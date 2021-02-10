@@ -2,25 +2,43 @@
 all : java_src native_lib
 
 java_src: 
-	javac -h src src/se/oracle/jaokim/dumpster/Dumpster.java
-	javac src/se/oracle/jaokim/dumpster/Dumpster.java
+	javac -d build/ -cp build/ ./src/jaokim/dumpster/*.java
+	javac -h src -cp build/ ./src/jaokim/dumpster/Divider.java
 
-se_oracle_jaokim_dumpster_Dumpster.o:
-	g++ -c -D__int64="long long" -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux src/se_oracle_jaokim_dumpster_Dumpster.cpp -o build/se_oracle_jaokim_dumpster_Dumpster.o
+jaokim_dumpster_Divider.o:
+	g++ -c -D__int64="long long" -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux src/jaokim_dumpster_Divider.cpp -o build/jaokim_dumpster_Divider.o
 
-native_lib : libdump.so 
+native_lib : divider.so libdump.so 
 
+divider.so: FORCE
+	jaotc --output build/divider.so -J-cp -J./build/ --class-name jaokim.dumpster.Divider 
+	
 #Linux version
-libdump.so : se_oracle_jaokim_dumpster_Dumpster.o
-	g++ -shared -fPIC -o build/$@ build/se_oracle_jaokim_dumpster_Dumpster.o -lc
+libdump.so : jaokim_dumpster_Divider.o
+	g++ -shared -fPIC -o build/$@ build/jaokim_dumpster_Divider.o -lc
 
 #Windows version:
 dump.dll: 
-	g++ -c -I%JAVA_HOME%\include -I%JAVA_HOME%\include\win32 java_inside_jaokim_dumpster_Dumpster.cpp -o build/$@ 
+	g++ -c -I%JAVA_HOME%\include -I%JAVA_HOME%\include\win32 jaokim_dumpster_Divider.cpp -o build/$@ 
 
 #MacOS version;
 dump.dylib:
-	g++ -c -fPIC -I${JAVA_HOME}/include -I${JAVA_HOME}/include/darwin java_inside_jaokim_dumpster_Dumpster.cpp -o build/$@ 
+	g++ -c -fPIC -I${JAVA_HOME}/include -I${JAVA_HOME}/include/darwin jaokim_dumpster_Divider.cpp -o build/$@ 
 
 clean: 
-	rm build/*
+	rm -r build/*
+
+
+test : FORCE
+	java -cp "build/" -Djava.library.path="/work/build" jaokim.dumpster.Dumpster 10
+
+
+test_loop: FORCE
+	java -cp "build/" -Djava.library.path="/work/build" jaokim.dumpster.Dumpster 1000
+
+test_aot : FORCE
+	java -XX:+UnlockExperimentalVMOptions -XX:AOTLibrary="./build/divider.so" -cp "build/" -Djava.library.path="/work/build" jaokim.dumpster.Dumpster 1000
+
+
+	
+FORCE:
