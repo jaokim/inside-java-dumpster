@@ -1,5 +1,8 @@
 
-all : java_src native_lib
+all : setup java_src native_lib
+
+setup:
+	mkdir build
 
 java_src: 
 	javac -d build/ -cp build/ ./src/jaokim/dumpster/*.java
@@ -29,11 +32,11 @@ clean:
 	rm -r build/*
 
 
-test : FORCE
+test_loops : FORCE
 	java -cp "build/" -Djava.library.path="/work/build" jaokim.dumpster.Dumpster 10
 
 
-test_loop: FORCE
+test_many_loops: FORCE
 	java -cp "build/" -Djava.library.path="/work/build" jaokim.dumpster.Dumpster 1000
 
 test_aot : FORCE
