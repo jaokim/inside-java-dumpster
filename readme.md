@@ -1,4 +1,4 @@
-Code for the Inside Java blog post [Deciphering the stacktrace](https://inside.java/2021/02/11/deciphering-the-stacktrace/).
+Code for the Inside Java blog post [Deciphering the stacktrace](https://inside.java/2021/02/12/deciphering-the-stacktrace/).
 
 ## Instructions
 Download the entire repo.
