@@ -30,7 +30,7 @@ public class DumpJFROnHighCPU {
         float cpuLevel = event.getFloat("machineTotal");
         
         if(cpuLevel > CPU_LEVEL_THRESHOLD) {
-          System.out.println(new SimpleDateFormat("yyyyMMdd HH:mm.ss").format(new Date())+ ": High CPU level noticed: "+cpuLevel);
+          System.out.println("High CPU level noticed: "+cpuLevel);
           try {
             final Path jfrFilePath = generateJFRFilename();
       
@@ -45,7 +45,7 @@ public class DumpJFROnHighCPU {
             ex.printStackTrace();
           }
         } else {
-          System.out.println(new SimpleDateFormat("yyyyMMdd HH:mm.ss").format(new Date())+ ": CPU level ok: "+cpuLevel);
+          System.out.println("CPU level ok: "+cpuLevel);
         
         }
       });
