@@ -12,9 +12,8 @@ import jdk.jfr.consumer.RecordingStream;
 
 /**
  * Example to show how to dump a JFR file when the CPU load is too high. 
- * A recording stream is used to monitor the CPULoad event and the trigger 
- * a JFR file top be dumped when the CPU load is above a certain level.
- * is too high.
+ * A recording stream is used to monitor the CPULoad event and then trigger 
+ * a JFR file to be written when the CPU load is above a certain level.
  * 
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
@@ -29,9 +28,9 @@ public class DumpJFROnHighCPU {
       rs.onEvent("jdk.CPULoad", (event) -> {
         // get CPU measurement: "jvmSystem", "jvmUser" or "machineTotal"
         float cpuLevel = event.getFloat("machineTotal");
-        System.out.println(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+ ": cpu: "+cpuLevel);
         
         if(cpuLevel > CPU_LEVEL_THRESHOLD) {
+          System.out.println(new SimpleDateFormat("yyyyMMdd HH:mm.ss").format(new Date())+ ": High CPU level noticed: "+cpuLevel);
           try {
             final Path jfrFilePath = generateJFRFilename();
       
@@ -45,6 +44,9 @@ public class DumpJFROnHighCPU {
           } catch (IOException ex) {
             ex.printStackTrace();
           }
+        } else {
+          System.out.println(new SimpleDateFormat("yyyyMMdd HH:mm.ss").format(new Date())+ ": CPU level ok: "+cpuLevel);
+        
         }
       });
       
@@ -56,6 +58,5 @@ public class DumpJFROnHighCPU {
     final String tmpdir = System.getProperty("java.io.tmpdir");
     final String filename = new SimpleDateFormat("yyyyMMddHHmm").format(new Date());
     return Path.of(tmpdir, filename + ".jfr");
-            
   }
 }
