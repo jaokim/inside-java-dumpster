@@ -27,7 +27,6 @@ public class ImageGenerator {
     this.height = height;
   }
   public InputStream generateImage() throws IOException {
-    Faker faker = new Faker();
     BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     int color = 0;
     for (int y = 0; y < image.getHeight(); y++) {

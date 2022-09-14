@@ -17,7 +17,7 @@ import jakarta.inject.Singleton;
 public class MicronautService {
     private final BusinessLogicFactory factory = new BusinessLogicFactory();
     public BusinessLogicServiceWrapper getService(String destination) throws BusinessLogicException {
-        return factory.getServiceWrapper(new Payload.Destination(destination));
+        return factory.lookupService(new Payload.Destination(destination));
     }
     
 }

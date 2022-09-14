@@ -5,8 +5,6 @@ package inside.dumpster.backend.repository.data;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -14,16 +12,24 @@ import java.util.logging.Logger;
  * @param <D>
  */
 public class DataUtils<D extends Data> {
-
+  ThreadLocal<byte[]> threadLocalValue = new ThreadLocal<>();
+      
+  private final D data;
+  public DataUtils(D data) {
+    this.data = data;
+  }
+  
   public D convertToData(InputStream inputStream) {
     try {
-
-      byte[] buffer = new byte[inputStream.available()];
+      threadLocalValue.set(new byte[inputStream.available()]);
+      byte[] buffer = threadLocalValue.get();
       inputStream.read(buffer);
-      return (D)new Data(buffer);
+      
+      data.setBuffer(buffer);
+      return data;
     } catch (IOException ex) {
       ex.printStackTrace();
-      return null;
+      return data;
     }
   }
 }

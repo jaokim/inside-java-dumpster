@@ -6,11 +6,17 @@ package inside.dumpster.bl;
 import inside.dumpster.client.Payload;
 import inside.dumpster.client.Result;
 import inside.dumpster.client.impl.Helper;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import inside.dumpster.monitoring.event.ServiceInvocation;
+import java.util.UUID;
 
 /**
- *
+ * Wrapper for a business logic service to facilitate service mapping. This
+ * only serves to lessen the boilerplate code needed to map the network logs
+ * to service calls. 
+ * This construct is only used for the mimicked business application -- this
+ * is -not- a viable design pattern to take inspiration from. 
+ * You've been warned!
+ * 
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
 public class BusinessLogicServiceWrapper<P extends Payload, R extends Result> {
@@ -21,10 +27,28 @@ public class BusinessLogicServiceWrapper<P extends Payload, R extends Result> {
     this.service = service;
   }
 
-
+  /**
+   * Invoke the service using the supplied payload.
+   * @param payload
+   * @return
+   * @throws BusinessLogicException 
+   */
   public R invoke(Payload payload) throws BusinessLogicException {
-    P p = Helper.convertPayload(this.service.payloadClass, payload);
-    return service.invoke(p);
+    payload.setTransactionId(UUID.randomUUID().toString());
+    
+    ServiceInvocation serviceInvocation = new ServiceInvocation();
+    serviceInvocation.serviceClass = service.getClass();
+    serviceInvocation.registerPayloadData(payload);
+    serviceInvocation.begin();
+    
+    P convertedPayload = Helper.convertPayload(this.service.payloadClass, payload);
+    
+    R result = service.invoke(convertedPayload);
+   
+    serviceInvocation.end();
+    serviceInvocation.commit();
+    
+    return result;
   }
 
 }

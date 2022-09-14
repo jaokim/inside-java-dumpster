@@ -49,7 +49,7 @@ public class Cli {
     });
     PayloadScheduler<Payload> scheduler = new PayloadScheduler(data.getFirsttime(), (payload) -> {
       try {
-        BusinessLogicServiceWrapper wrapper = new BusinessLogicFactory().getServiceWrapper(payload.getDestination());
+        BusinessLogicServiceWrapper wrapper = new BusinessLogicFactory().lookupService(payload.getDestination());
         PayloadDataGenerator generator = new PayloadDataGenerator();
         payload.setInputStream(generator.genetarePayloadData(payload));
                 

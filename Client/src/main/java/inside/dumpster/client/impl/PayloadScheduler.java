@@ -26,6 +26,7 @@ public class PayloadScheduler<P extends Payload> {
   final long start = System.currentTimeMillis();
   long count = 0;
   boolean debug;
+  private long lastTime = -1;
   private final long firsttimeFromLog;
   private final PayloadProcessor payloadProcessor;
   public PayloadScheduler(long firsttime, PayloadProcessor payloadProcessor) {
@@ -45,22 +46,34 @@ public class PayloadScheduler<P extends Payload> {
   }
 
   public void scheduleRequest(final P req) {
-    long delayFromFirstLog = req.getTime() - firsttimeFromLog;
-    long now = System.currentTimeMillis();
+    long delay;
+    if(lastTime == -1) {
+      delay = 0;
+    } else {
+      delay = req.getTime() - lastTime;
+    }
+    lastTime = req.getTime();
+//    long delayFromFirstLog = req.getTime() - firsttimeFromLog;
+//    long now = System.currentTimeMillis();
+//
+//    long offset = now - start;
+//
+//    long delay = offset - delayFromFirstLog;
 
-    long offset = now - start;
-
-    long delay = offset - delayFromFirstLog;
-
-    delay = delay / 10;
+//    delay = delay / 100;
     long time = System.currentTimeMillis() + (delay);
     
-    ScheduledFuture future = threadPool.schedule(() -> payloadProcessor.processPayload(req),
-            delay, TimeUnit.MILLISECONDS);
+    ScheduledFuture future = threadPool.schedule(() -> {
+      try {
+        payloadProcessor.processPayload(req);
+      } catch(Exception e) {
+        e.printStackTrace();
+      }
+    }, delay, TimeUnit.MILLISECONDS);
 
-    // if (count % 100 == 0) {
-//    System.out.println(future.toString() + "Scheduled for: " + delay + " -> " + new Date(time) + ", now: " + new Date().toString());
-    //}
+//    if (count % 100 == 0) {
+      //System.out.println("Scheduled for: " + delay + " -> " + new Date(time) + ", now: " + new Date().toString());
+//    }
     count++;
     int thrCount = threadPool.getQueue().size();
     synchronized (lock) {
@@ -73,7 +86,7 @@ public class PayloadScheduler<P extends Payload> {
         }
       }
     }
-    logger.info("Queue:" + threadPool.getQueue().size() + ", total count: " + ++totalCount);
+//    logger.info("Queue:" + threadPool.getQueue().size() + ", total count: " + ++totalCount);
 //        threadPool.shutdown();
   }
 

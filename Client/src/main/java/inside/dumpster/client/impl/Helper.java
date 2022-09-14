@@ -14,6 +14,14 @@ import java.util.logging.Logger;
  */
 public class Helper {
   
+  
+  /**
+   * Convert from a general payload object, to a more specific service payload.
+   * @param <P> the wanted Payload class
+   * @param payloadClass the Class for the wanted Payload
+   * @param payload the ingoing plain payload
+   * @return 
+   */
   public static <P extends Payload> P convertPayload(Class<P> payloadClass, Payload payload) {
     P p = null;
     if(payload == null) {
@@ -21,7 +29,7 @@ public class Helper {
     }
     try {
       p = payloadClass.getDeclaredConstructor().newInstance();
-      
+      p.setTransactionId(payload.getTransactionId());
       p.setDstBytes(payload.getDstBytes());
       p.setDstDevice(payload.getDstDevice());
       p.setDstDeviceId(payload.getDstDeviceId());

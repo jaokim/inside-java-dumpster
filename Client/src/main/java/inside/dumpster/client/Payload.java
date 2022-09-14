@@ -16,7 +16,6 @@ public class Payload {
    * The destination defines which service should handle a payload.
    */
   public static class Destination {
-
     private final String destination;
 
     public Destination(String destination) {
@@ -36,7 +35,7 @@ public class Payload {
    * @return a destination
    */
   public Destination getDestination() {
-    return new Destination(String.format("%s%s", getSrcDevice(), getSrcDeviceId().substring(0, 0)));
+    return new Destination(String.format("%s%s", getSrcDevice(), getSrcDeviceId() != null ?getSrcDeviceId().substring(0, 0):"0"));
   }
   
   
@@ -87,6 +86,9 @@ public class Payload {
    */
   private int dstBytes;
 
+  private InputStream inputStream;
+
+  private String transactionId;
   
   /** 
    * Create an empty payload.
@@ -356,8 +358,6 @@ public class Payload {
     this.dstDeviceId = dstDeviceId;
   }
 
-  private InputStream inputStream;
-
   /**
    * If not null, this contains the data sent with the payload.
    * @return an input stream with data, can be null
@@ -375,5 +375,14 @@ public class Payload {
     this.inputStream = inputStream;
   }
 
+
+
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
+  }
 
 }

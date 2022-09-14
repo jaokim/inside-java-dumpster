@@ -6,8 +6,8 @@ package inside.dumpster.client.impl;
 import inside.dumpster.client.Payload;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -29,8 +29,8 @@ public class NetFlowData<P extends Payload> {
     }
   }
 
-  private static BufferedReader openNetFlowLogFile() throws FileNotFoundException {
-    return new BufferedReader(new FileReader("D:\\jsnordst\\projekt\\InsideDumpster\\netflow_day-02"));
+  private BufferedReader openNetFlowLogFile() throws FileNotFoundException {
+    return new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/netflow_partial")));
   }
 
   public long getFirsttime() {

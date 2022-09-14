@@ -45,18 +45,19 @@ public class JackRabbitService extends BusinessLogicService<JackRabbitPayload, J
         
         String content = "";
         int index = 0;
-        do {
-          try {
-            bb.put(is.readAllBytes());
-            index += content.getBytes().length;
-            content =  bb.toString();
-          } catch (IOException ex) {
-            Logger.getLogger(JackRabbitService.class.getName()).log(Level.SEVERE, null, ex);
-          }
-        } while(index < bb.limit() && bb.limit() < numOfBytes);
-        
-        logger.log(Level.INFO, String.format("Adding: %25s", bb.toString()));
-        
+        if(is != null) {
+          do {
+            try {
+              bb.put(is.readAllBytes());
+              index += content.getBytes().length;
+              content =  bb.toString();
+            } catch (IOException ex) {
+              Logger.getLogger(JackRabbitService.class.getName()).log(Level.SEVERE, null, ex);
+            }
+          } while(index < bb.limit() && bb.limit() < numOfBytes);
+
+          logger.log(Level.INFO, String.format("Adding: %25s", bb.toString()));
+        }
         for(JackRabbitResult jackRabbit : jackRabbitCache) {
             if(jackRabbit.getName().equals(jackRabbitName)) {
                 jackRabbit.setJackRabbitBuffer(bb);

@@ -11,11 +11,14 @@ import inside.dumpster.eldorado.ElDoradoService;
 import inside.dumpster.jackrabbit.JackRabbitPayload;
 import inside.dumpster.jackrabbit.JackRabbitResult;
 import inside.dumpster.jackrabbit.JackRabbitService;
-import inside.dumpster.monitoring.service.ServiceCall;
-import inside.dumpster.monitoring.service.UnhandledServiceCall;
+import inside.dumpster.monitoring.event.ServiceCall;
+import inside.dumpster.monitoring.event.UnhandledServiceCall;
 import inside.dumpster.uploadimage.UploadImagePayload;
 import inside.dumpster.uploadimage.UploadImageResult;
 import inside.dumpster.uploadimage.UploadImageService;
+import inside.dumpster.uploadtext.UploadTextPayload;
+import inside.dumpster.uploadtext.UploadTextResult;
+import inside.dumpster.uploadtext.UploadTextService;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -31,16 +34,31 @@ public class BusinessLogicFactory {
         }
     }
     
-    public BusinessLogicServiceWrapper<? extends Payload, ? extends Result> getServiceWrapper(Destination destination) throws BusinessLogicException {
-      return new BusinessLogicServiceWrapper<>(getService(destination.toString()));
+    /**
+     * Lookup and returns service for destination.
+     * @param destination
+     * @return
+     * @throws BusinessLogicException 
+     */
+    public BusinessLogicServiceWrapper<? extends Payload, ? extends Result> lookupService(Destination destination) throws BusinessLogicException {
+      return new BusinessLogicServiceWrapper<>(BusinessLogicFactory.this.lookupService(destination.toString()));
     }
-    private BusinessLogicService<? extends Payload, ? extends Result> getService(String destination) throws BusinessLogicException {
-      ServiceCall serviceCallEvent = new ServiceCall();
-      serviceCallEvent.setDestination(destination);
-      
+    
+    /**
+     * Lookup service for destination.
+     * @param destination
+     * @return
+     * @throws BusinessLogicException 
+     */
+    private BusinessLogicService<? extends Payload, ? extends Result> lookupService(String destination) throws BusinessLogicException {
       final BusinessLogicService<? extends Payload, ? extends Result> service;
-        
+
+      ServiceCall serviceCallEvent = new ServiceCall();
+      serviceCallEvent.destination = destination;
       switch(destination) {
+          case "Comp0":
+              service = new UploadTextService(UploadTextPayload.class, UploadTextResult.class);
+              break;
           case "Comp1":
               service = new ElDoradoService(ElDoradoPayload.class, Result.class);
               break;
@@ -51,16 +69,16 @@ public class BusinessLogicFactory {
               service = new UploadImageService(UploadImagePayload.class, UploadImageResult.class);
               break;
           default:
-              UnhandledServiceCall unhandled = new UnhandledServiceCall();
-              unhandled.setDestination(destination);
-              unhandled.commit();
+              UnhandledServiceCall unhandledServiceEvent = new UnhandledServiceCall();
+              unhandledServiceEvent.destination = destination;
+              unhandledServiceEvent.commit();
+              
               service = new DefaultBusinessLogicService(Payload.class, Result.class);
               return service;
       }
-      serviceCallEvent.setClass(service.getClass());
+      serviceCallEvent.serviceClass = service.getClass();
       serviceCallEvent.commit();
+      
       return service;
-
-
     }
 }
