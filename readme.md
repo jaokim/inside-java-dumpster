@@ -1,9 +1,9 @@
 Accompanying code for my blog [jaokim.github.io](https://jaokim.github.io/).
 
 ## Introduction
-The code here tries to mimic a relatively likely production system. The mimiced system is supposed contain a plethora of bugs, anti-patterns, oddities, perfomrance issues and in general be less than ideal. It serves as a sandbox, or playground to demonstrate how to troubleshoot various issues.
+The code here tries to mimic a relatively likely production system. The mimiced system is supposed contain a plethora of bugs, anti-patterns, oddities, performance issues and in general be less than ideal. It serves as a sandbox, or playground to demonstrate how to troubleshoot various issues.
 
-Disclaimer: This code contain both subtle and not so subtle bugs -- that is its purpose.
+Disclaimer: This code contains both subtle and not so subtle bugs -- that is its purpose.
 
 Some motivations behind the project:
 * reproducible executions; requests to the application are created from actual log files
