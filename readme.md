@@ -20,13 +20,15 @@ flowchart TD
     Client --> WebClient
     Client --> CliClient
   end
-  subgraph webapps
+  subgraph web
+  subgraph appserver
     JettyServer
     MicronautServer
   end
-  webapps --> backend
+  appserver --> backend
   subgraph backend
     BusinessLogic --- bd[(Backend)]
+  end
   end
   click Client "https://github.com/jaokim/inside-java-dumpster/tree/main/Client"
   click WebClient "https://github.com/jaokim/inside-java-dumpster/tree/main/WebClient"
