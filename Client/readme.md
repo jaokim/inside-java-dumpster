@@ -7,6 +7,8 @@ The Client module
 flowchart TD
   Client --> client
   Client --> server
+  client --> server
+  server --> client
   subgraph client
     WebClient
     CliClient
