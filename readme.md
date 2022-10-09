@@ -10,6 +10,7 @@ Some motivations behind the project:
 * create life-like JFR event examples, to not only create "TestEvent" and the likes
 * has different web application servers (Micronaut, Jetty, will add WLS) in order to test where f.i. JFR VM properties are set
 
+### Overview
 
 ```mermaid
 flowchart TD
@@ -39,6 +40,7 @@ flowchart TD
   click MicronautServer "https://github.com/jaokim/inside-java-dumpster/tree/main/MicronautServer"
   click JettyServer "https://github.com/jaokim/inside-java-dumpster/tree/main/JettyServer"
 ```
+
 
 
 
