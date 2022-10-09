@@ -12,14 +12,31 @@ Some motivations behind the project:
 
 
 ```mermaid
+flowchart TD
+  netflow_data --> Client
+  WebClient --> JettyServer
+  WebClient --> MicronautServer
+  subgraph client
+    Client --> WebClient
+    Client --> CliClient
+  end
+  subgraph webapps
+    JettyServer --  BusinessLogic
+    MicronautServer -- BusinessLogic
+    BusinessLogic
+    BusinessLogic -- Backend
+  end
+```
+
+```mermaid
 classDiagram
 Client <|-- WebClient
 Client <|-- CliClient
-Client .. BusinessLogic
 JettyServer --  BusinessLogic
 MicronautServer -- BusinessLogic
-WebClient -- JettyServer
-WebClient -- MicronautServer
+WebClient --> JettyServer
+WebClient --> MicronautServer
+CliClient --> BusinessLogic
 BusinessLogic -- Backend
 ```
 
