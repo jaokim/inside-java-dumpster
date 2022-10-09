@@ -1,12 +1,12 @@
 The Client module 
-* defines and creates the Payload used by the BusinessLogic services
+* defines and creates the Payload consumed by the BusinessLogic services
 * defines the interface for the Result returned by the BusinessLogic
 * has a set of helper classes to aid in data creation, and consumption for both clients and servers
 
 ```mermaid
 flowchart TD
-  Client --> client
-  Client --> server
+  Client --> client(Client Side)
+  Client --> server(Server Side)
   subgraph client
     WebClient
     CliClient
@@ -18,7 +18,7 @@ flowchart TD
   click CliClient "https://github.com/jaokim/inside-java-dumpster/tree/main/CliClient"
 ```
 
-The client side of the dumpster takes data from the [Unified Host and Network Data Set](https://csr.lanl.gov/data/2017/), parses this and creates a [Payload](src/main/java/inside/dumpster/client/Payload.java).
+The input data comes from the [Unified Host and Network Data Set](https://csr.lanl.gov/data/2017/). 
 
 |Timestamp|Duration|Src Device|Dst Device|Protocol|Src Port|Dest Port|Src packets|Dst Packets|Src Bytes|Dst Bytes|
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -29,13 +29,16 @@ The client side of the dumpster takes data from the [Unified Host and Network Da
 |118785|262319|IP564116|Comp141988|17|5060|5060|28257|0|23149303|0|
 |118843|28287|Comp364445|Comp870517|17|Port68697|Port28366|5445|6438|457380|592296|
 
-
+The Client parses this and creates a [Payload](src/main/java/inside/dumpster/client/Payload.java) for each row
 * The payload has a [Destination](https://github.com/jaokim/inside-java-dumpster/blob/main/Client/src/main/java/inside/dumpster/client/Payload.java#L37) which is based on the Src Device. 
 * The Destination decides which service in the BusinessLogic layer should handle the payload.
 * Besides all columns from a logline, the payload can have a body of data attached to it. The kind of data is decided based on the destination; this can be text data, image data, or something else. See [PaylodDataGenerator](src/main/java/inside/dumpster/client/impl/PayloadDataGenerator.java).
 
+There are currently two clients available:
+* [WebClient](../WebClient) that creates a HttpPayload to send to arbitrary HTTP endpoint
+* [CliClient](../CliClient) calls the BusinessLogic server directly, without any netwokr involvment
 
-
-
+The WebClient is designed to be used on one machine/JVM, wuth the BusinessLogic server runs on another.
+The CliClient is only suing one JVM to simulkate the entire server environment.
 
 
