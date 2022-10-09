@@ -20,7 +20,7 @@ flowchart TD
     Client --> WebClient
     Client --> CliClient
   end
-  subgraph 
+  subgraph container
   subgraph appserver
     JettyServer
     MicronautServer
