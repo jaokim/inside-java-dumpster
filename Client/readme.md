@@ -4,7 +4,6 @@ The client side of the dumpster takes data from the [Unified Host and Network Da
 * Besides all columns from a logline, the payload can have a body of data attached to it. The kind of data is decided based on the destination; this can be text data, image data, or something else.
 
 
-```
 |Timestamp|Duration|Src Device|Dst Device|Protocol|Src Port|Dest Port|Src packets|Dst Packets|Src Bytes|Dst Bytes|
 |---|---|---|---|---|---|---|---|---|---|---|
 |118781|5580|Comp364445|Comp547245|17|Port05507|Port46272|0|755065|0|1042329018|
