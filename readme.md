@@ -13,18 +13,19 @@ Some motivations behind the project:
 
 ```mermaid
 flowchart TD
-  netflow_data --> Client
-  WebClient --> JettyServer
-  WebClient --> MicronautServer
+  ([netflow_data logs]) --- Client
+  WebClient --> webapps
   CliClient --> BusinessLogic
   subgraph client
     Client --> WebClient
     Client --> CliClient
   end
-  subgraph webapps
-    JettyServer -->  BusinessLogic
-    MicronautServer --> BusinessLogic
-    BusinessLogic --> Backend
+    subgraph backend
+      subgraph webapps
+        JettyServer -->  BusinessLogic
+        MicronautServer --> BusinessLogic
+      end
+    BusinessLogic --- [(Backend)]
   end
 ```
 
