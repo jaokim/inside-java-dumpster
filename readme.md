@@ -28,18 +28,12 @@ flowchart TD
   subgraph backend
     BusinessLogic --- bd[(Backend)]
   end
-```
-
-```mermaid
-classDiagram
-Client <|-- WebClient
-Client <|-- CliClient
-JettyServer --  BusinessLogic
-MicronautServer -- BusinessLogic
-WebClient --> JettyServer
-WebClient --> MicronautServer
-CliClient --> BusinessLogic
-BusinessLogic -- Backend
+  click Client "https://github.com/jaokim/inside-java-dumpster/tree/main/Client"
+  click WebClient "https://github.com/jaokim/inside-java-dumpster/tree/main/WebClient"
+  click CliClient "https://github.com/jaokim/inside-java-dumpster/tree/main/CliClient"
+  click BusinessLogic "https://github.com/jaokim/inside-java-dumpster/tree/main/BusinessLogic"
+  click MicronautServer "https://github.com/jaokim/inside-java-dumpster/tree/main/MicronautServer"
+  click JettyServer "https://github.com/jaokim/inside-java-dumpster/tree/main/JettyServer"
 ```
 
 If you're looking for code for my [old blog posts at inside.java](https://inside.java/u/JoakimNordstrom/), go look in the [tag inside.java](https://github.com/jaokim/inside-java-dumpster/tree/inside.java)
