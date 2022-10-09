@@ -30,7 +30,7 @@ flowchart TD
     BusinessLogic --- bd[(Backend)]
   end
   end
-  style container fill:#1f6feb24
+  style container fill:#c3a64724
   click Client "https://github.com/jaokim/inside-java-dumpster/tree/main/Client"
   click WebClient "https://github.com/jaokim/inside-java-dumpster/tree/main/WebClient"
   click CliClient "https://github.com/jaokim/inside-java-dumpster/tree/main/CliClient"
