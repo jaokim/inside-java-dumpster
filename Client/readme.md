@@ -5,12 +5,14 @@ The Client module
 
 ```mermaid
 flowchart TD
+  Client --> client
+  Client --> server
   subgraph client
-    Client --> WebClient
-    Client --> CliClient
+    WebClient
+    CliClient
   end
   subgraph server
-    Client --> BusinessLogic 
+    BusinessLogic 
   end
   click WebClient "https://github.com/jaokim/inside-java-dumpster/tree/main/WebClient"
   click CliClient "https://github.com/jaokim/inside-java-dumpster/tree/main/CliClient"
