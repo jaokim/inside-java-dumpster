@@ -16,15 +16,15 @@ flowchart TD
   netflow_data --> Client
   WebClient --> JettyServer
   WebClient --> MicronautServer
+  CliClient --> BusinessLogic
   subgraph client
     Client --> WebClient
     Client --> CliClient
   end
   subgraph webapps
-    JettyServer --  BusinessLogic
-    MicronautServer -- BusinessLogic
-    BusinessLogic
-    BusinessLogic -- Backend
+    JettyServer -->  BusinessLogic
+    MicronautServer --> BusinessLogic
+    BusinessLogic --> Backend
   end
 ```
 
