@@ -13,7 +13,7 @@ Some motivations behind the project:
 
 ```mermaid
 flowchart TD
-  ([netflow_data logs]) --- Client
+  nf([netflow_data logs]) --- Client
   WebClient --> webapps
   CliClient --> BusinessLogic
   subgraph client
@@ -25,7 +25,7 @@ flowchart TD
         JettyServer -->  BusinessLogic
         MicronautServer --> BusinessLogic
       end
-    BusinessLogic --- [(Backend)]
+    BusinessLogic --- bd[(Backend)]
   end
 ```
 
