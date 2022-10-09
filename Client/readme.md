@@ -7,8 +7,6 @@ The Client module
 flowchart TD
   Client --> client
   Client --> server
-  client --> server
-  server --> client
   subgraph client
     WebClient
     CliClient
@@ -16,6 +14,8 @@ flowchart TD
   subgraph server
     BusinessLogic 
   end
+  client --> server
+  server --> client
   click WebClient "https://github.com/jaokim/inside-java-dumpster/tree/main/WebClient"
   click CliClient "https://github.com/jaokim/inside-java-dumpster/tree/main/CliClient"
 ```
