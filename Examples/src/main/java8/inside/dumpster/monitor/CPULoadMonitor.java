@@ -1,7 +1,7 @@
 /*
  * 
  */
-package inside.dumpster.examples;
+package inside.dumpster.monitor;
 
 import java.io.File;
 import java.util.Optional;

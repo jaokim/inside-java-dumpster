@@ -44,7 +44,6 @@
                             <multiReleaseOutput>true</multiReleaseOutput>
                         </configuration>
                     </execution>
-
                 </executions>
             </plugin>
             <plugin>

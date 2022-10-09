@@ -1,11 +1,10 @@
 /*
  * 
  */
-package inside.dumpster.examples;
+package inside.dumpster.monitor;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.Optional;
 import java.util.function.DoublePredicate;
 import java.util.function.Supplier;
@@ -35,9 +34,9 @@ public class CPULoadMonitorImpl implements CPULoadMonitor {
     System.out.println("Adding JDK17 type CPU level monitor");
     Configuration c = Configuration.getConfiguration("default");
     // create a recording stream using the "default" JFC configuration
-    try (RecordingStream rs = new RecordingStream(c)) {
+    try (RecordingStream stream = new RecordingStream(c)) {
 
-      rs.onEvent("jdk.CPULoad", (event) -> {
+      stream.onEvent("jdk.CPULoad", (event) -> {
         // get CPU measurement: "jvmSystem", "jvmUser" or "machineTotal"
         float cpuLoad = event.getFloat("machineTotal");
 
@@ -46,7 +45,7 @@ public class CPULoadMonitorImpl implements CPULoadMonitor {
           Optional<File> jfrFileDestination = jfrRecordingDestination.get();
           jfrFileDestination.ifPresent((file -> {
             try {
-              rs.dump(file.toPath());
+              stream.dump(file.toPath());
               System.out.println("Dumped JFR recording to: "+file.getAbsolutePath());
             } catch (IOException ex) {
               Logger.getLogger(CPULoadMonitorImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -57,7 +56,7 @@ public class CPULoadMonitorImpl implements CPULoadMonitor {
         }
       });
 
-      rs.start();
+      stream.start();
     }
   }
   
