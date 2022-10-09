@@ -5,8 +5,8 @@ The Client module
 
 ```mermaid
 flowchart TD
-  Client --> client(Client Side)
-  Client --> server(Server Side)
+  Client --> client[Client Side]
+  Client --> server[Server Side]
   subgraph client
     WebClient
     CliClient
