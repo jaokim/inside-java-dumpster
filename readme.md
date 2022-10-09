@@ -36,7 +36,7 @@ flowchart TD
   click WebClient "WebClient"
   click CliClient "CliClient"
   click BusinessLogic "BusinessLogic"
-  click Backend "Backend"
+  click bd "Backend"
   click MicronautServer "MicronautServer"
   click JettyServer "JettyServer"
 ```
