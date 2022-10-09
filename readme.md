@@ -15,7 +15,7 @@ Some motivations behind the project:
 flowchart TD
   nf([netflow_data logs]) --- Client
   WebClient --> webapps
-  CliClient --> BusinessLogic
+  CliClient --> backend
   subgraph client
     Client --> WebClient
     Client --> CliClient
@@ -24,7 +24,7 @@ flowchart TD
     JettyServer
     MicronautServer
   end
-  webapps --> BusinessLogic
+  webapps --> backend
   subgraph backend
     BusinessLogic --- bd[(Backend)]
   end
