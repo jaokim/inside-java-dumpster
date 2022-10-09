@@ -33,6 +33,7 @@ flowchart TD
   end
   style container fill:#c3a64724
   click Client "Client"
+  click nf "Client"
   click WebClient "WebClient"
   click CliClient "CliClient"
   click BusinessLogic "BusinessLogic"
