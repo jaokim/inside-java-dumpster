@@ -14,7 +14,7 @@ Some motivations behind the project:
 ```mermaid
 flowchart TD
   nf([netflow_data logs]) --- Client
-  WebClient --> webapps
+  WebClient --> appserver
   CliClient --> backend
   subgraph client
     Client --> WebClient
