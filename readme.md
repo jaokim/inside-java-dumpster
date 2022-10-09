@@ -32,14 +32,14 @@ flowchart TD
   end
   end
   style container fill:#c3a64724
-  click Client "./Client"
-  click nf "./Client"
-  click WebClient "./WebClient"
-  click CliClient "./CliClient"
-  click BusinessLogic "./BusinessLogic"
-  click bd "./Backend"
-  click MicronautServer "./MicronautServer"
-  click JettyServer "./JettyServer"
+  click Client "https://github.com/jaokim/inside-java-dumpster/tree/main/Client"
+  click nf "https://github.com/jaokim/inside-java-dumpster/tree/main/Client"
+  click WebClient "https://github.com/jaokim/inside-java-dumpster/tree/main/WebClient"
+  click CliClient "https://github.com/jaokim/inside-java-dumpster/tree/main/CliClient"
+  click BusinessLogic "https://github.com/jaokim/inside-java-dumpster/tree/main/BusinessLogic"
+  click bd "https://github.com/jaokim/inside-java-dumpster/tree/main/Backend"
+  click MicronautServer "https://github.com/jaokim/inside-java-dumpster/tree/main/MicronautServer"
+  click JettyServer "https://github.com/jaokim/inside-java-dumpster/tree/main/JettyServer"
 ```
 
 
