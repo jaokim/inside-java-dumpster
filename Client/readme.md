@@ -3,10 +3,12 @@ The Client module
 * defines the interface for the Result returned by the BusinessLogic
 * has a set of helper classes to aid in data creation, and consumption for both clients and servers
 
+
+
 ```mermaid
 flowchart TD
-  Client --> client[Client Side]
-  Client --> server[Server Side]
+  Client --> client[ClientSide]
+  Client --> server[ServerSide]
   subgraph client
     WebClient
     CliClient
@@ -14,10 +16,12 @@ flowchart TD
   subgraph server
     BusinessLogic 
   end
-  click WebClient "https://github.com/jaokim/inside-java-dumpster/tree/main/WebClient"
-  click CliClient "https://github.com/jaokim/inside-java-dumpster/tree/main/CliClient"
+  click WebClient "../WebClient"
+  click CliClient "../CliClient"
+  click BusinessLogic "../BusinessLogic"
 ```
 
+## Input data
 The input data comes from the [Unified Host and Network Data Set](https://csr.lanl.gov/data/2017/). 
 
 |Timestamp|Duration|Src Device|Dst Device|Protocol|Src Port|Dest Port|Src packets|Dst Packets|Src Bytes|Dst Bytes|
@@ -33,6 +37,8 @@ The Client parses this and creates a [Payload](src/main/java/inside/dumpster/cli
 * The payload has a [Destination](https://github.com/jaokim/inside-java-dumpster/blob/main/Client/src/main/java/inside/dumpster/client/Payload.java#L37) which is based on the Src Device. 
 * The Destination decides which service in the BusinessLogic layer should handle the payload.
 * Besides all columns from a logline, the payload can have a body of data attached to it. The kind of data is decided based on the destination; this can be text data, image data, or something else. See [PaylodDataGenerator](src/main/java/inside/dumpster/client/impl/PayloadDataGenerator.java).
+
+## Client implementations
 
 There are currently two clients available:
 * [WebClient](../WebClient) that creates a HttpPayload to send to arbitrary HTTP endpoint
