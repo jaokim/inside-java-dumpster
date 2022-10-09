@@ -21,9 +21,10 @@ flowchart TD
     Client --> CliClient
   end
   subgraph webapps
-    JettyServer -->  BusinessLogic
-    MicronautServer --> BusinessLogic
+    JettyServer
+    MicronautServer
   end
+  webapps --> BusinessLogic
   subgraph backend
     BusinessLogic --- bd[(Backend)]
   end
