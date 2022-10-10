@@ -41,10 +41,10 @@ The Client parses this and creates a [Payload](src/main/java/inside/dumpster/cli
 ## Client implementations
 
 There are currently two clients available:
-* [WebClient](../WebClient) that creates a HttpPayload to send to arbitrary HTTP endpoint
-* [CliClient](../CliClient) calls the BusinessLogic server directly, without any netwokr involvment
+* [WebClient](../WebClient) creates a HttpPayload to send to arbitrary HTTP endpoint
+* [CliClient](../CliClient) calls the BusinessLogic server directly, without any network involvment
 
-The WebClient is designed to be used on one machine/JVM, wuth the BusinessLogic server runs on another.
-The CliClient is only suing one JVM to simulkate the entire server environment.
+The WebClient is designed to be used on one machine/JVM, with the BusinessLogic server running on another.
+The CliClient is only using one JVM to simulate the entire server environment.
 
 
