@@ -20,7 +20,7 @@ public class DefaultBusinessLogicService extends BusinessLogicService<Payload, R
     @Override
     public Result invoke(Payload payload) throws BusinessLogicException {
         Result result = new Result();
-        result.setResult("ok");
+        result.setResult("nok");
         return result;
     }
 

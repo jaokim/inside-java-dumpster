@@ -3,7 +3,11 @@ micronaut:
     name: MicronautServer
   server:
     port: 8081
+    max-request-size: '100MB'
+    multipart:
+        max-file-size: '100MB'
 netty:
   default:
     allocator:
       max-order: 3
+       

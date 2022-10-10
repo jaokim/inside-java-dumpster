@@ -3,22 +3,20 @@
  */
 package inside.dumpster.backend.repository.data;
 
+import java.awt.image.RenderedImage;
+
 /**
  *
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
-public class LImage implements Data {
-  private byte[] buffer;
-  
-  @Override
-  public void setBuffer(byte[] buffer) {
-    this.buffer = buffer;
+public class LImage extends AbstractData {
+  protected RenderedImage img;
+  public LImage(RenderedImage img) {
+    this.img = img;
   }
 
-  @Override
-  public byte[] getBuffer() {
-    return buffer;
+
+  public RenderedImage getRenderedImage() {
+    return img;
   }
-  
-  
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>inside.dumpster</groupId>
+    <artifactId>InsideDumpster</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>OutsideDumpster</module>
+        <module>Backend</module>
+        <module>BusinessLogic</module>
+        <module>WebClient</module>
+        <module>Client</module>
+        <module>CliClient</module>
+        <module>MicronautServer</module>
+        <module>JettyServer</module>
+        <module>Monitoring-JDK17</module>
+    </modules>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+</project>

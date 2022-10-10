@@ -5,6 +5,8 @@ package inside.dumpster.jackrabbit;
 
 import inside.dumpster.bl.BusinessLogicException;
 import inside.dumpster.bl.BusinessLogicService;
+import inside.dumpster.outside.Bug;
+import inside.dumpster.outside.Buggy;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -22,6 +24,7 @@ import java.util.logging.Logger;
  * 
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
+@Buggy(because="it uses a bytebuffer that isn't freed")
 public class JackRabbitService extends BusinessLogicService<JackRabbitPayload, JackRabbitResult> {
     private static final Logger logger = Logger.getLogger(JackRabbitService.class.getName());
     private static final List<JackRabbitResult> jackRabbitCache = new CopyOnWriteArrayList<>();
@@ -29,7 +32,6 @@ public class JackRabbitService extends BusinessLogicService<JackRabbitPayload, J
   public JackRabbitService(Class<JackRabbitPayload> type, Class<JackRabbitResult> type1) {
     super(type, type1);
   }
-    
     @Override
     public JackRabbitResult invoke(JackRabbitPayload payload) throws BusinessLogicException {
         final String jackRabbitName;
@@ -41,14 +43,19 @@ public class JackRabbitService extends BusinessLogicService<JackRabbitPayload, J
         
         InputStream is = payload.getInputStream();
         final int numOfBytes = payload.getDstBytes();
-        final ByteBuffer bb = allocateStorage(numOfBytes);
+        final ByteBuffer bb;
+        if(Bug.isBuggy(this)) {
+          bb = allocateDirectByteBuffer(numOfBytes);
+        } else {
+          bb = ByteBuffer.wrap(new byte[numOfBytes]);
+        }
         
         String content = "";
         int index = 0;
         if(is != null) {
           do {
             try {
-              bb.put(is.readAllBytes());
+              bb.put(is.readNBytes(numOfBytes));
               index += content.getBytes().length;
               content =  bb.toString();
             } catch (IOException ex) {
@@ -71,7 +78,7 @@ public class JackRabbitService extends BusinessLogicService<JackRabbitPayload, J
         return result;
     }
     
-    private ByteBuffer allocateStorage(int size) {
+    private ByteBuffer allocateDirectByteBuffer(int size) {
         ByteBuffer directBuffer = ByteBuffer.allocateDirect(size);
         return directBuffer;
     }

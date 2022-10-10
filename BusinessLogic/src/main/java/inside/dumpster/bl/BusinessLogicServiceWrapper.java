@@ -3,6 +3,8 @@
  */
 package inside.dumpster.bl;
 
+import inside.dumpster.bl.auth.Authenticator;
+import inside.dumpster.bl.auth.User;
 import inside.dumpster.client.Payload;
 import inside.dumpster.client.Result;
 import inside.dumpster.client.impl.Helper;
@@ -20,8 +22,8 @@ import java.util.UUID;
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
 public class BusinessLogicServiceWrapper<P extends Payload, R extends Result> {
-
-  public BusinessLogicService<P, R> service;
+  private final Authenticator authenticator = new Authenticator();
+  private final BusinessLogicService<P, R> service;
 
   BusinessLogicServiceWrapper(BusinessLogicService<P, R> service) {
     this.service = service;
@@ -35,7 +37,7 @@ public class BusinessLogicServiceWrapper<P extends Payload, R extends Result> {
    */
   public R invoke(Payload payload) throws BusinessLogicException {
     payload.setTransactionId(UUID.randomUUID().toString());
-    
+    User user = authenticator.getLoggedInUser();
     ServiceInvocation serviceInvocation = new ServiceInvocation();
     serviceInvocation.serviceClass = service.getClass();
     serviceInvocation.registerPayloadData(payload);

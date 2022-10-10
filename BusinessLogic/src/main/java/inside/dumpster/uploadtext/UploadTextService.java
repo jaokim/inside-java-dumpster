@@ -3,15 +3,20 @@
  */
 package inside.dumpster.uploadtext;
 
+import inside.dumpster.backend.repository.StoredData;
+import inside.dumpster.backend.repository.TextRepository;
+import inside.dumpster.backend.repository.data.Text;
 import inside.dumpster.bl.BusinessLogicException;
 import inside.dumpster.bl.BusinessLogicService;
 import inside.dumpster.monitoring.event.DataUpload;
+import static java.awt.SystemColor.text;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static org.apache.commons.lang3.CharSetUtils.count;
 
 /**
  *
@@ -23,92 +28,40 @@ public class UploadTextService extends BusinessLogicService<UploadTextPayload, U
     super(payloadClass, resultClass);
   }
   
+  
   @Override
   public UploadTextResult invoke(UploadTextPayload payload) throws BusinessLogicException {
-    DataUpload uploadEvent = new DataUpload();
+
+    final DataUpload uploadEvent = new DataUpload();
     uploadEvent.transactionId = payload.getTransactionId();
     uploadEvent.datatype = "Text";
     uploadEvent.srcDevice = payload.getSrcDevice();
-    uploadEvent.size = payload.getDstBytes();
-    uploadEvent.begin();
-
-    if(payload.getInputStream() == null) {
-      // nothing to do
-      return null;
-    }
+  
+    final UploadTextResult res = new UploadTextResult();
     
-    UploadTextResult result;
-    if(System.getProperty("inside.dumpster.UploadText.bug", "true").equals("true")) {
-      result = doItDumb(payload);
-    } else {
-      result = doItNotSoDumb(payload);
+    try {
+      uploadEvent.begin();
+      
+      final InputStream input = payload.getInputStream();
+      
+      if(input != null) {
+        TextRepository repo = new TextRepository();
+        Text textData = new Text(input);
+        StoredData data = repo.storeData(textData);
+        uploadEvent.size = data.getLength();
+        res.setResult(String.valueOf(data.getLength()));
+      } else {
+        uploadEvent.size = -1;
+        res.setResult("nodata");
+      }
+      
+    } catch (IOException ex) {
+      ex.printStackTrace();
+      res.setResult(ex.getMessage());
+      throw new BusinessLogicException(ex);
     }
-        
     uploadEvent.end();
     uploadEvent.commit();
-    return result;
+    return res;
   }
-  
-  private UploadTextResult doItDumb(UploadTextPayload payload) {
-    UploadTextResult result = new UploadTextResult();
-    InputStream input = payload.getInputStream();
-    
-    
-    int numberOfChunks = Integer.parseInt(payload.getDstPackets());
-    String[] array = new String[numberOfChunks];
-    try (BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
-      for (int i = 0; i<numberOfChunks;  i++) {
-        array[i] = new String();
-      }
-      String line = reader.readLine();
-      while (line != null) {
-        int linePos = 0;
-      
-        for (int i = 0; i<numberOfChunks;  i++) {
-         array[i] = array[i] + line.substring(linePos, linePos+1);
-         linePos++;
-         if(linePos >= line.length()) {
-           break;
-         }
-        }
-        line = reader.readLine();
-      } 
-
-      
-    } catch (IOException ex) {
-      Logger.getLogger(UploadTextService.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    return result;
-  }
-  private UploadTextResult doItNotSoDumb(UploadTextPayload payload) {
-    UploadTextResult result = new UploadTextResult();
-    InputStream input = payload.getInputStream();
-    
-    int numberOfChunks = Integer.parseInt(payload.getDstPackets());
-    StringBuilder[] array = new StringBuilder[numberOfChunks];
-    try (BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
-      for (int i = 0; i<numberOfChunks;  i++) {
-        array[i] = new StringBuilder();
-      }
-      String line = reader.readLine();
-      while (line != null) {
-        int linePos = 0;
-      
-        for (int i = 0; i<numberOfChunks;  i++) {
-         array[i].append(line.substring(linePos, linePos+1));
-         linePos++;
-         if(linePos >= line.length()) {
-           break;
-         }
-        }
-        line = reader.readLine();
-      } 
-
-      
-    } catch (IOException ex) {
-      Logger.getLogger(UploadTextService.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    return result;
-  }
-  
 }

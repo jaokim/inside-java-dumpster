@@ -8,6 +8,9 @@ import inside.dumpster.client.Payload.Destination;
 import inside.dumpster.client.Result;
 import inside.dumpster.eldorado.ElDoradoPayload;
 import inside.dumpster.eldorado.ElDoradoService;
+import inside.dumpster.energy.EnergyPayload;
+import inside.dumpster.energy.EnergyResult;
+import inside.dumpster.energy.EnergyService;
 import inside.dumpster.jackrabbit.JackRabbitPayload;
 import inside.dumpster.jackrabbit.JackRabbitResult;
 import inside.dumpster.jackrabbit.JackRabbitService;
@@ -56,7 +59,9 @@ public class BusinessLogicFactory {
       ServiceCall serviceCallEvent = new ServiceCall();
       serviceCallEvent.destination = destination;
       switch(destination) {
-          case "Comp0":
+          case "IP5":
+          case "Comp3":
+          case "Comp9":
               service = new UploadTextService(UploadTextPayload.class, UploadTextResult.class);
               break;
           case "Comp1":
@@ -65,6 +70,10 @@ public class BusinessLogicFactory {
           case "Comp2":
               service = new JackRabbitService(JackRabbitPayload.class, JackRabbitResult.class);
               break;
+          case "Comp0":
+              service = new EnergyService(EnergyPayload.class, EnergyResult.class);
+              break;
+          case "Comp8":
           case "Comp7":
               service = new UploadImageService(UploadImagePayload.class, UploadImageResult.class);
               break;

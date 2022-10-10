@@ -22,10 +22,14 @@ public class ServiceInvocation extends TransactionEvent {
   public String protocol;
   @Name("DestPort")
   public String dstPort;
-  @Name("SrcDevice")
-  public String srcDevice;
-  @Name("SrcDeviceId")
-  public String srcDeviceId;
+  @Name("Dst Packets")
+  public String dstPackets;
+  @Name("Dst Bytes")
+  public int dstBytes;
+  @Name("Src Packets")
+  public String srcPackets;
+  @Name("Src Bytes")
+  public int srcBytes;
   @Name("ServiceClass")
   public Class<? extends BusinessLogicService> serviceClass;
   
@@ -38,8 +42,10 @@ public class ServiceInvocation extends TransactionEvent {
     super.registerPayloadData(payload);
     this.protocol = payload.getProtocol();
     this.dstPort = payload.getDstPort();
-    this.srcDevice = payload.getSrcDevice();
-    this.srcDeviceId = payload.getSrcDeviceId();
+    this.dstPackets = payload.getDstPackets();
+    this.dstBytes = payload.getDstBytes();
+    this.srcPackets = payload.getSrcPackets();
+    this.srcBytes = payload.getSrcBytes();
     
   }
 }

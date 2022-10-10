@@ -4,7 +4,8 @@
 package inside.dumpster.uploadimage;
 
 import inside.dumpster.backend.Backend;
-import inside.dumpster.backend.repository.data.Id;
+import inside.dumpster.backend.repository.StoredData;
+import inside.dumpster.backend.repository.data.LImage;
 import inside.dumpster.bl.BusinessLogicException;
 import inside.dumpster.bl.BusinessLogicService;
 import inside.dumpster.monitoring.event.DataProcessing;
@@ -71,12 +72,12 @@ public class UploadImageService extends BusinessLogicService<UploadImagePayload,
       }
       processEvent.commit();
       
-      Id id = backend.getImageRepository().storeData(image);
+      StoredData data = backend.getImageRepository().storeData(new LImage(image));
       
       UploadImageResult result = new UploadImageResult();
-      result.setResult(id.toString());
+      result.setResult(data.getId().toString());
       
-      uploadEvent.id = id.toString();
+      uploadEvent.id = data.getId().toString();
       uploadEvent.end();
       uploadEvent.commit();
       return result;

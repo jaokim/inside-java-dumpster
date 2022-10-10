@@ -11,5 +11,11 @@ public class BusinessLogicException extends Exception {
 
     public BusinessLogicException() {
     }
+    public BusinessLogicException(String message, Exception e) {
+      super(message, e);
+    }
+    public BusinessLogicException(Exception e) {
+      super(e);
+    }
     
 }
