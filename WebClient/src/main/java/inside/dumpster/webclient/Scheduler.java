@@ -3,9 +3,10 @@
  */
 package inside.dumpster.webclient;
 
-import inside.dumpster.client.Payload;
-import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -18,46 +19,42 @@ import java.util.logging.Logger;
  */
 public class Scheduler {
 
-  private static final Logger logger = Logger.getLogger(PostRequest.class.getName());
+  private static final Logger logger = Logger.getLogger("WebClient");
 
-  static long totalCount = 0;
-  final static Object lock = new Object();
+  private static long totalCount = 0;
+  private final static Object lock = new Object();
   ScheduledThreadPoolExecutor threadPool = new ScheduledThreadPoolExecutor(20);
-  final long start = System.currentTimeMillis();
+  /** Start in milliseconds. */
+  final long start;
   long count = 0;
   boolean debug;
-  private final long firsttimeFromLog;
-  private static String baseURI;
-
+  private final long timeForFirstRequest;
+  private final String baseURI;
+  private long lastlogtime = -1;
+  private Duration durationToPostRequests;
   public Scheduler(String baseUri, long firsttime) {
-    baseURI = baseUri;
-    this.firsttimeFromLog = firsttime;
+    this(baseUri, firsttime, false);
   }
 
   public Scheduler(String baseUri, long firsttime, boolean debug) {
-    this.firsttimeFromLog = firsttime;
-    baseURI = baseUri;
+    this.timeForFirstRequest = firsttime * 1000;
+    this.baseURI = baseUri;
     this.debug = debug;
+    this.start = System.nanoTime() / 1_000_000;
+    if(durationToPostRequests != null) {
+      logger.info("Running for a duration of "+durationToPostRequests.getSeconds() + "s");
+    }
   }
+  
 
-  static String log(String s) {
-    System.out.println(s);
-    return s;
+  public void setDuration(Duration duration) {
+    this.durationToPostRequests = duration;
   }
-
+  
   public void scheduleNetworkRequest(final HttpPayload req) {
+    final Runnable runner;
     req.setBaseURI(baseURI);
-    long delayFromFirstLog = req.getTime() - firsttimeFromLog;
-    long now = System.currentTimeMillis();
-
-    long offset = now - start;
-
-    long delay = offset - delayFromFirstLog;
-
-    //System.out.println(String.format("dff: %d offset: %d  delay: %d", delayFromFirstLog, offset, delay));
-    delay = delay / 10;
-    long time = System.currentTimeMillis() + (delay);
-    Runnable runner;
+    
     if (!debug) {
       runner = new NetworkRequestRunnable(req);
     } else {
@@ -68,38 +65,51 @@ public class Scheduler {
         }
       };
     }
+    
+    if(lastlogtime == -1) {
+      lastlogtime = req.getTime() * 1000;
+    }
+    final long timeForThisRequest = req.getTime() * 1000;
+    final long now = System.nanoTime() / 1_000_000;
 
+    
+    final long delayFromFirstRequest = timeForThisRequest - timeForFirstRequest;
+    final long fromNow = delayFromFirstRequest + start;
+    long delayFromStart = now - start;
+    long delay = delayFromFirstRequest - delayFromStart;
+    delay = delay / 100;
+    
+    lastlogtime = req.getTime();
+    
+    long time = now + (delay);
     ScheduledFuture future = threadPool.schedule(runner, delay, TimeUnit.MILLISECONDS);
+    Duration currentDuration = Duration.ofMillis(delayFromStart);
 
-    // if (count % 100 == 0) {
-    System.out.println(future.toString() + "Scheduled for: " + delay + " -> " + new Date(time) + ", now: " + new Date().toString());
-    //}
     count++;
     int thrCount = threadPool.getQueue().size();
     synchronized (lock) {
       while (thrCount >= 50) {
         try {
+          if(durationToPostRequests != null) {
+            if(durationToPostRequests.minus(currentDuration).isNegative()) {
+              logger.warning("The time to end has come, not processing more log lines.");
+              threadPool.awaitTermination(30, TimeUnit.SECONDS);
+              List leftRunnables = threadPool.shutdownNow();
+              logger.warning(String.format("There were %d requests posted that won't be executed", leftRunnables.size()));
+              logger.info(String.format("There were %d requests made during the %d s duration", count, currentDuration.getSeconds()));
+              System.exit(0);
+            }
+          }
           lock.wait(200);
           thrCount = threadPool.getQueue().size();
         } catch (InterruptedException ex) {
-          Logger.getLogger(PerformRequests.class.getName()).log(Level.SEVERE, null, ex);
+          logger.log(Level.SEVERE, null, ex);
         }
       }
     }
-    logger.info("Queue:" + threadPool.getQueue().size() + ", total count: " + ++totalCount);
-//        threadPool.shutdown();
+    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+    logger.warning(String.format("Queue: %d, %s, duration left: %d s", threadPool.getQueue().size(), sdf.format(new Date(time)), durationToPostRequests.minus(currentDuration).getSeconds()));
+//    logger.info("Queue: " + sdf.format(new Date(timeForThisRequest)) + ", next: " + sdf.format(new Date(time))+ ", exper: " + sdf.format(new Date(now + myDelay)) + ", delay: "+delay + ", q.size: "+ threadPool.getQueue().size() + ", total count: " + ++totalCount + 
+//            ", nt:"+ sdf.format(new Date(newtime)) + ", nd: "+newDelay);
   }
-
-//    static long calculateDelay(long startOfTime, long timestamp, TimeUnit timeUnit) {
-//        long delay;
-//        //long now = System.nanoTime();
-//        switch(timeUnit) {
-//            case NANOSECONDS:
-//                delay = (timestamp - startOfTime)/1000;
-//                break;
-//            default:
-//                throw new IllegalStateException("Unsupported timeunit: "+timeUnit.name());
-//        }
-//        return delay;
-//    }
 }

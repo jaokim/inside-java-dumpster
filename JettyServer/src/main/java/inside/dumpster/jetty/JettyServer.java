@@ -3,6 +3,7 @@
  */
 package inside.dumpster.jetty;
 
+import inside.dumpster.outside.Bug;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -19,6 +20,7 @@ public class JettyServer {
     this.port = port;
   }
   public void start() throws Exception {
+    Bug.registerMXBean();
     server = new Server();
     ServerConnector connector = new ServerConnector(server);
     connector.setPort(port);

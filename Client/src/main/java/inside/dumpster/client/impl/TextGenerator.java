@@ -20,6 +20,7 @@ public class TextGenerator {
     while(builder.length() < sentences) {
       fact = faker.chuckNorris().fact();
       builder.append(fact);
+      builder.append("\n");
     }
     InputStream is = new ByteArrayInputStream(builder.toString().getBytes());
     return is;

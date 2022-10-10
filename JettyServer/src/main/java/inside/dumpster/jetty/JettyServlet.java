@@ -10,10 +10,14 @@ import com.google.gson.GsonBuilder;
 import inside.dumpster.bl.BusinessLogicException;
 import inside.dumpster.bl.BusinessLogicFactory;
 import inside.dumpster.bl.BusinessLogicServiceWrapper;
+import inside.dumpster.bl.auth.Authenticator;
+import inside.dumpster.bl.auth.UnauthorizedException;
 import inside.dumpster.client.Payload;
 import inside.dumpster.client.Payload.Destination;
 import inside.dumpster.client.Result;
+import inside.dumpster.client.impl.PayloadHelper;
 import java.io.IOException;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -26,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
 public class JettyServlet extends HttpServlet {
+  private final Authenticator authenticator = new Authenticator();
   private final BusinessLogicFactory factory = new BusinessLogicFactory();
   
   @Override
@@ -33,11 +38,11 @@ public class JettyServlet extends HttpServlet {
           HttpServletRequest request,
           HttpServletResponse response)
           throws ServletException, IOException {
-
-    String destination = request.getPathInfo();
-    response.setContentType("application/json");
-    response.setStatus(HttpServletResponse.SC_OK);
-    response.getWriter().println("{ \"status\": \"ok\"}");
+    doPost(request, response);
+//    String destination = request.getPathInfo();
+//    response.setContentType("application/json");
+//    response.setStatus(HttpServletResponse.SC_OK);
+//    response.getWriter().println("{ \"status\": \"ok\"}");
   }
   @Override
   protected void doPost(
@@ -46,7 +51,10 @@ public class JettyServlet extends HttpServlet {
           throws ServletException, IOException {
 
     try {
-      String destination = request.getPathInfo().substring(1);
+      authenticator.authenticateUser(request.getAuthType(), UUID.randomUUID().toString(), request.getUserPrincipal(), new Object(), request.getParameterMap());
+      String pathinfo = request.getPathInfo().substring(1);
+      String destination = PayloadHelper.getDestination(pathinfo);
+      System.out.println("Dest: "+destination);
       Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
              @Override
              public boolean shouldSkipField(FieldAttributes f) {
@@ -65,14 +73,20 @@ public class JettyServlet extends HttpServlet {
              }
           }).create();
       BusinessLogicServiceWrapper<? extends Payload, ? extends Result> service = 
-              factory.getServiceWrapper(new Destination(destination));
-      Payload payload = gson.fromJson(request.getReader(), Payload.class);
+              factory.lookupService(new Destination(destination));
+      Payload payload = new Payload();//gson.fromJson(request.getReader(), Payload.class);
+      payload = PayloadHelper.fillPayloadFromURI(payload, pathinfo);
+      payload.setInputStream(request.getInputStream());
       Result result = service.invoke(payload);
       
       response.setContentType("application/json");
-      response.setStatus(HttpServletResponse.SC_OK);
+      
+//      response.setStatus(HttpServletResponse.SC_OK);
+System.out.println("response:"+result.getResult());
       response.getWriter().write(gson.toJson(result));
     } catch (BusinessLogicException ex) {
+      Logger.getLogger(JettyServlet.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (UnauthorizedException ex) {
       Logger.getLogger(JettyServlet.class.getName()).log(Level.SEVERE, null, ex);
     }
   }

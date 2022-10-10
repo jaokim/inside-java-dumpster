@@ -20,7 +20,7 @@ public class PerformOneRequest {
     PostRequest pr = new PostRequest("http://localhost:8081/");
 
     data.getStream().filter((t) -> {
-      System.out.print("Press enter for new req.");
+      System.out.println("Press enter for new req.");
       try {
         System.in.read();
       } catch (IOException ex) {
