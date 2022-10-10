@@ -10,36 +10,41 @@ Some motivations behind the project:
 * create life-like JFR event examples, to not only create "TestEvent" and the likes
 * has different web application servers (Micronaut, Jetty, will add WLS) in order to test where f.i. JFR VM properties are set
 
+### Overview
 
 ```mermaid
 flowchart TD
   nf([netflow_data logs]) --- Client
-  WebClient --> webapps
-  CliClient --> BusinessLogic
+  WebClient --> appserver
+  CliClient --> backend
   subgraph client
     Client --> WebClient
     Client --> CliClient
   end
-  subgraph webapps
-    JettyServer -->  BusinessLogic
-    MicronautServer --> BusinessLogic
+  subgraph container
+  subgraph appserver
+    JettyServer
+    MicronautServer
   end
+  appserver --> backend
   subgraph backend
     BusinessLogic --- bd[(Backend)]
   end
+  end
+  style container fill:#c3a64724
+  click Client "https://github.com/jaokim/inside-java-dumpster/tree/main/Client"
+  click nf "https://github.com/jaokim/inside-java-dumpster/tree/main/Client"
+  click WebClient "https://github.com/jaokim/inside-java-dumpster/tree/main/WebClient"
+  click CliClient "https://github.com/jaokim/inside-java-dumpster/tree/main/CliClient"
+  click BusinessLogic "https://github.com/jaokim/inside-java-dumpster/tree/main/BusinessLogic"
+  click bd "https://github.com/jaokim/inside-java-dumpster/tree/main/Backend"
+  click MicronautServer "https://github.com/jaokim/inside-java-dumpster/tree/main/MicronautServer"
+  click JettyServer "https://github.com/jaokim/inside-java-dumpster/tree/main/JettyServer"
 ```
 
-```mermaid
-classDiagram
-Client <|-- WebClient
-Client <|-- CliClient
-JettyServer --  BusinessLogic
-MicronautServer -- BusinessLogic
-WebClient --> JettyServer
-WebClient --> MicronautServer
-CliClient --> BusinessLogic
-BusinessLogic -- Backend
-```
+
+
+
 
 If you're looking for code for my [old blog posts at inside.java](https://inside.java/u/JoakimNordstrom/), go look in the [tag inside.java](https://github.com/jaokim/inside-java-dumpster/tree/inside.java)
 
