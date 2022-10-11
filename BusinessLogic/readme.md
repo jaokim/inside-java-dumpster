@@ -15,7 +15,7 @@ flowchart LR
 ```
 
 ## Adding new BusinessLogic Service
-For a new Business Logic service you need three classes. Imagine the exmaple service "EnergyService"
+For a new Business Logic service you need three classes. Imagine the example service "EnergyService"
 * EnergyService extends BusinessLogicService
 * EnergyPayload extends Payload
 * EnergyResult extends Result
