@@ -42,10 +42,35 @@ flowchart TD
   click JettyServer "https://github.com/jaokim/inside-java-dumpster/tree/main/JettyServer"
 ```
 
+## An example test-run
+Preferable you'd want a remote machine to run the server JVM on, but it works with an all local setup.
+* You need atleast JDK17.
+
+Check out all the code and build using Maven (I might supply pre-built binairies at some point).
+Start two terminals (has been tested on cygwin). 
+
+In terminal 1, start the Micronaut Webserver
+```
+sh ./runmicronaut.sh
+```
+
+In terminal 2, start JConsole and connnect to the Micronaut JVM
+```
+jconsole &
+```
+Then, start the webclient script to create network requests.
+```
+sh runwebclient.sh
+```
+
+The runwebclient script first starts a delayed JFR recording for 60 seconds, and then produces network request for atleaset 60 seconds.
+When done, the webclient should stop, and you should have a JFR recording to analyze (or a crashlog!).
+
+### Excercise 1
+Find out which service is the slowest, and why. When you've found the liely culprit, set it as non-buggy in JConsole, and do another test run.
 
 
-
-
+---
 If you're looking for code for my [old blog posts at inside.java](https://inside.java/u/JoakimNordstrom/), go look in the [tag inside.java](https://github.com/jaokim/inside-java-dumpster/tree/inside.java)
 
 
