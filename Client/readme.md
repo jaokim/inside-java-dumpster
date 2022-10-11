@@ -38,34 +38,6 @@ The Client parses the log and creates a [Payload](src/main/java/inside/dumpster/
 * The Destination decides which service in the BusinessLogic layer should handle the payload.
 * Besides all columns from a logline, the payload can have a body of data attached to it. The kind of data is decided based on the destination; this can be text data, image data, or something else. See [PaylodDataGenerator](src/main/java/inside/dumpster/client/impl/PayloadDataGenerator.java).
 
-```mermaid
-flowchart LR
-    C[Client] -->|parse logline| P(Payload)
-    P --> WC[WebClient]
-    P --> CC[CliClient]
-    WC -->Dest{PayloadDataGenerator}
-    CC -->Dest
-    Dest --> |Destination=Comp3|TB("Text body")
-    Dest --> |Destination=Comp4|IB("Image body")
-    Dest --> |Destination=IP5|EB("Empty body")
-    TB -->PL("Payload w body") 
-    IB -->PL
-    EB -->PL 
-```
-```mermaid
-flowchart LR
-  subgraph server
-    ABB --> BC[Jetty/Micronaut]
-    BC -->BusinessLogic
-    BusinessLogic -->|Destination| C{BusinessLogicFactory}
-    C -->|Comp3| D[UptempoService]
-    C -->|Comp4| E[DownvoteService]
-    C -->|IP5| F[BackpackService]
-    D --> GB[(Backend)]
-    E --> GB[(Backend)]
-    F --> GB[(Backend)]
-  end
-```
 ## Client implementations
 
 There are currently two clients available:
@@ -75,4 +47,23 @@ There are currently two clients available:
 The WebClient is designed to be used on one machine/JVM, with the BusinessLogic server running on another.
 The CliClient is only using one JVM to simulate the entire server environment.
 
+
+```mermaid
+flowchart LR
+    C[Client]:::project -->|parse logline| P(Payload)
+    P --> WC[WebClient]:::project
+    P --> CC[CliClient]:::project
+    WC -->Dest{PayloadDataGenerator}
+    CC -->Dest
+    Dest --> |Destination=Comp3|TB("Text body")
+    Dest --> |Destination=Comp4|IB("Image body")
+    Dest --> |Destination=IP5|EB("Empty body")
+    TB -->PL("Payload w body") 
+    IB -->PL
+    EB -->PL
+  classDef project fill:#f96;
+  click WC "../WebClient"
+  click CC "../CliClient"
+  click Dest "src/main/java/inside/dumpster/client/impl/PayloadDataGenerator.java"
+```
 
