@@ -16,9 +16,9 @@ flowchart TD
   subgraph server
     BusinessLogic 
   end
-  click WebClient "../WebClient"
-  click CliClient "../CliClient"
-  click BusinessLogic "../BusinessLogic"
+  click WebClient "./../WebClient"
+  click CliClient "./../CliClient"
+  click BusinessLogic "./../BusinessLogic"
 ```
 
 ## Input data
