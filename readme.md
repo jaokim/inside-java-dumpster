@@ -6,9 +6,9 @@ The code here tries to mimic a relatively likely production system. The mimiced 
 Disclaimer: This code contains both subtle and not so subtle bugs -- that is its purpose.
 
 ### Motivations and objective
+* produce JFR events to learn JMC
 * life-like env. to set JFR properties and arguments to get away from simple examples like:
      `java -XX:StartFlightRecording Example.java`
-* produce JFR events to learn JMC
 * reproducible executions; requests to the application are created from actual log files
 * recreate bugs or weird behaviour
 * has different web application servers (Micronaut, Jetty, will add WLS) in order to test where f.i. JFR VM properties are set
