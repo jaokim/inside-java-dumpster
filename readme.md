@@ -7,7 +7,7 @@ Disclaimer: This code contains both subtle and not so subtle bugs -- that is its
 
 ### Motivations and objective
 * life-like env. to set JFR properties and arguments to get away from simple examples like:
-     `java -XX:StartFlightRecording Example`
+     `java -XX:StartFlightRecording Example.java`
 * produce JFR events to learn JMC
 * reproducible executions; requests to the application are created from actual log files
 * recreate bugs or weird behaviour
