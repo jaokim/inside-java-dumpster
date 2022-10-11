@@ -33,12 +33,12 @@ The input data comes from the [Unified Host and Network Data Set](https://csr.la
 |118785|262319|IP5|IP564116|Comp141988|17|5060|5060|28257|0|23149303|0|
 |118843|28287|Comp3|Comp364445|Comp870517|17|Port68697|Port28366|5445|6438|457380|592296|
 
-The Client parses the log and creates a [Payload](src/main/java/inside/dumpster/client/Payload.java) for each row
+The Client parses the log and creates a [Payload](./src/main/java/inside/dumpster/client/Payload.java) for each row
 * The payload has a [Destination](https://github.com/jaokim/inside-java-dumpster/blob/main/Client/src/main/java/inside/dumpster/client/Payload.java#L37) which is based on the Src Device. 
 * The Destination decides which service in the BusinessLogic layer should handle the payload.
-* Besides all columns from a logline, the payload can have a body of data attached to it. The kind of data is decided based on the destination; this can be text data, image data, or something else. See [PaylodDataGenerator](src/main/java/inside/dumpster/client/impl/PayloadDataGenerator.java).
+* Besides all columns from a logline, the payload can have a body of data attached to it. The kind of data is decided based on the destination; this can be text data, image data, or something else. See [PaylodDataGenerator](./src/main/java/inside/dumpster/client/impl/PayloadDataGenerator.java).
 
-:grey_exclamation: If a BusinessLogic service consumes a certain type of data, a mapping has to be added in the [PaylodDataGenerator](src/main/java/inside/dumpster/client/impl/PayloadDataGenerator.java).
+:grey_exclamation: If a BusinessLogic service consumes a certain type of data, a mapping has to be added in the [PaylodDataGenerator](./src/main/java/inside/dumpster/client/impl/PayloadDataGenerator.java).
 
 ## Client implementations
 
@@ -66,5 +66,5 @@ flowchart LR
   classDef project fill:#f96;
   click WC "../WebClient"
   click CC "../CliClient"
-  click Dest "src/main/java/inside/dumpster/client/impl/PayloadDataGenerator.java"
+  click Dest "./src/main/java/inside/dumpster/client/impl/PayloadDataGenerator.java"
 ```
