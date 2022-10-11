@@ -67,7 +67,7 @@ The runwebclient script first starts a delayed JFR recording for 60 seconds, and
 When done, the webclient should stop, and you should have a JFR recording to analyze (or a crashlog!).
 
 ### Excercise 1
-Find out which service is the slowest, and why. When you've found the liely culprit, set it as non-buggy in JConsole, and do another test run.
+Find out which service is the slowest, and why. When you've found the likely culprit, set it as non-buggy in JConsole, and do another test run.
 
 
 ---
