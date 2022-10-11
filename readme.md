@@ -21,6 +21,15 @@ Disclaimer: This code contains both subtle and not so subtle bugs -- that is its
 * JFR remote recording stream to containerized servers
 * create multi-JDK environments (JDK8 combined with JDK17)
 
+> #### Hands-on-lab suggestion
+> The aim of this hands-on-lab is to expose the attendee to the monitoring and troubleshooting tools available in any vanilla JDK. A real-world-like sandbox business application is used to allow exploration in a safe environment with examples resembling real issues encountered in Java applications. After completing this lab you'll be able to:
+>
+> * Remotely monitor and control a live Java application
+> * Configure Java Flight Recorder for different tasks
+> * Diagnose applications using JDK Flight Recorder and JDK Mission Control
+> * Examine HotSpot crashlogs
+
+
 ## Overview
 
 ```mermaid
