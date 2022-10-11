@@ -16,9 +16,9 @@ flowchart TD
   subgraph server
     BusinessLogic 
   end
-  click WebClient "./../WebClient"
-  click CliClient "./../CliClient"
-  click BusinessLogic "./../BusinessLogic"
+  click WebClient "https://github.com/jaokim/inside-java-dumpster/tree/main/BusinessLogic/WebClient"
+  click CliClient "https://github.com/jaokim/inside-java-dumpster/tree/main/BusinessLogic/CliClient"
+  click BusinessLogic "https://github.com/jaokim/inside-java-dumpster/tree/main/BusinessLogic"
 ```
 
 ## Input data
@@ -64,7 +64,5 @@ flowchart LR
     IB -->PL
     EB -->PL
   classDef project fill:#f96;
-  click WC "../WebClient"
-  click CC "../CliClient"
   click Dest "./src/main/java/inside/dumpster/client/impl/PayloadDataGenerator.java"
 ```
