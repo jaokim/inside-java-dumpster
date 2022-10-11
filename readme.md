@@ -1,5 +1,3 @@
-Accompanying code for my blog [jaokim.github.io](https://jaokim.github.io/).
-
 # Introduction
 The code here tries to mimic a relatively likely production system. The mimiced system is supposed contain a plethora of bugs, anti-patterns, memory hogs, oddities, performance issues and in general be less than ideal. It serves as a sandbox, or playground to demonstrate how to troubleshoot various issues.
 
@@ -33,7 +31,7 @@ sequenceDiagram
 :heavy_exclamation_mark: Disclaimer: This code contains both subtle and not so subtle bugs -- that is its purpose.
 
 ## Motivations and objective
-* produce JFR events to learn JMC
+* produce JFR events, to learn JMC and try out stuff
 * life-like env. to set JFR properties and arguments to get away from simple examples like:
      `java -XX:StartFlightRecording Example.java`
 * reproducible executions; requests to the application are created from actual log files
