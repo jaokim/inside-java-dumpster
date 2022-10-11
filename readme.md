@@ -90,9 +90,9 @@ The diagram above gives a context for most of the components involved. There is 
 ```mermaid
 flowchart LR
   subgraph Client [Client terminal]
-    JConsole
-    jcmd["jcmd JFR.start"]
     WebClient["webclient http://jvm/business/"]
+    jcmd["jcmd JFR.start"]
+    JConsole
   end
   subgraph Server [Server terminal]
     subgraph JVM
