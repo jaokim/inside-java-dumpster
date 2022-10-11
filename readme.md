@@ -5,12 +5,23 @@ The code here tries to mimic a relatively likely production system. The mimiced 
 
 Disclaimer: This code contains both subtle and not so subtle bugs -- that is its purpose.
 
-Some motivations behind the project:
+### Motivations and objective
+* life-like env. to set JFR properties and arguments to get away from simple examples like:
+     `java -XX:StartFlightRecording Example`
+* produce JFR events to learn JMC
 * reproducible executions; requests to the application are created from actual log files
-* create life-like JFR event examples, to not only create "TestEvent" and the likes
+* recreate bugs or weird behaviour
 * has different web application servers (Micronaut, Jetty, will add WLS) in order to test where f.i. JFR VM properties are set
 
-### Overview
+### Possible scenarios
+* crash "randomly" for learning purposes -- not just `java Crash.java` 
+* find memory leaks
+* create life-like JFR event examples, to not only create "TestEvent" and the likes
+* using JConsole to remote JVM via ssh tunneling
+* JFR remote recording stream to containerized servers
+* create multi-JDK environments (JDK8 combined with JDK17)
+
+## Overview
 
 ```mermaid
 flowchart TD
