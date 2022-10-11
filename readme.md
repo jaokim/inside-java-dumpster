@@ -58,17 +58,17 @@ flowchart TD
   nf([netflow_data logs]) --- Client
   WebClient --> appserver
   CliClient --> backend
-  subgraph client (Client Components)
+  subgraph client [Client Components]
     Client --> WebClient
     Client --> CliClient
   end
-  subgraph container (Server Components)
-  subgraph appserver
+  subgraph container [Server Components]
+  subgraph appserver [Application Servers]
     JettyServer
     MicronautServer
   end
   appserver --> backend
-  subgraph backend
+  subgraph backend [Backend]
     BusinessLogic --- bd[(Backend)]
   end
   end
@@ -86,6 +86,26 @@ flowchart TD
 The diagram above gives a context for most of the components involved. There is however also the [OutsideDumpster](https://github.com/jaokim/inside-java-dumpster/tree/main/OutsideDumpster) which is included in each of the server components. This holds classes specific for the sandbox, and is used to aid in creating buggy behavior and disable/enable it in "production".
 
 # An example test-run
+
+```mermaid
+flowchart LR
+  subgraph Client [Client terminal]
+    JConsole
+    jcmd["jcmd JFR.start"]
+    WebClient["webclient http://jvm/business/"]
+  end
+  subgraph Server [Server terminal]
+    subgraph JVM
+      ApplicationServer
+      JFR
+    end
+  end
+  WebClient -->|request| ApplicationServer
+  jcmd -->|record| JFR
+  JConsole -->|control| JVM
+  style JVM fill:#e0e0e9dd
+```
+
 Preferable you'd want a remote machine to run the server JVM on, but it works with an all local setup.
 * You need atleast JDK17.
 
