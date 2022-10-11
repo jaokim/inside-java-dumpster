@@ -38,6 +38,8 @@ The Client parses the log and creates a [Payload](src/main/java/inside/dumpster/
 * The Destination decides which service in the BusinessLogic layer should handle the payload.
 * Besides all columns from a logline, the payload can have a body of data attached to it. The kind of data is decided based on the destination; this can be text data, image data, or something else. See [PaylodDataGenerator](src/main/java/inside/dumpster/client/impl/PayloadDataGenerator.java).
 
+:grey_exclamation: If a BusinessLogic service consumes a certain type of data, a mapping has to be added in the [PaylodDataGenerator](src/main/java/inside/dumpster/client/impl/PayloadDataGenerator.java).
+
 ## Client implementations
 
 There are currently two clients available:
@@ -66,4 +68,3 @@ flowchart LR
   click CC "../CliClient"
   click Dest "src/main/java/inside/dumpster/client/impl/PayloadDataGenerator.java"
 ```
-
