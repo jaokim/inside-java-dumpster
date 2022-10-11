@@ -10,8 +10,8 @@ flowchart TD
   Client --> client[ClientSide]
   Client --> server[ServerSide]
   subgraph client
-    WebClient
-    CliClient
+    WebClient[WebClient]
+    CliClient[CliClient]
   end
   subgraph server
     BusinessLogic 
