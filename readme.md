@@ -58,11 +58,11 @@ flowchart TD
   nf([netflow_data logs]) --- Client
   WebClient --> appserver
   CliClient --> backend
-  subgraph client
+  subgraph client (Client Components)
     Client --> WebClient
     Client --> CliClient
   end
-  subgraph container
+  subgraph container (Server Components)
   subgraph appserver
     JettyServer
     MicronautServer
