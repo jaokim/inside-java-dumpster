@@ -83,6 +83,8 @@ flowchart TD
   click JettyServer "https://github.com/jaokim/inside-java-dumpster/tree/main/JettyServer"
 ```
 
+The diagram above gives a context for most of the components involved. There is however also the [OutsideDumpster](https://github.com/jaokim/inside-java-dumpster/tree/main/OutsideDumpster) which is included in each of the server components. This holds classes specific for the sandbox, and is used to aid in creating buggy behavior and disable/enable it in "production".
+
 # An example test-run
 Preferable you'd want a remote machine to run the server JVM on, but it works with an all local setup.
 * You need atleast JDK17.
