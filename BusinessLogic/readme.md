@@ -47,3 +47,7 @@ In order for the service class to be called, it has to be mapped to a payload De
 ```
 
 If the service should consumes any data (apart from the standard payload data), it also has to be added to the Client [PayloadDataGenerator](https://github.com/jaokim/inside-java-dumpster/blob/main/Client/src/main/java/inside/dumpster/client/impl/PayloadDataGenerator.java) class. (This is subject to change.)
+
+## Adding bugs to the service
+
+Please see [OutsideDumpster](https://github.com/jaokim/inside-java-dumpster/tree/main/OutsideDumpster) for details on how to add bugs to your code.
