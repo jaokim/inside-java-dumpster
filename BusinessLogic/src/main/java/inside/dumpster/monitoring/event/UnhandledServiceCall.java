@@ -16,7 +16,6 @@ import jdk.jfr.Name;
 @Label("Unhandled Service Call")
 @Category({"Business Application", "Services"})
 public class UnhandledServiceCall extends Event {
-  @Name("Destination")
   @Label("Unhandled Service Destination")
   public String destination;
   
