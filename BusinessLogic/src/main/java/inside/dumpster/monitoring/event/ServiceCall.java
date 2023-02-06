@@ -16,13 +16,10 @@ import jdk.jfr.Name;
 @Label("Service Call")
 @Category({"Business Application", "Services"})
 public class ServiceCall extends Event {
-  @Name("Destination")
   @Label("Service Destination")
   public String destination;
   
-  @Name("Class")
+  @Name("serviceClass")
   @Label("Service Implementation Class")
   public Class serviceClass;
-
-  
 }
