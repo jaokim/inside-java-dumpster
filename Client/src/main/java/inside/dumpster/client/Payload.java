@@ -1,8 +1,9 @@
 /*
- * 
+ *
  */
 package inside.dumpster.client;
 
+import inside.dumpster.client.impl.PayloadHelper;
 import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,30 +16,77 @@ public class Payload {
   /**
    * The destination defines which service should handle a payload.
    */
-  public static class Destination {
-    private final String destination;
+  public enum Destination {
+      /**
+       * Around ~1600 requests.
+       */
+      Comp0,
+      /**
+       * Most requests. Around ~5900 requests.
+       */
+      Comp1,
+      /**
+       * Around ~1000 requests.
+       */
+      Comp2,
+      /**
+       * Around ~1200 requests.
+       */
+      Comp3,
+      /**
+       * Around ~1400 requests.
+       */
+      Comp4,
+      /**
+       * Around ~1000 requests.
+       */
+      Comp5,
+      /**
+       * Around ~1000 requests.
+       */
+      Comp6,
+      /**
+       * Around ~850 requests.
+       */
+      Comp7,
+      /**
+       * Around ~1500 requests.
+       */
+      Comp8,
+      /**
+       * Around ~2000 requests.
+       */
+      Comp9,
+      /**
+       * Only very few requests. In the order of 10.
+       */
+      ActiveDirectory,
+      /**
+       * Relatively few requests, but a burst of requests. Total ~1200 request,
+       * 1000 coming at the same time.
+       */
+      EnterpriseAppServer,
+      /**
+       * Few requests. Like 20.
+       */
+      IP,
+      /**
+       * Few requests. Like 20.
+       */
+      VPN,
+      Unknown;
 
-    public Destination(String destination) {
-      this.destination = destination;
-    }
-
-    @Override
-    public String toString() {
-      return destination;
-    }
-
-  };
-
-  /**
-   * The destination defines which service should handle this payload.
-   *
-   * @return a destination
-   */
-  public Destination getDestination() {
-    return new Destination(String.format("%s%s", getSrcDevice(), getSrcDeviceId() != null ?getSrcDeviceId().substring(0, 0):"0"));
+      public static Destination fromString(String dest) {
+        if(dest == null) return Unknown;
+        for(Destination d : Destination.values()) {
+          if(dest.startsWith(d.name())) return d;
+        }
+        return Unknown;
+      }
   }
-  
-  
+
+  private Destination destination;
+
   /**
    * The start time of the event in epoch time format
    */
@@ -51,12 +99,11 @@ public class Payload {
    * The device that likely initiated the event.
    */
   private String srcDevice;
-  private String srcDeviceId;
+
   /**
    * The receiving device.
    */
   private String dstDevice;
-  private String dstDeviceId;
   /**
    * The protocol number.
    */
@@ -89,15 +136,15 @@ public class Payload {
   private InputStream inputStream;
 
   private String transactionId;
-  
-  /** 
+
+  /**
    * Create an empty payload.
    */
   public Payload() {
   }
 
   /**
-   * Constructor for all payload values, as returned by the NetFlow data source. The order 
+   * Constructor for all payload values, as returned by the NetFlow data source. The order
    * of the string is the same as in the standard log file.
    * @param time
    * @param duration
@@ -109,15 +156,15 @@ public class Payload {
    * @param srcPackets
    * @param dstPackets
    * @param srcBytes
-   * @param dstBytes 
+   * @param dstBytes
    */
   public Payload(String time, String duration, String srcDevice, String dstDevice, String protocol, String srcPort, String dstPort, String srcPackets, String dstPackets, String srcBytes, String dstBytes) {
     this.setPayloadValues(time, duration, srcDevice, dstDevice, protocol, srcPort, dstPort, srcPackets, dstPackets, srcBytes, dstBytes);
   }
 
-  
+
   /**
-   * Set all payload values, as returned by the NetFlow data source. The order 
+   * Set all payload values, as returned by the NetFlow data source. The order
    * of the string is the same as in the standard log file.
    * @see inside.dumpster.NetFlowData
    * @param time
@@ -130,29 +177,14 @@ public class Payload {
    * @param srcPackets
    * @param dstPackets
    * @param srcBytes
-   * @param dstBytes 
+   * @param dstBytes
    */
   public final void setPayloadValues(String time, String duration, String srcDevice, String dstDevice, String protocol, String srcPort, String dstPort, String srcPackets, String dstPackets, String srcBytes, String dstBytes) {
     Pattern p = Pattern.compile("([A-Za-z]+[0-9]?)([0-9]+)");
     /*0*/ this.time = Long.parseLong(time);
     /*1*/ this.duration = duration;
     /*2*/ this.srcDevice = srcDevice;
-    Matcher m = p.matcher(srcDevice);
-    if (m.find()) {
-      this.srcDevice = m.group(1);
-      this.srcDeviceId = m.group(2);
-    } else {
-      this.srcDevice = dstDevice;
-      this.srcDeviceId = "0";
-    }
-    /*03*/ m = p.matcher(dstDevice);
-    if (m.find()) {
-      this.dstDevice = m.group(1);
-      this.dstDeviceId = m.group(2);
-    } else {
-      this.dstDevice = dstDevice;
-      this.dstDeviceId = "0";
-    }
+    /*03*/ this.dstDevice = dstDevice;
     /*4*/ this.protocol = protocol;
     /*5*/ this.srcPort = srcPort;
     /*6*/ this.dstPort = dstPort;
@@ -170,6 +202,16 @@ public class Payload {
 
   }
 
+
+  /**
+   * The destination defines which service should handle this payload.
+   *
+   * @return a destination
+   */
+  public Destination getDestination() {
+    return destination != null ? destination : (destination = Destination.fromString(srcDevice));
+  }
+
   /**
    * @return the time
    */
@@ -185,6 +227,7 @@ public class Payload {
   }
 
   /**
+   * The duration, f.i. 20870
    * @return the duration
    */
   public String getDuration() {
@@ -199,7 +242,7 @@ public class Payload {
   }
 
   /**
-   * F.i. "Comp"
+   * F.i. "Comp429341"
    *
    * @return the srcDevice
    */
@@ -215,7 +258,7 @@ public class Payload {
   }
 
   /**
-   * "Mail"
+   * "ActiveDirecotry", "Comp34988"
    *
    * @return the dstDevice
    */
@@ -231,6 +274,7 @@ public class Payload {
   }
 
   /**
+   * F.i. 17, 6
    * @return the protocol
    */
   public String getProtocol() {
@@ -245,6 +289,7 @@ public class Payload {
   }
 
   /**
+   * F.i. Port06522
    * @return the srcPort
    */
   public String getSrcPort() {
@@ -259,6 +304,7 @@ public class Payload {
   }
 
   /**
+   * 161, 514, 443, 22, 5061, Port6890
    * @return the dstPort
    */
   public String getDstPort() {
@@ -273,6 +319,7 @@ public class Payload {
   }
 
   /**
+   * 277, 1461922, etc.
    * @return the srcPackets
    */
   public String getSrcPackets() {
@@ -287,6 +334,7 @@ public class Payload {
   }
 
   /**
+   * 277, 1461922, etc.
    * @return the dstPackets
    */
   public String getDstPackets() {
@@ -301,6 +349,7 @@ public class Payload {
   }
 
   /**
+   * 277, 14619228908
    * @return the srcBytes
    */
   public int getSrcBytes() {
@@ -315,6 +364,7 @@ public class Payload {
   }
 
   /**
+   * 0, 1543890, and so on.
    * @return the dstBytes
    */
   public int getDstBytes() {
@@ -328,35 +378,6 @@ public class Payload {
     this.dstBytes = dstBytes;
   }
 
-  /**
-   * F.i. 789344
-   *
-   * @return the srcDeviceId
-   */
-  public String getSrcDeviceId() {
-    return srcDeviceId;
-  }
-
-  /**
-   * @param srcDeviceId the srcDeviceId to set
-   */
-  public void setSrcDeviceId(String srcDeviceId) {
-    this.srcDeviceId = srcDeviceId;
-  }
-
-  /**
-   * @return the dstDeviceId
-   */
-  public String getDstDeviceId() {
-    return dstDeviceId;
-  }
-
-  /**
-   * @param dstDeviceId the dstDeviceId to set
-   */
-  public void setDstDeviceId(String dstDeviceId) {
-    this.dstDeviceId = dstDeviceId;
-  }
 
   /**
    * If not null, this contains the data sent with the payload.
@@ -366,10 +387,10 @@ public class Payload {
     return inputStream;
   }
 
-  
+
   /**
    * This payload's data stream.
-   * @param inputStream 
+   * @param inputStream
    */
   public void setInputStream(InputStream inputStream) {
     this.inputStream = inputStream;
@@ -384,5 +405,11 @@ public class Payload {
   public void setTransactionId(String transactionId) {
     this.transactionId = transactionId;
   }
+
+
+    @Override
+    public String toString() {
+        return PayloadHelper.getURI(this).toASCIIString();
+    }
 
 }
