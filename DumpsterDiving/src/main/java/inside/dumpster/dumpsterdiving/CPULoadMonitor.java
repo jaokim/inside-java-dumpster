@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package inside.dumpster.dumpsterdiving;
 
@@ -8,10 +8,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.management.MBeanServerConnection;
 import javax.management.remote.JMXConnector;
@@ -38,16 +35,16 @@ public class CPULoadMonitor {
         CPULoadMonitor monitor = new CPULoadMonitor(dumpPath);
     }
   }
-  
-  
+
+
   private CPULoadMonitor(Path dumpPath) throws Exception {
     Configuration conf = Configuration.getConfiguration("default");
     try (var stream = new RecordingStream()) {
-      //stream.enable("jdk.CPULoad").withPeriod(Duration.ofSeconds(1));
+      stream.enable("jdk.CPULoad").withPeriod(Duration.ofSeconds(1));
       stream.onEvent("jdk.CPULoad", event -> {
         float cpuLoad = event.getFloat("jvmUser");
         System.out.printf("CPU load: %f\n", cpuLoad);
-        if (cpuLoad > 0.025) {
+        if (cpuLoad > 0.8) {
           if (!dumpPath.toFile().exists()) {
             try {
               stream.dump(dumpPath);
@@ -60,15 +57,15 @@ public class CPULoadMonitor {
       stream.start();
     }
   }
-  
-  private CPULoadMonitor(String host, Path dumpPath) throws Exception {    
-      
+
+  private CPULoadMonitor(String host, Path dumpPath) throws Exception {
+
     JMXServiceURL u = new JMXServiceURL(
             "service:jmx:rmi:///jndi/rmi://" + host + "/jmxrmi");
-    JMXConnector c = JMXConnectorFactory.connect(u, 
+    JMXConnector c = JMXConnectorFactory.connect(u,
             Map.of("jmx.remote.credentials", new String[]{user, pwd}));
     MBeanServerConnection conn = c.getMBeanServerConnection();
-    
+
     try (var stream = new RemoteRecordingStream(conn)) {
       stream.setSettings(Collections.EMPTY_MAP);
       stream.setMaxAge(Duration.ofMinutes(10));
@@ -95,5 +92,4 @@ public class CPULoadMonitor {
       stream.start();
     }
   }
-
 }
