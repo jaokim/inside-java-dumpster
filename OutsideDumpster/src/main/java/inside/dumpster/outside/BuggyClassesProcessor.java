@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package inside.dumpster.outside;
 
@@ -22,7 +22,7 @@ import javax.tools.StandardLocation;
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
 @SupportedAnnotationTypes("inside.dumpster.outside.Buggy")
-@SupportedSourceVersion(SourceVersion.RELEASE_13)
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class BuggyClassesProcessor extends AbstractProcessor {
 
   public BuggyClassesProcessor() {
@@ -30,7 +30,7 @@ public class BuggyClassesProcessor extends AbstractProcessor {
   }
 
   static final String BUGGY_CLASSES_RESOURCENAME = "buggyclasses.properties";
-  
+
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     System.out.println("Process:" + annotations + " re:" + roundEnv.toString());
@@ -46,9 +46,9 @@ public class BuggyClassesProcessor extends AbstractProcessor {
         return true;
     }
   }
-    
+
     try {
-      
+
       FileObject fileObject;
       fileObject = processingEnv.getFiler().createSourceFile("inside.dumpster.Dooby");
       try (Writer writter = fileObject.openWriter()) {
@@ -83,12 +83,12 @@ public class BuggyClassesProcessor extends AbstractProcessor {
     } catch (final Exception ex) {
       processingEnv.getMessager().printMessage(Kind.ERROR, ex.getMessage());
     }
-    
-    
+
+
     try {
-      
+
       FileObject fileObject;
-      fileObject = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "", 
+      fileObject = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "",
               BUGGY_CLASSES_RESOURCENAME);
       try (Writer writter = fileObject.openWriter()) {
 
@@ -108,7 +108,7 @@ public class BuggyClassesProcessor extends AbstractProcessor {
                 writter.append(typeElement.getQualifiedName().toString()+"."+innerElement.getSimpleName().toString()+"\n") ;
               }
             }
-            
+
           }
         }
       }

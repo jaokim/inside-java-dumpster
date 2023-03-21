@@ -21,17 +21,14 @@ public class Bug {
   public static boolean isBuggy(Object object) {
     final Class clazz = object.getClass();
     if(BUG_BEHAVIOUR.get() != null) {
-      System.out.println("We have an overriden behavour: "+clazz.getName());
       Boolean overridden = BUG_BEHAVIOUR.get().isBuggy(clazz.getName());
       if(overridden != null) {
         return overridden;
       }
     }
-    System.out.println("Checking for annotation for: "+clazz.getName());
     if (clazz.isAnnotationPresent(Buggy.class)) {
       Buggy buggy = (Buggy)clazz.getAnnotation(Buggy.class);
       final Boolean enabled = buggy.enabled();
-      System.out.println("Annotation found: "+clazz.getName()+  "is enabled: "+(enabled));
       return enabled;
     } else {
       return false;
