@@ -1,4 +1,4 @@
-This is where the business logic lives. Depending on your targetted JDK, code from either BusinessLogic-XX is used. Please see [BusinessLogic-Base](BusinessLogic-Base) for details on how the diffrerent JDKs are supported. 
+This is where the business logic lives. Depending on your targetted JDK, code from either BusinessLogic-XX is used. Please see [BusinessLogic-Base](BusinessLogic-Base) for details on how the different JDKs are supported. 
 
 ## The BusinessLogic
 
@@ -37,7 +37,7 @@ public class EnergyService extends BusinessLogicService<EnergyPayload, EnergyRes
 }
 ```
 
-In order for the service class to be called, it has to be mapped to a payload Destination in the [BusinessLogicFactory](https://github.com/jaokim/inside-java-dumpster/blob/main/BusinessLogic/src/main/java/inside/dumpster/bl/BusinessLogicFactory.java) class
+In order for the service class to be called, it has to be mapped to a payload Destination in the [BusinessLogicFactory](https://github.com/jaokim/inside-java-dumpster/blob/main/BusinessLogic/BusinessLogic-8/src/main/java/inside/dumpster/bl/BusinessLogicFactory.java) class
 ```java
   switch(destination) {
     ..
