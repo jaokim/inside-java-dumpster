@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package inside.dumpster.backend.auth;
 
@@ -20,7 +20,7 @@ public class UserRepository {
       userInfo.getUserInfo().put("contact_number_"+i, faker.phoneNumber().phoneNumber());
       userInfo.getUserInfo().put("contact_city_"+i, faker.address().cityName());
       userInfo.getUserInfo().put("contact_bnr"+i, faker.address().buildingNumber());
-      
+
     }
     return userInfo;
   }
