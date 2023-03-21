@@ -3,10 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>inside.dumpster</groupId>
     <artifactId>InsideDumpster</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
+    <name>1. InsideDumpster</name>
     <packaging>pom</packaging>
     <modules>
         <module>OutsideDumpster</module>
+        <module>BackendAPI</module>
         <module>Backend</module>
         <module>BusinessLogic</module>
         <module>WebClient</module>
@@ -14,7 +16,25 @@
         <module>CliClient</module>
         <module>MicronautServer</module>
         <module>JettyServer</module>
+        <module>DumpsterDiving</module>
     </modules>
+    <!--build>
+      <plugins>
+        <plugin>
+                    <groupId>com.atlassian.maven.plugins</groupId>
+                    <artifactId>maven-upload-plugin</artifactId>
+                    <version>1.1</version>
+                    <configuration>
+                        <resourceSrc>
+                            ${project.build.directory}/${project.build.finalName}.${project.packaging}
+                        </resourceSrc>
+                        <resourceDest>${jboss.deployDir}</resourceDest>
+                        <serverId>${jboss.host}</serverId>
+                        <url>${jboss.deployUrl}</url>
+                    </configuration>
+                </plugin>
+      </plugins>
+    </build-->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
