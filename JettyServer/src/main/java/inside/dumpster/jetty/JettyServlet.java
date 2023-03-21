@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package inside.dumpster.jetty;
 
@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 public class JettyServlet extends HttpServlet {
   private final Authenticator authenticator = new Authenticator();
   private final BusinessLogicFactory factory = new BusinessLogicFactory();
-  
+
   @Override
   protected void doGet(
           HttpServletRequest request,
@@ -55,32 +55,16 @@ public class JettyServlet extends HttpServlet {
       String pathinfo = request.getPathInfo().substring(1);
       String destination = PayloadHelper.getDestination(pathinfo);
       System.out.println("Dest: "+destination);
-      Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
-             @Override
-             public boolean shouldSkipField(FieldAttributes f) {
-                if(f.getName().equals("next")){
-                   return true;
-                }
-                return false;
-             }
-
-             @Override
-             public boolean shouldSkipClass(Class<?> clazz) {
-               if(clazz.getName().equals(Payload.class.getName())) {
-                 return false;
-               }
-                return true;
-             }
-          }).create();
-      BusinessLogicServiceWrapper<? extends Payload, ? extends Result> service = 
-              factory.lookupService(new Destination(destination));
+      Gson gson = getGson();
+      BusinessLogicServiceWrapper<? extends Payload, ? extends Result> service =
+              factory.lookupService(Destination.fromString(destination));
       Payload payload = new Payload();//gson.fromJson(request.getReader(), Payload.class);
       payload = PayloadHelper.fillPayloadFromURI(payload, pathinfo);
       payload.setInputStream(request.getInputStream());
       Result result = service.invoke(payload);
-      
+
       response.setContentType("application/json");
-      
+
 //      response.setStatus(HttpServletResponse.SC_OK);
 System.out.println("response:"+result.getResult());
       response.getWriter().write(gson.toJson(result));
@@ -89,5 +73,26 @@ System.out.println("response:"+result.getResult());
     } catch (UnauthorizedException ex) {
       Logger.getLogger(JettyServlet.class.getName()).log(Level.SEVERE, null, ex);
     }
+  }
+
+  Gson getGson() {
+    Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
+      @Override
+      public boolean shouldSkipField(FieldAttributes f) {
+        if(f.getName().equals("next")){
+          return true;
+        }
+        return false;
+      }
+
+      @Override
+      public boolean shouldSkipClass(Class<?> clazz) {
+        if(clazz.getName().equals(Payload.class.getName())) {
+          return false;
+        }
+        return true;
+      }
+    }).create();
+    return gson;
   }
 }

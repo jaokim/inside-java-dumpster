@@ -3,32 +3,32 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>MicronautServer</artifactId>
     <groupId>inside.dumpster.micronaut</groupId>
-    <version>1.0-SNAPSHOT</version>
-    
+    <version>1.0</version>
+
     <packaging>${packaging}</packaging>
-    <parent> 
+    <parent>
         <groupId>io.micronaut</groupId>
         <artifactId>micronaut-parent</artifactId>
-        <version>3.3.0</version>
+        <version>3.8.4</version>
     </parent>
     <properties>
         <packaging>jar</packaging>
-        <jdk.version>11</jdk.version>
-        <release.version>11</release.version>
+        <jdk.version>17</jdk.version>
+        <release.version>17</release.version>
         <micronaut.version>3.3.0</micronaut.version>
         <exec.mainClass>inside.dumpster.micronaut.Application</exec.mainClass>
         <micronaut.runtime>netty</micronaut.runtime>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
-    
+
     <repositories>
         <repository>
             <id>central</id>
             <url>https://repo.maven.apache.org/maven2</url>
         </repository>
     </repositories>
-  
+
     <dependencies>
         <dependency>
             <groupId>io.micronaut</groupId>
@@ -84,18 +84,16 @@
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
             <scope>compile</scope>
-            <version>2.0.0</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <scope>runtime</scope>
-            <version>1.2.10</version>
         </dependency>
         <dependency>
             <groupId>inside.dumpster.businesslogic</groupId>
             <artifactId>BusinessLogic</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0</version>
         </dependency>
     </dependencies>
 
@@ -105,7 +103,7 @@
                 <groupId>io.micronaut.build</groupId>
                 <artifactId>micronaut-maven-plugin</artifactId>
             </plugin>
-      
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
