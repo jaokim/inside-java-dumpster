@@ -59,7 +59,7 @@ public class Cli {
     new Cli().start(arguments);
   }
 
-  private void start(final CliArguments args) throws IOException {
+  public void start(final CliArguments args) throws IOException {
     String address;
     NetFlowData data;
     if(args.Address.isSet()) {
@@ -99,7 +99,7 @@ public class Cli {
 
           }
           System.out.println("Okay, so we've reached the end, and then some. Exiting.");
-          System.exit(0);
+          //System.exit(0);
         }
       });
       t.setDaemon(true);

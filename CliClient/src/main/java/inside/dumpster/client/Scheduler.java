@@ -112,7 +112,8 @@ public class Scheduler<P extends Payload> {
               List leftRunnables = threadPool.shutdownNow();
               logger.warning(String.format("There were %d requests posted that weren't executed", leftRunnables.size()));
               logger.info(String.format("There were %d requests made during the %d s duration", count, currentDuration.getSeconds()));
-              System.exit(0);
+              //System.exit(0);
+              break;
             }
           }
           lock.wait(200);
@@ -123,7 +124,7 @@ public class Scheduler<P extends Payload> {
       }
     }
     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-    logger.info(String.format("Queue: %d, %s, duration left: %d s", threadPool.getQueue().size(), sdf.format(new Date(time)), durationToPostRequests != null ? durationToPostRequests.minus(currentDuration).getSeconds(): -1));
+    logger.fine(String.format("Queue: %d, %s, duration left: %d s", threadPool.getQueue().size(), sdf.format(new Date(time)), durationToPostRequests != null ? durationToPostRequests.minus(currentDuration).getSeconds(): -1));
 //    logger.info("Queue: " + sdf.format(new Date(timeForThisRequest)) + ", next: " + sdf.format(new Date(time))+ ", exper: " + sdf.format(new Date(now + myDelay)) + ", delay: "+delay + ", q.size: "+ threadPool.getQueue().size() + ", total count: " + ++totalCount +
 //            ", nt:"+ sdf.format(new Date(newtime)) + ", nd: "+newDelay);
   }
