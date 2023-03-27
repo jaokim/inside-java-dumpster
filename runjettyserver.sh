@@ -15,4 +15,6 @@ fi
 
 
 
-java $JDKARGS -XX:StartFlightRecording=filename=D:/jsnordst/Bugs/InsideDumpster/dump.jfr,dumponexit=true -XX:+PrintConcurrentLocks -Dcom.sun.management.jmxremote.port=12345 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -jar JettyServer/target/JettyServer-1.0-jar-with-dependencies.jar
+#java $JDKARGS -XX:StartFlightRecording=filename=D:/jsnordst/Bugs/InsideDumpster/dump.jfr,dumponexit=true -XX:+PrintConcurrentLocks -Dcom.sun.management.jmxremote.port=12345 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Djava.util.logging.config.file=logging.properties -jar JettyServer/target/JettyServer-1.0-jar-with-dependencies.jar
+
+java $JDKARGS -XX:StartFlightRecording=filename=D:/jsnordst/Bugs/InsideDumpster/dump.jfr,dumponexit=true -XX:+PrintConcurrentLocks -Dcom.sun.management.jmxremote.port=12345 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Djava.util.logging.config.file=logging.properties -jar JettyServer/target/JettyServer-1.0.jar

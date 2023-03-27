@@ -1,1 +1,0 @@
-JMH S 38 inside.dumpster.client.BenchmarkRunner S 65 inside.dumpster.client.jmh_generated.BenchmarkRunner_init_jmhTest S 4 init S 11 AverageTime E A 1 1 1 E E E E E E E E E E E E E E E E T 4 60 s 
