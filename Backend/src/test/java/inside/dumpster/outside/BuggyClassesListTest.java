@@ -1,7 +1,7 @@
 package inside.dumpster.outside;
 
 /*
- * 
+ *
  */
 
 import inside.dumpster.backend.repository.TextRepository;
@@ -21,6 +21,6 @@ public class BuggyClassesListTest {
 //    assertFalse(bb.isBuggy(BuggyClassDefaultFalseTest.class.getName()));
 //    assertTrue(bb.isBuggy(BuggyClassTest.class.getName()));
     String[] cls = bb.getBuggyClasses();
-//    assertTrue(binarySearch(cls, TextRepository.class.getName()) >= 0);
+    assertTrue(binarySearch(cls, TextRepository.class.getName()) >= 0);
   }
 }

@@ -17,9 +17,6 @@ import jdk.jfr.Name;
 @Category({"Business Application", "Services"})
 public class ServiceCall extends Event {
 
-  public ServiceCall() {
-    System.out.println("Java 11 service call");
-  }
   @Label("Service Destination")
   public String destination;
 

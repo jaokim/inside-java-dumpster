@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package inside.dumpster.backend.repository;
 
@@ -21,7 +21,7 @@ import java.io.OutputStream;
  */
 @Buggy(because="using non-buffered streams")
 public class TextRepository implements Repository<Text> {
-  
+
   @Override
   public StoredData storeData(final Text im) throws IOException {
     File file = File.createTempFile("textrepo_", ".txt");
@@ -30,16 +30,16 @@ public class TextRepository implements Repository<Text> {
     if(im.hasInputStream()) {
       InputStream inputStream = null;
       OutputStream outputStream = null;
-      
+
       try {
         if(Bug.isBuggy(this)) {
-          inputStream = im.getInputStream(); 
+          inputStream = im.getInputStream();
           outputStream = new FileOutputStream(file);
         } else {
-          inputStream = new BufferedInputStream(im.getInputStream()); 
+          inputStream = new BufferedInputStream(im.getInputStream());
           outputStream = new BufferedOutputStream(new FileOutputStream(file));
         }
-        
+
         int data;
         while((data = inputStream.read()) != -1) {
           outputStream.write(data);
@@ -64,8 +64,9 @@ public class TextRepository implements Repository<Text> {
 
   @Override
   public void removeData(Id id) {
-    
+    File fg = new File(id.toString());
+    fg.delete();
   }
-  
-  
+
+
 }

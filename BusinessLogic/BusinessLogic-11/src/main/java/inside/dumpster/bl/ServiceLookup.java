@@ -38,13 +38,12 @@ public class ServiceLookup implements ServiceLookupInterface {
   @Override
   public BusinessLogicService<? extends Payload, ? extends Result> lookupServiceWrapper(Payload.Destination destination) throws BusinessLogicException {
     final BusinessLogicService<? extends Payload, ? extends Result> service;
-    System.out.println("Java11 lookup");
       ServiceCall serviceCallEvent = new ServiceCall();
       serviceCallEvent.destination = destination.name();
       switch(destination) {
           case IP:
-              service = new EnergyService(EnergyPayload.class, EnergyResult.class);
-              break;
+//              service = new EnergyService(EnergyPayload.class, EnergyResult.class);
+//              break;
           case Comp1:
               service = new ElDoradoService(ElDoradoPayload.class, Result.class);
               break;

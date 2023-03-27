@@ -24,7 +24,6 @@ public class ServiceLookup implements ServiceLookupInterface {
   @Override
   public BusinessLogicService<? extends Payload, ? extends Result> lookupServiceWrapper(Payload.Destination destination) throws BusinessLogicException {
       final BusinessLogicService<? extends Payload, ? extends Result> service;
-    System.out.println("Java 8 lookup");
       ServiceCall serviceCallEvent = new ServiceCall();
       serviceCallEvent.destination = destination.name();
       switch(destination) {
