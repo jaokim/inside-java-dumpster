@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  */
 @Buggy(because = "this test should return it")
 public class BugBehaviour implements BugBehaviourMXBean {
-
+  private static final Logger logger = Logger.getLogger(BugBehaviour.class.getName());
   private final Map<String, Boolean> possiblyBuggyClasses = new HashMap<>();
 
   public BugBehaviour() {
@@ -52,14 +52,16 @@ public class BugBehaviour implements BugBehaviourMXBean {
   }
 
   private void findBuggyClasses(Set<String> buggyClasses, ClassLoader classLoader) {
+    logger.log(Level.FINE, "ClassLoader: {0}", classLoader.toString());
     try {
       Enumeration<URL> r = classLoader.getResources(BUGGY_CLASSES_RESOURCENAME);
       URL u;
       while (r.hasMoreElements() && (u = r.nextElement()) != null) {
+        logger.log(Level.FINE, "Reading bug classes from: {0}", u.toString());
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(u.openStream()))) {
           reader.lines().forEach((cls) -> buggyClasses.add(cls));
         } catch (Exception ex) {
-          System.out.println("Exception reading buggyclasses props: " + ex.getMessage());
+          logger.log(Level.WARNING, ex, ()->("Exception while reading bug classes"));
         }
       }
     } catch (IOException ex) {
