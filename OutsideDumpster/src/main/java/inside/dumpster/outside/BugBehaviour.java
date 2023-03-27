@@ -42,7 +42,7 @@ public class BugBehaviour implements BugBehaviourMXBean {
 
   @Override
   public String[] getBuggyClasses() {
-    Set<String> buggyClasses = new HashSet<>();
+    final Set<String> buggyClasses = new HashSet<>();
 
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     findBuggyClasses(buggyClasses, classLoader);
