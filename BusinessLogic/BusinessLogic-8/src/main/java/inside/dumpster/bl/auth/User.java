@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package inside.dumpster.bl.auth;
 
@@ -16,8 +16,30 @@ public class User {
   private Object session;
   private Principal principal;
   private Object params;
+  private boolean needsReauth;
+  String authTicket;
+
+  public User() {
+    authTicket = null;
+  }
+
   void setId(UUID id) {
     this.id = id;
+  }
+
+  public void setAuthTicket(String authTicket) {
+    this.authTicket = authTicket;
+  }
+
+  public String getAuthTicket() throws NeedToReauthenticateError {
+    if (authTicket == null) {
+      throw new NeedToReauthenticateError(this);
+    }
+    return authTicket;
+  }
+
+  public boolean isReauthenticationNeeded() {
+    return authTicket == null;
   }
 
   public UUID getId() {
@@ -35,5 +57,4 @@ public class User {
   void setPrincipal(Principal principal) {
     this.principal = principal;
   }
-
 }
