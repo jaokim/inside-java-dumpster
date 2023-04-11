@@ -11,7 +11,9 @@ import inside.dumpster.bl.BusinessLogicException;
 import inside.dumpster.bl.BusinessLogicFactory;
 import inside.dumpster.bl.BusinessLogicServiceWrapper;
 import inside.dumpster.bl.auth.Authenticator;
+import inside.dumpster.bl.auth.NeedToReauthenticateError;
 import inside.dumpster.bl.auth.UnauthorizedException;
+import inside.dumpster.bl.auth.User;
 import inside.dumpster.client.Payload;
 import inside.dumpster.client.Payload.Destination;
 import inside.dumpster.client.Result;
@@ -49,37 +51,50 @@ public class JettyServlet extends HttpServlet {
           HttpServletRequest request,
           HttpServletResponse response)
           throws ServletException, IOException {
-
+    final User user;
     try {
-      authenticator.authenticateUser(request.getAuthType(), UUID.randomUUID().toString(), request.getUserPrincipal(), new Object(), request.getParameterMap());
+      user = authenticator.authenticateUser(request.getAuthType(), UUID.randomUUID().toString(), request.getUserPrincipal(), new Object(), request.getParameterMap());
+
+      if (user.isReauthenticationNeeded()) {
+        authenticator.reauthenticate(user);
+      }
+
       String pathinfo = request.getPathInfo().substring(1);
       String destination = PayloadHelper.getDestination(pathinfo);
       System.out.println("Dest: "+destination);
       Gson gson = getGson();
       BusinessLogicServiceWrapper<? extends Payload, ? extends Result> service =
               factory.lookupService(Destination.fromString(destination));
-      Payload payload = new Payload();//gson.fromJson(request.getReader(), Payload.class);
+
+      Payload payload = new Payload();
       payload = PayloadHelper.fillPayloadFromURI(payload, pathinfo);
       payload.setInputStream(request.getInputStream());
+
       Result result = service.invoke(payload);
 
       response.setContentType("application/json");
 
 //      response.setStatus(HttpServletResponse.SC_OK);
-System.out.println("response:"+result.getResult());
+      System.out.println("response:"+result.getResult());
       response.getWriter().write(gson.toJson(result));
+
+    } catch (NeedToReauthenticateError ex) {
+      authenticator.reauthenticate(ex.getUser());
+      Logger.getLogger(JettyServlet.class.getName()).log(Level.SEVERE, "Reauth needed");
+      doPost(request, response);
+
     } catch (BusinessLogicException ex) {
       Logger.getLogger(JettyServlet.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (UnauthorizedException ex) {
-      Logger.getLogger(JettyServlet.class.getName()).log(Level.SEVERE, null, ex);
+    } finally {
+      authenticator.clearSession();
     }
   }
 
-  Gson getGson() {
+  private Gson getGson() {
     Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
       @Override
       public boolean shouldSkipField(FieldAttributes f) {
-        if(f.getName().equals("next")){
+        if (f.getName().equals("next")){
           return true;
         }
         return false;
