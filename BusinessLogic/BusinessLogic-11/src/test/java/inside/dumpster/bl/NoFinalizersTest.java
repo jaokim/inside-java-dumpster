@@ -3,6 +3,11 @@
  */
 package inside.dumpster.bl;
 
+import com.sun.security.auth.UserPrincipal;
+import inside.dumpster.bl.auth.Authenticator;
+import inside.dumpster.bl.auth.NeedToReauthenticateError;
+import inside.dumpster.bl.auth.UnauthorizedException;
+import inside.dumpster.bl.auth.User;
 import inside.dumpster.client.Payload;
 import inside.dumpster.client.Payload.Destination;
 import inside.dumpster.client.Result;
@@ -169,7 +174,14 @@ public class NoFinalizersTest {
    * Method that calls all services with dummy data.
    * @throws BusinessLogicException
    */
-  private void callAllServices() throws BusinessLogicException {
+  private void callAllServices() throws BusinessLogicException, UnauthorizedException {
+    Authenticator auth = new Authenticator();
+    User user;
+    try {
+      user = auth.authenticateUser("a", "123", new UserPrincipal("moin"), this, null);
+    } catch(NeedToReauthenticateError ex) {
+      auth.reauthenticate(ex.getUser());
+    }
     final Payload payload = new Payload();
     payload.setDstPort("6745");
     payload.setDstDevice("Port789432");
