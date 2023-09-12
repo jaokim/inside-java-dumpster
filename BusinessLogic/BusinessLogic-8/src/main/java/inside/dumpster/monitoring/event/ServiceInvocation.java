@@ -6,10 +6,6 @@ package inside.dumpster.monitoring.event;
 import inside.dumpster.bl.BusinessLogicService;
 import inside.dumpster.client.Payload;
 import inside.dumpster.monitoring.TransactionEvent;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -32,11 +28,6 @@ public class ServiceInvocation extends TransactionEvent {
   @Override
   public void registerPayloadData(Payload payload) {
     super.registerPayloadData(payload);
-    try {
-      this.data = payload.getInputStream() != null ? new String(payload.getInputStream().readAllBytes(), StandardCharsets.UTF_8):"";
-    } catch (IOException ex) {
-      
-    }
     this.protocol = payload.getProtocol();
     this.dstPort = payload.getDstPort();
     this.dstPackets = payload.getDstPackets();

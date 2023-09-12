@@ -11,9 +11,7 @@ import inside.dumpster.monitoring.Event;
  */
 public class ServiceCall extends Event {
 
-  public ServiceCall() {
-    System.out.println("Java 8 service call");
-  }
+  public ServiceCall() { }
 
   public String destination;
 
