@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package inside.dumpster.uploadimage;
 
@@ -25,7 +25,7 @@ import javax.imageio.ImageIO;
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
 public class UploadImageService extends BusinessLogicService<UploadImagePayload, UploadImageResult> {
- 
+
   public UploadImageService(Class<UploadImagePayload> type, Class<UploadImageResult> type1) {
     super(type, type1);
   }
@@ -34,6 +34,7 @@ public class UploadImageService extends BusinessLogicService<UploadImagePayload,
   @Override
   public UploadImageResult invoke(UploadImagePayload payload) throws BusinessLogicException {
     try {
+      UploadImageResult result = new UploadImageResult();
       final Backend backend = Backend.getInstance();
       DataUpload uploadEvent = new DataUpload();
       uploadEvent.transactionId = payload.getTransactionId();
@@ -41,7 +42,7 @@ public class UploadImageService extends BusinessLogicService<UploadImagePayload,
       uploadEvent.srcDevice = payload.getSrcDevice();
       uploadEvent.size = payload.getDstBytes();
       uploadEvent.begin();
-      
+
       InputStream is = payload.getInputStream();
       if(is == null) {
         uploadEvent.datatype = "NoData";
@@ -52,32 +53,35 @@ public class UploadImageService extends BusinessLogicService<UploadImagePayload,
       BufferedImage image = ImageIO.read(is);
 //      DataUtils<Image> utils = new DataUtils<>(new Image());
 //      Image image = utils.convertToData(is);
-          
-      DataProcessing processEvent = new DataProcessing();
-      processEvent.transactionId = payload.getTransactionId();
-      processEvent.datatype = "Image";
-      processEvent.processType = payload.getProcessing().name();
-          
-      switch(payload.getProcessing()) {
-        case Convert:
-          processEvent.begin();
-          CropImageFilter filter = new CropImageFilter(0, 0, image.getHeight()/2, image.getWidth()/2);
-          Applet a = new Applet();
-          Image croppedImage = a.createImage(new FilteredImageSource(image.getSource() , filter));
-          image = toBufferedImage(croppedImage);
-          processEvent.end();
-          break;
-        case None:
-          break;
+      if (image != null) {
+        DataProcessing processEvent = new DataProcessing();
+        processEvent.transactionId = payload.getTransactionId();
+        processEvent.datatype = "Image";
+        processEvent.processType = payload.getProcessing().name();
+
+        switch(payload.getProcessing()) {
+          case Convert:
+            processEvent.begin();
+            CropImageFilter filter = new CropImageFilter(0, 0, image.getHeight()/2, image.getWidth()/2);
+            Applet a = new Applet();
+            Image croppedImage = a.createImage(new FilteredImageSource(image.getSource() , filter));
+            image = toBufferedImage(croppedImage);
+            processEvent.end();
+            break;
+          case None:
+            break;
+        }
+        processEvent.commit();
+
+        StoredData data = backend.getImageRepository().storeData(new LImage(image));
+
+
+        result.setResult(data.getId().toString());
+
+        uploadEvent.id = data.getId().toString();
+      } else {
+        result.setResult("-1");
       }
-      processEvent.commit();
-      
-      StoredData data = backend.getImageRepository().storeData(new LImage(image));
-      
-      UploadImageResult result = new UploadImageResult();
-      result.setResult(data.getId().toString());
-      
-      uploadEvent.id = data.getId().toString();
       uploadEvent.end();
       uploadEvent.commit();
       return result;
@@ -85,14 +89,13 @@ public class UploadImageService extends BusinessLogicService<UploadImagePayload,
       throw new BusinessLogicException();
     }
   }
-    
+
     public static BufferedImage toBufferedImage(Image img)
 {
     if (img instanceof BufferedImage)
     {
         return (BufferedImage) img;
     }
-
     // Create a buffered image with transparency
     BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 
@@ -104,6 +107,6 @@ public class UploadImageService extends BusinessLogicService<UploadImagePayload,
     // Return the buffered image
     return bimage;
 }
-  
-  
+
+
 }

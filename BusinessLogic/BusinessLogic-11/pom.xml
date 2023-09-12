@@ -15,7 +15,6 @@
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
     <name>BusinessLogic-11</name>
-
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

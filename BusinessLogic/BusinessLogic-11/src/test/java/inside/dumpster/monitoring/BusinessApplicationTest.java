@@ -4,7 +4,6 @@
 package inside.dumpster.monitoring;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -17,6 +16,10 @@ public class BusinessApplicationTest {
 
   @Test
   public void testSomeMethod() {
+
+  }
+
+  public static void main(String[] args) {
   }
 
 }

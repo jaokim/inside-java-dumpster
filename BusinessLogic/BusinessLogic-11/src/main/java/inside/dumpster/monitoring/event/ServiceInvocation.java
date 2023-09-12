@@ -45,11 +45,6 @@ public class ServiceInvocation extends TransactionEvent {
   @Override
   public void registerPayloadData(Payload payload) {
     super.registerPayloadData(payload);
-        try {
-      this.data = payload.getInputStream() != null ? new String(payload.getInputStream().readAllBytes(), StandardCharsets.UTF_8):"";
-    } catch (IOException ex) {
-
-    }
     this.protocol = payload.getProtocol();
     this.dstPort = payload.getDstPort();
     this.dstPackets = payload.getDstPackets();

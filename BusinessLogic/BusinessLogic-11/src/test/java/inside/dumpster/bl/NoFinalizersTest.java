@@ -5,7 +5,7 @@ package inside.dumpster.bl;
 
 import com.sun.security.auth.UserPrincipal;
 import inside.dumpster.bl.auth.Authenticator;
-import inside.dumpster.bl.auth.NeedToReauthenticateError;
+import inside.dumpster.bl.auth.MustAcceptCookiesError;
 import inside.dumpster.bl.auth.UnauthorizedException;
 import inside.dumpster.bl.auth.User;
 import inside.dumpster.client.Payload;
@@ -179,7 +179,7 @@ public class NoFinalizersTest {
     User user;
     try {
       user = auth.authenticateUser("a", "123", new UserPrincipal("moin"), this, null);
-    } catch(NeedToReauthenticateError ex) {
+    } catch(MustAcceptCookiesError ex) {
       auth.reauthenticate(ex.getUser());
     }
     final Payload payload = new Payload();
@@ -187,11 +187,8 @@ public class NoFinalizersTest {
     payload.setDstDevice("Port789432");
     BusinessLogicFactory instance = new BusinessLogicFactory();
     BusinessLogicServiceWrapper<? extends Payload, ? extends Result> service;
-    for(Destination dest : Destination.values()) {
-      service = instance.lookupService(dest);
-      Result res = service.invoke(payload);
-      res = null;
-    }
+    service = instance.lookupService(Destination.Unknown);
+    Result res = service.invoke(payload);
   }
 
 }

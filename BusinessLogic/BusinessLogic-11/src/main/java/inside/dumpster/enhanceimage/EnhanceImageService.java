@@ -12,7 +12,6 @@ import inside.dumpster.monitoring.event.DataProcessing;
 import inside.dumpster.monitoring.event.DataUpload;
 import inside.dumpster.outside.Bug;
 import inside.dumpster.outside.Buggy;
-import inside.dumpster.uploadimage.UploadImageResult;
 import static inside.dumpster.uploadimage.UploadImageService.toBufferedImage;
 import java.applet.Applet;
 import java.awt.Image;
@@ -20,13 +19,13 @@ import java.awt.image.BufferedImage;
 import java.awt.image.CropImageFilter;
 import java.awt.image.FilteredImageSource;
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
@@ -69,39 +68,45 @@ public class EnhanceImageService extends BusinessLogicService<EnhanceImagePayloa
       }
 
       BufferedImage image = ImageIO.read(is);
-      BufferedInputStream buffered = new BufferedInputStream(is);
-      int i;
-      byte b[] = new byte[1024];
-      do {
-        buffered.read(b,0,1024);
-        bb.put(b);
-      } while(b.length > 0);
+      if (image != null) {
+//        BufferedInputStream buffered = new BufferedInputStream(is);
+//        int i;
+//        byte b[] = new byte[1024];
+//        do {
+//          int res = buffered.read(b,0,1024);
+//          if (res == -1) break;
+//          bb.put(b);
+//        } while(b.length > 0);
 
-      DataProcessing processEvent = new DataProcessing();
-      processEvent.transactionId = payload.getTransactionId();
-      processEvent.datatype = "Image";
-      processEvent.processType = "Enhance";
+        DataProcessing processEvent = new DataProcessing();
+        processEvent.transactionId = payload.getTransactionId();
+        processEvent.datatype = "Image";
+        processEvent.processType = "Enhance";
 
-      processEvent.begin();
+        processEvent.begin();
 
-      CropImageFilter filter = new CropImageFilter(0, 0, image.getHeight()/2, image.getWidth()/2);
-      Applet a = new Applet();
-      Image croppedImage = a.createImage(new FilteredImageSource(image.getSource() , filter));
-      image = toBufferedImage(croppedImage);
+//        CropImageFilter filter = new CropImageFilter(0, 0, image.getHeight()/2, image.getWidth()/2);
+//        Applet a = new Applet();
+//        Image croppedImage = a.createImage(new FilteredImageSource(image.getSource() , filter));
+//
+//        image = toBufferedImage(croppedImage);
 
-      processEvent.end();
-      processEvent.commit();
+        processEvent.end();
+        processEvent.commit();
 
-      StoredData data = backend.getImageRepository().storeData(new LImage(image));
+        StoredData data = backend.getImageRepository().storeData(new LImage(image));
+        result.setResult(data.getId().toString());
 
-      result.setResult(data.getId().toString());
-
-      uploadEvent.id = data.getId().toString();
+        uploadEvent.id = data.getId().toString();
+      } else {
+        uploadEvent.datatype = "NoData";
+        uploadEvent.size = 0;
+      }
       uploadEvent.end();
       uploadEvent.commit();
       return result;
     } catch (IOException ex) {
-      throw new BusinessLogicException();
+      throw new BusinessLogicException(ex);
     }
     }
 

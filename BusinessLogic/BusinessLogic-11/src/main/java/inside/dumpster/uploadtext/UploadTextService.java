@@ -42,8 +42,9 @@ public class UploadTextService extends BusinessLogicService<UploadTextPayload, U
         TextRepository repo = new TextRepository();
         Text textData = new Text(input);
         StoredData data = repo.storeData(textData);
-
-        uploadEvent.data = textData.getBuilder().toString();
+        if (textData.getBuilder() != null) {
+          uploadEvent.data = textData.getBuilder().toString();
+        }
         uploadEvent.size = data.getLength();
         res.setResult(String.valueOf(data.getLength()));
       } else {

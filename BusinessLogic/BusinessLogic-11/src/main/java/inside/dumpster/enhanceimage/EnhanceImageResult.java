@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package inside.dumpster.enhanceimage;
 
@@ -12,16 +12,16 @@ import java.nio.ByteBuffer;
  */
 public class EnhanceImageResult extends Result {
     private final String name;
-    private ByteBuffer imageBuffer;
+    private transient ByteBuffer imageBuffer;
 
     public EnhanceImageResult() {
         this.name = null;
     }
-    
+
     public EnhanceImageResult(String name) {
         this.name = name;
     }
-    
+
     public void setImageBuffer(ByteBuffer imageBuffer) {
         this.imageBuffer = imageBuffer;
     }
@@ -45,5 +45,5 @@ public class EnhanceImageResult extends Result {
     }
   }
 
-    
+
 }
