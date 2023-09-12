@@ -36,6 +36,7 @@
     </plugins>
   </build-->
   <build>
+    <defaultGoal>install</defaultGoal>
     <pluginManagement>
       <plugins>
         <plugin>
