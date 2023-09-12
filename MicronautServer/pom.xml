@@ -10,6 +10,7 @@
         <groupId>io.micronaut</groupId>
         <artifactId>micronaut-parent</artifactId>
         <version>3.8.4</version>
+        <relativePath></relativePath>
     </parent>
     <properties>
         <packaging>jar</packaging>
