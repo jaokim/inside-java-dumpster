@@ -1,10 +1,15 @@
 /*
- * 
+ *
  */
 package inside.dumpster.outside;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.management.ManagementFactory;
+import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
@@ -20,13 +25,19 @@ public class Bug {
   private static final AtomicReference<BugBehaviour> BUG_BEHAVIOUR = new AtomicReference<>();
   public static boolean isBuggy(Object object) {
     final Class clazz = object.getClass();
-    if(BUG_BEHAVIOUR.get() != null) {
-      Boolean overridden = BUG_BEHAVIOUR.get().isBuggy(clazz.getName());
+    return isBuggy(clazz);
+  }
+  public static boolean isBuggy(final Class clazz) {
+    if (BUG_BEHAVIOUR.get() != null) {
+      Boolean overridden = BUG_BEHAVIOUR.get().possiblyBuggyClasses.get(clazz.getName());
       if(overridden != null) {
         return overridden;
       }
     }
     if (clazz.isAnnotationPresent(Buggy.class)) {
+      if (System.getProperty("NOBUGS") != null) {
+        return false;
+      }
       Buggy buggy = (Buggy)clazz.getAnnotation(Buggy.class);
       final Boolean enabled = buggy.enabled();
       return enabled;
@@ -34,7 +45,7 @@ public class Bug {
       return false;
     }
   }
-  
+
   public static void registerMXBean() {
     try {
       MBeanServer mbs
@@ -42,14 +53,21 @@ public class Bug {
 
       ObjectName mxbeanName = new ObjectName("inside.dumpster.outside:type=BugBehaviour");
       if(!mbs.isRegistered(mxbeanName)) {
-        BUG_BEHAVIOUR.set(new BugBehaviour());
-        System.out.println("Settging bug behav: "+BUG_BEHAVIOUR.get());
-        mbs.registerMBean(BUG_BEHAVIOUR.get(), mxbeanName);
+        final BugBehaviour bugBehaviour = new BugBehaviour();
+        BUG_BEHAVIOUR.set(bugBehaviour);
+        System.out.println("Setting bug behav: "+bugBehaviour);
+        bugBehaviour.loadFromProperties();
+        mbs.registerMBean(bugBehaviour, mxbeanName);
       }
     } catch (MalformedObjectNameException | InstanceAlreadyExistsException | MBeanRegistrationException | NotCompliantMBeanException ex) {
       throw new RuntimeException(ex);
     }
+
   }
 
-  
+  public static BugBehaviourMXBean getMXBean() {
+    registerMXBean();
+    return BUG_BEHAVIOUR.get();
+  }
+
 }
