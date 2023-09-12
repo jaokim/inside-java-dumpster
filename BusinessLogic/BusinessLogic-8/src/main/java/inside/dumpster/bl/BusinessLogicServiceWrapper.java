@@ -9,13 +9,13 @@ import inside.dumpster.client.Payload;
 import inside.dumpster.client.Result;
 import inside.dumpster.client.impl.Helper;
 import inside.dumpster.monitoring.event.ServiceInvocation;
-import java.util.Random;
-import java.util.UUID;
+import java.security.SecureRandom;
+import java.util.Base64;
 
 /**
- * Wrapper for a business logic service to facilitate service mapping. This
- * only serves to lessen the boilerplate code needed to map the network logs
- * to service calls.This construct is only used for the mimicked business
+ * Wrapper for a business logic service to facilitate service mapping. This only
+ * serves to lessen the boilerplate code needed to map the network logs to
+ * service calls.This construct is only used for the mimicked business
  * application -- this is -not- a viable design pattern to take inspiration
  * from. You've been warned!
  *
@@ -26,7 +26,8 @@ import java.util.UUID;
 public class BusinessLogicServiceWrapper<SpecificPayload extends Payload, SpecificResult extends Result> {
   private final Authenticator authenticator = new Authenticator();
   private final BusinessLogicService<SpecificPayload, SpecificResult> service;
-  private static final Random random = new Random();
+  private static final SecureRandom random = new SecureRandom();
+  private static final Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
 
   BusinessLogicServiceWrapper(BusinessLogicService<SpecificPayload, SpecificResult> service) {
     this.service = service;
@@ -34,12 +35,13 @@ public class BusinessLogicServiceWrapper<SpecificPayload extends Payload, Specif
 
   /**
    * Invoke the service using the supplied payload.
+   *
    * @param payload
    * @return
    * @throws BusinessLogicException
    */
   public SpecificResult invoke(Payload payload) throws BusinessLogicException {
-    payload.setTransactionId(UUID.fromString(String.valueOf(random.nextGaussian())).toString());
+    payload.setTransactionId(generateTransactionId());
     User user = authenticator.getLoggedInUser();
     ServiceInvocation serviceInvocation = new ServiceInvocation();
     serviceInvocation.serviceClass = service.getClass();
@@ -56,4 +58,9 @@ public class BusinessLogicServiceWrapper<SpecificPayload extends Payload, Specif
     return result;
   }
 
+  private String generateTransactionId() {
+    byte[] buffer = new byte[20];
+    random.nextBytes(buffer);
+    return encoder.encodeToString(buffer);
+  }
 }
