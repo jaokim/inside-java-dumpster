@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package inside.dumpster.backend.repository;
 
@@ -24,22 +24,29 @@ import javax.imageio.ImageIO;
  */
 @Buggy(because="the thread local var isn't removed")
 public class ImageRepository extends AbstractRepository<LImage> {
-   private static ScheduledThreadPoolExecutor textUploadThreadPool = new ScheduledThreadPoolExecutor(20);
+   private static ScheduledThreadPoolExecutor imageUploadThreadPool = new ScheduledThreadPoolExecutor(20);
 
   @Override
   public StoredData storeData(LImage im) throws IOException {
     if(Bug.isBuggy(this)) {
 //      inputStream = im.getInputStream();
     }
-    return super.storeData(im);
+    File file = createFile(generateRandomString()+".jpg");
+    ImageUploader uplaoder = new ImageUploader(file, im);
+    Id id = new Id(file.getAbsolutePath());
+    StoredData storedData = new StoredData(0, id);
+//    uplaoder.run();
+    imageUploadThreadPool.execute(uplaoder);
+
+    return storedData;
   }
 
-  static class TextUploader implements Runnable {
+  static class ImageUploader implements Runnable {
     private static final ThreadLocal<LImage> imageTempStore = new ThreadLocal<>();
     private final LImage image;
     private final File file;
-    
-    public TextUploader(File file, LImage image) {
+
+    public ImageUploader(File file, LImage image) {
       this.file = file;
       this.image = image;
     }
@@ -48,15 +55,25 @@ public class ImageRepository extends AbstractRepository<LImage> {
       imageTempStore.set(image);
       storeData();
     }
-    
+
     public void storeData() {
       LImage im = imageTempStore.get();
       try {
-        ImageIO.write(im.getRenderedImage(), "jpg", file);
+        System.out.println("About ti write:");
+        ImageIO.getImageWritersBySuffix("jpg").forEachRemaining(
+        i -> {System.out.println("Writer:: "+i.toString());}
+
+        );
+        System.out.println("Img: "+im.getRenderedImage().toString());
+        if (!ImageIO.write(im.getRenderedImage(), "jpeg", file)) {
+          System.out.println("Coulnd't write");
+        }
+        System.out.println("About ti write:");
+
       } catch (IOException ex) {
         Logger.getLogger(ImageRepository.class.getName()).log(Level.SEVERE, null, ex);
       }
-      
+
       if(!Bug.isBuggy(this)) {
         imageTempStore.remove();
       }

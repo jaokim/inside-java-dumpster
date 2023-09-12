@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package inside.dumpster.backend.repository.data;
 
