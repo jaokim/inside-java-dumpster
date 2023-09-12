@@ -7,9 +7,9 @@ package inside.dumpster.bl.auth;
  *
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
-public class NeedToReauthenticateError extends Error {
+public class MustAcceptCookiesError extends Error {
   private final User user;
-  NeedToReauthenticateError(User user) {
+  MustAcceptCookiesError(User user) {
     this.user = user;
   }
 

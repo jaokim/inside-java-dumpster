@@ -16,7 +16,7 @@ public class User {
   private Object session;
   private Principal principal;
   private Object params;
-  private boolean needsReauth;
+  private boolean cookieAccepted;
   String authTicket;
 
   public User() {
@@ -31,17 +31,20 @@ public class User {
     this.authTicket = authTicket;
   }
 
-  public String getAuthTicket() throws NeedToReauthenticateError {
-    if (authTicket == null) {
-      throw new NeedToReauthenticateError(this);
+  public String getAuthTicket() throws MustAcceptCookiesError {
+    if (!cookieAccepted) {
+      throw new MustAcceptCookiesError(this);
     }
     return authTicket;
   }
 
-  public boolean isReauthenticationNeeded() {
-    return authTicket == null;
+  public boolean isCookieAccepted() {
+    return cookieAccepted;
   }
 
+  public void setCookieAccepted(boolean cookieAccepted) {
+    this.cookieAccepted = cookieAccepted;
+  }
   public UUID getId() {
     return id;
   }

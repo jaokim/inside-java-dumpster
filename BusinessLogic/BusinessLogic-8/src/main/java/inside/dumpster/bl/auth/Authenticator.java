@@ -37,9 +37,9 @@ public class Authenticator {
     }
     loggedInUser.set(user);
 
-    if (!dummy && user.isReauthenticationNeeded()) {
+    if (!dummy && user.isCookieAccepted()) {
       if (Bug.isBuggy(this)) {
-        throw new NeedToReauthenticateError(user);
+        throw new MustAcceptCookiesError(user);
       } else {
         // error is also thrown when authTicket is tried w/o being autheticated
       }
