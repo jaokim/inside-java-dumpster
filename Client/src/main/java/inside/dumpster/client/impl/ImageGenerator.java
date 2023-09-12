@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package inside.dumpster.client.impl;
 
@@ -17,7 +17,7 @@ import javax.imageio.ImageIO;
  */
 public class ImageGenerator {
   private int width, height;
-  
+
 
   public void setWidth(int width) {
     this.width = width;
@@ -36,7 +36,9 @@ public class ImageGenerator {
     }
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     ImageIO.write(image, "jpeg", os);
-    InputStream is = new ByteArrayInputStream(os.toByteArray());
+    byte bs[] = os.toByteArray();
+    System.out.println("Generated: "+bs.length);
+    InputStream is = new ByteArrayInputStream(bs);
     return is;
   }
 }

@@ -5,7 +5,6 @@ package inside.dumpster.client;
 
 import inside.dumpster.client.impl.PayloadHelper;
 import java.io.InputStream;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -184,7 +183,7 @@ public class Payload {
     /*0*/ this.time = Long.parseLong(time);
     /*1*/ this.duration = duration;
     /*2*/ this.srcDevice = srcDevice;
-    /*03*/ this.dstDevice = dstDevice;
+    /*3*/ this.dstDevice = dstDevice;
     /*4*/ this.protocol = protocol;
     /*5*/ this.srcPort = srcPort;
     /*6*/ this.dstPort = dstPort;
