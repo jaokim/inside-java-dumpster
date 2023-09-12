@@ -23,7 +23,7 @@ public class NetworkRequestRunnable implements Runnable {
   @Override
   public void run() {
     try {
-      new PostRequest(baseURI).doRequest(req);
+      HttpResult result = new PostRequest(baseURI).doRequest(req);
     } catch (Exception ex) {
       Logger.getLogger(PerformRequests.class.getName()).log(Level.SEVERE, "Req failed: "+req, ex);
     }

@@ -6,6 +6,7 @@ package inside.dumpster.client.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import inside.dumpster.client.Payload;
+import inside.dumpster.client.event.RequestEvent;
 import inside.dumpster.client.impl.PayloadDataGenerator;
 import inside.dumpster.client.impl.PayloadHelper;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.Builder;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,6 +43,7 @@ public class PostRequest {
    * @throws IOException
    */
   public HttpResult doRequest(Payload networkRequest) {
+    final RequestEvent reqEvent = new RequestEvent();
     try {
       byte[] bytes = new byte[networkRequest.getSrcBytes()];
       byte theByte = 'a';
@@ -49,10 +52,17 @@ public class PostRequest {
       mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
       HttpClient client = HttpClient.newBuilder()
               .version(HttpClient.Version.HTTP_1_1)
+              .connectTimeout(Duration.ofSeconds(10))
               .build();
       URI uri = URI.create(baseURI + PayloadHelper.getURI(networkRequest).toASCIIString());
 //      logger.warning(String.format("URI: %s",uri.toString()));
+
+      reqEvent.uri = uri.toString();
+      reqEvent.type = RequestEvent.Type.Network.name();
+      reqEvent.destination = networkRequest.getDestination().toString();
       final PayloadDataGenerator pdg = new PayloadDataGenerator();
+
+      reqEvent.begin();
 
       Builder builder = HttpRequest.newBuilder();
       InputStream is = pdg.genetarePayloadData(networkRequest);
@@ -70,13 +80,27 @@ public class PostRequest {
               .header("TransactionId", networkRequest.getTransactionId())
               .build();
       client.sendAsync(request, BodyHandlers.ofString())
-              .thenApply(HttpResponse::body)
-              .thenAccept((String s) -> {
-                logger.info(String.format("%s: %s, %s", uri, body, s));
-              })
+              .thenAccept((HttpResponse<String> response) -> {
+                reqEvent.result = response.body();
+                reqEvent.status = response.statusCode();
+                logger.info(String.format("%s: %d", uri, reqEvent.status));
+                reqEvent.end();
+                reqEvent.commit();
+
+              } )
+//              .thenApply(HttpResponse::body)
+//              .thenAccept((String s) -> {
+//                reqEvent.result = s;
+//                reqEvent.end();
+//                reqEvent.commit();
+//
+//              })
               .join();
 
     } catch (Exception ex) {
+      reqEvent.result = ex.getMessage();
+      reqEvent.end();
+      reqEvent.commit();
       Logger.getLogger(PostRequest.class.getName()).log(Level.SEVERE, null, ex);
     }
 

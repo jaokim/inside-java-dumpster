@@ -8,11 +8,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.System.Logger;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -128,7 +129,7 @@ public class Arguments<T extends Arguments> {
     public final Arg Help = new Arg("-h", "help", Boolean.class, Arg.Is.Optional, "Get help.", "true");
 
 
-    private static final Logger logger = System.getLogger("BugsBunny");
+    private static final Logger logger = Logger.getLogger("BugsBunny");
 
     private Arg[] init() {
         int i=0;
@@ -201,7 +202,7 @@ public class Arguments<T extends Arguments> {
                         arg.value = props.getProperty(arg.prop, arg.def);
 //                    }
 
-                    logger.log(Logger.Level.INFO, "Prop: " + arg.prop + " : " + arg.value);
+                    logger.log(Level.INFO, "Prop: " + arg.prop + " : " + arg.value);
                 }
             }
         }
@@ -308,7 +309,7 @@ public class Arguments<T extends Arguments> {
 //                                logger.info("Arg: " + inarg.prop + " : " + inarg.value);
 //                            } else  {
                                 inarg.value = args[idx];
-                                logger.log(Logger.Level.INFO, "Arg: " + inarg.prop + " : " + inarg.value);
+                                logger.log(Level.INFO, "Arg: " + inarg.prop + " : " + inarg.value);
 //                            }
 
                         }
@@ -340,7 +341,7 @@ public class Arguments<T extends Arguments> {
         if (Properties.isSet()) {
             Properties properties = new Properties();
             File f = new File(Properties.value);
-            logger.log(Logger.Level.INFO, "Loading properties from: " + f.getAbsolutePath());
+            logger.log(Level.INFO, "Loading properties from: " + f.getAbsolutePath());
             properties.load(new FileReader(f));
             loadProperties(properties);
         }
@@ -348,7 +349,7 @@ public class Arguments<T extends Arguments> {
             for(String filename : PropertiesImports.value.split(",")) {
                 Properties properties = new Properties();
                 File f = new File(filename);
-                logger.log(Logger.Level.INFO, "Loading properties from: " + f.getAbsolutePath());
+                logger.log(Level.INFO, "Loading properties from: " + f.getAbsolutePath());
                 properties.load(new FileReader(f));
                 loadProperties(properties);
             }

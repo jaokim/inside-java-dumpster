@@ -10,6 +10,7 @@ import inside.dumpster.client.web.HttpPayload;
 import inside.dumpster.client.web.HttpPayloadParseLine;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.ConsoleHandler;
@@ -85,6 +86,20 @@ public class Cli {
     Stream<Payload> stream = data.getStream();
 
 
+    if(args.Filter.isSet()) {
+      System.out.println("Filter requests: "+args.Filter.getValue());
+      stream = stream.filter((Payload payload) -> {
+        for (String filter : args.Filter.getValue().split(",")) {
+          System.out.println("Comapting: "+filter+" with: "+payload.getDestination().name());
+          return payload.getDestination().name().matches(filter);
+        }
+        return false;
+      });
+    }
+    if(args.Limit.isSet()) {
+      System.out.println("Limited requests: "+args.Limit.getInteger());
+      stream = stream.limit(args.Limit.getInteger());
+    }
     if(args.Duration.isSet()) {
       int runningtimeSeconds = args.Duration.getInteger();
       Duration duration = Duration.ofSeconds(runningtimeSeconds);
@@ -93,28 +108,20 @@ public class Cli {
         @Override
         public void run() {
           try {
-            Thread.sleep(duration.toMillis() + 100000);
-
+            Thread.sleep(duration.toMillis());
           } catch (InterruptedException ex) {
-
           }
-          System.out.println("Okay, so we've reached the end, and then some. Exiting.");
+          System.out.println("Okay, we've reached the end, scheduling for exit.");
+          scheduler.scheduleForExit();
           //System.exit(0);
+          //Runtime.getRuntime().halt(0);
         }
       });
       t.setDaemon(true);
       t.start();
     }
-    if(args.Limit.isSet()) {
-      System.out.println("Limited requests: "+args.Limit.getInteger());
-      stream = stream.limit(args.Limit.getInteger());
-    }
-    if(args.Filter.isSet()) {
-      System.out.println("Filter requests: "+args.Filter.getValue());
-      stream = stream.filter(payload -> {
-        return payload.getDestination().name().matches(args.Filter.getValue());
-      });
-    }
+
+
     if(args.DelayThreshold.isSet()) {
       scheduler.setDelayThreshold(args.DelayThreshold.getInteger());
     }
@@ -122,11 +129,16 @@ public class Cli {
         stream = stream.filter((t) -> {
           System.out.println("Press enter for new req.");
           try {
-            System.in.read();
+            int ch = System.in.read();
+            if ('q' == ch) {
+                return false;
+            }
           } catch (IOException ex) { }
           return true;
         });
     }
     stream.forEach(scheduler::scheduleRequest);
+
+    scheduler.scheduleForExit();
   }
 }

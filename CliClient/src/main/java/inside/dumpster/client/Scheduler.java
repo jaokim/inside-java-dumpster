@@ -25,6 +25,9 @@ public class Scheduler<P extends Payload> {
 
   private static long totalCount = 0;
   private final static Object lock = new Object();
+  void scheduleForExit() {
+    threadPool.shutdown();
+  }
   ScheduledThreadPoolExecutor threadPool = new ScheduledThreadPoolExecutor(20);
   /** Start in milliseconds. */
   final long start;
@@ -89,7 +92,6 @@ public class Scheduler<P extends Payload> {
 
 
     final long delayFromFirstRequest = timeForThisRequest - timeForFirstRequest;
-    final long fromNow = delayFromFirstRequest + start;
     long delayFromStart = now - start;
     long delay = delayFromFirstRequest - delayFromStart;
     delay = delay / delayThreshold;
@@ -97,17 +99,30 @@ public class Scheduler<P extends Payload> {
     lastlogtime = req.getTime();
 
     long time = now + (delay);
-    ScheduledFuture future = threadPool.schedule(runner, delay, TimeUnit.MILLISECONDS);
+    if (!threadPool.isShutdown()) {
+      ScheduledFuture future = threadPool.schedule(runner, delay, TimeUnit.MILLISECONDS);
+
+    }
     Duration currentDuration = Duration.ofMillis(delayFromStart);
 
     count++;
     int thrCount = threadPool.getQueue().size();
     synchronized (lock) {
+      // pause if there are too many requests scheduled
       while (thrCount >= 200) {
+        if (threadPool.isShutdown()) {
+          System.out.println("Shutting down");
+          System.out.println(threadPool.toString());
+          
+          threadPool.shutdownNow();
+          break;
+        }
+        System.out.println(" "+(threadPool.isShutdown()?"in shutdown":"not in shutdown")+ " "+threadPool.toString());
         try {
+          // if there's  a duration limit, we want to cancel
           if(durationToPostRequests != null) {
             if(durationToPostRequests.minus(currentDuration).isNegative()) {
-              logger.warning("The time to end has come, not processing more log lines.");
+              logger.warning("The time to end has come, not processing any more log lines.");
               threadPool.awaitTermination(10, TimeUnit.SECONDS);
               List leftRunnables = threadPool.shutdownNow();
               logger.warning(String.format("There were %d requests posted that weren't executed", leftRunnables.size()));
