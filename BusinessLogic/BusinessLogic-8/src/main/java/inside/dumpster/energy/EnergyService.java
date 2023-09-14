@@ -54,7 +54,7 @@ public class EnergyService extends BusinessLogicService<EnergyPayload, EnergyRes
       t.start();
       try {
         // the energy threads can be time consuming, allow for early bailout
-        energyThread.wait(40000);
+        energyThread.wait(4000);
       } catch (InterruptedException ex) {
         logger.log(Level.SEVERE, "Interrupted waiting for EnergyThread: " + energyThread.getThreadName(), ex);
       }
