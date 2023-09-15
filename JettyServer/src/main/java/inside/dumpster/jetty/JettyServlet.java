@@ -11,8 +11,7 @@ import inside.dumpster.bl.BusinessLogicException;
 import inside.dumpster.bl.BusinessLogicFactory;
 import inside.dumpster.bl.BusinessLogicServiceWrapper;
 import inside.dumpster.bl.auth.Authenticator;
-import inside.dumpster.bl.auth.NeedToReauthenticateError;
-import inside.dumpster.bl.auth.UnauthorizedException;
+import inside.dumpster.bl.auth.MustAcceptCookiesError;
 import inside.dumpster.bl.auth.User;
 import inside.dumpster.client.Payload;
 import inside.dumpster.client.Payload.Destination;
@@ -55,9 +54,9 @@ public class JettyServlet extends HttpServlet {
     try {
       user = authenticator.authenticateUser(request.getAuthType(), UUID.randomUUID().toString(), request.getUserPrincipal(), new Object(), request.getParameterMap());
 
-      if (user.isReauthenticationNeeded()) {
-        authenticator.reauthenticate(user);
-      }
+//      if (user.isCookieAccepted()) {
+//        authenticator.reauthenticate(user);
+//      }
 
       String pathinfo = request.getPathInfo().substring(1);
       String destination = PayloadHelper.getDestination(pathinfo);
@@ -73,19 +72,22 @@ public class JettyServlet extends HttpServlet {
       Result result = service.invoke(payload);
 
       response.setContentType("application/json");
+      request.setAttribute("payload", payload);
+      request.setAttribute("result", result);
+      request.setAttribute("user", user);
+//response.sendRedirect("web/default.jsp");
 
 //      response.setStatus(HttpServletResponse.SC_OK);
       System.out.println("response:"+result.getResult());
-      response.getWriter().write(gson.toJson(result));
+//      response.getWriter().write(gson.toJson(result));
 
-    } catch (NeedToReauthenticateError ex) {
-      authenticator.reauthenticate(ex.getUser());
-      Logger.getLogger(JettyServlet.class.getName()).log(Level.SEVERE, "Reauth needed");
-      doPost(request, response);
+    } catch (MustAcceptCookiesError ex) {
+      request.setAttribute("acceptCookies", Boolean.TRUE);
 
     } catch (BusinessLogicException ex) {
       Logger.getLogger(JettyServlet.class.getName()).log(Level.SEVERE, null, ex);
     } finally {
+      request.getRequestDispatcher("/default.jsp").forward(request, response);
       authenticator.clearSession();
     }
   }
