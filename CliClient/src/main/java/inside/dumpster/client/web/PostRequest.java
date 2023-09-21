@@ -11,6 +11,8 @@ import inside.dumpster.client.impl.PayloadDataGenerator;
 import inside.dumpster.client.impl.PayloadHelper;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetSocketAddress;
+import java.net.ProxySelector;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -50,12 +52,17 @@ public class PostRequest {
       Arrays.fill(bytes, theByte);
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-      HttpClient client = HttpClient.newBuilder()
+      HttpClient.Builder httpClientBuilder = HttpClient.newBuilder();
+      String proxy;
+      if ((proxy = System.getenv("http_proxy")) != null) {
+        URI proxyUri = URI.create(proxy);
+        httpClientBuilder = httpClientBuilder.proxy(ProxySelector.of(new InetSocketAddress(proxyUri.getHost(), proxyUri.getPort())));
+      }
+      HttpClient client = httpClientBuilder
               .version(HttpClient.Version.HTTP_1_1)
               .connectTimeout(Duration.ofSeconds(10))
               .build();
       URI uri = URI.create(baseURI + PayloadHelper.getURI(networkRequest).toASCIIString());
-//      logger.warning(String.format("URI: %s",uri.toString()));
 
       reqEvent.uri = uri.toString();
       reqEvent.type = RequestEvent.Type.Network.name();
