@@ -36,8 +36,7 @@ public class PayloadHelper {
     public static <P extends Payload> P fillPayloadFromURI(P payload, String uri) {
       String[] parts = uri.split("/");
       int cnt = 0;
-        System.out.println("INNNURI: "+uri);
-        cnt++;
+      cnt++;
       payload.setSrcDevice(parts[cnt++]);
       payload.setSrcPort(parts[cnt++]);
       payload.setSrcBytes(toInt(parts[cnt++]));
