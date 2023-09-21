@@ -7,13 +7,16 @@ import inside.dumpster.backend.repository.data.Data;
 import inside.dumpster.backend.repository.data.Id;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -21,7 +24,17 @@ import java.util.Random;
  * @param <D>
  */
 public abstract class AbstractRepository<D extends Data> {
-  private static File MAIN_DIR = new File("E:/dumpster");
+  private static File MAIN_DIR;
+  static {
+    try {
+      Properties prop = new Properties();
+      prop.load(new FileReader("dumpster.properties"));
+      MAIN_DIR = new File(prop.getProperty("datadir"));
+    } catch (Exception ex) {
+      Logger.getLogger(AbstractRepository.class.getName()).log(Level.SEVERE, null, ex);
+      MAIN_DIR = new File(System.getProperty("java.io.tmpdir"));
+    }
+  }
   public StoredData storeData(D im) throws IOException {
     File file = File.createTempFile("data", ".blob");
     try (
