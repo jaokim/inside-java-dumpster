@@ -392,7 +392,7 @@ public class Payload {
    * @param inputStream
    */
   public void setInputStream(InputStream inputStream) {
-    this.inputStream = inputStream;
+    //this.inputStream = inputStream;
   }
 
 

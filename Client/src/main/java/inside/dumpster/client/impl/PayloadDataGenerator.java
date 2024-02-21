@@ -5,8 +5,10 @@ package inside.dumpster.client.impl;
 
 import inside.dumpster.client.Payload;
 import inside.dumpster.client.Payload.Destination;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 
 /**
  *
@@ -21,16 +23,21 @@ public class PayloadDataGenerator {
       case Image:
         int dst = payload.getDstBytes();
         int src = payload.getSrcBytes();
+        int x, y;
         if(dst <= 0) {
-          dst = src;
+          dst = 100;
         }
         if(src <= 0) {
-          src = dst;
+          src = 100;
         }
-
+        x = y = (int)Math.round(Math.sqrt(dst));
         ImageGenerator generator = new ImageGenerator();
-        generator.setHeight((int)Math.round(Math.sqrt(dst)));
-        generator.setWidth((int)Math.round(Math.sqrt(src)));
+//        System.out.println("Img: "+(int)Math.round(Math.sqrt(dst))/10 + " x "+ (int)Math.round(Math.sqrt(src))/10);
+//        generator.setHeight((int)Math.round(Math.sqrt(dst))/10);
+//        generator.setWidth((int)Math.round(Math.sqrt(src))/10);
+        System.out.println("IOmg: "+x+"x"+y);
+        generator.setHeight(y);
+        generator.setWidth(x);
         return generator.generateImage();
       case Text:
       default:
@@ -39,12 +46,17 @@ public class PayloadDataGenerator {
         long dstpackets = Integer.parseInt(payload.getDstPackets());
         long sent = dstpackets;
         if(sent == 0) {
-          return null;
+          sent = 1000;
         }
-        text.setSentences(sent);
+        text.setSentences(Math.max(1, sent/100));
         return text.generateText();
     }
   }
+
+  public Path getJspPath(Payload payload) {
+    return new File(payload.getDestination().toString() + File.separator + payload.getProtocol() + File.separator + payload.getDstDevice()+".jsp").toPath();
+  }
+
   public Type getPayloadDataType(Destination destination) throws IOException {
     switch(destination) {
       case Comp2:
