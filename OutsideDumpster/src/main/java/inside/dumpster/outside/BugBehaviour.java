@@ -24,6 +24,13 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.management.Attribute;
+import javax.management.AttributeList;
+import javax.management.AttributeNotFoundException;
+import javax.management.InvalidAttributeValueException;
+import javax.management.MBeanException;
+import javax.management.MBeanInfo;
+import javax.management.ReflectionException;
 
 /**
  *
@@ -141,4 +148,5 @@ public class BugBehaviour implements BugBehaviourMXBean {
       System.out.println("Couldn't find foundbugs properties file: " + props.getAbsolutePath());
     }
   }
+
 }

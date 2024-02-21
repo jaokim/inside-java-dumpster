@@ -3,6 +3,8 @@
  */
 package inside.dumpster.outside;
 
+import javax.management.DynamicMBean;
+
 /**
  *
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com

@@ -23,6 +23,8 @@ import javax.management.ObjectName;
  */
 public class Bug {
   private static final AtomicReference<BugBehaviour> BUG_BEHAVIOUR = new AtomicReference<>();
+  private static final Logger logger = Logger.getLogger(Bug.class.getName());
+
   public static boolean isBuggy(Object object) {
     final Class clazz = object.getClass();
     return isBuggy(clazz);
@@ -36,6 +38,7 @@ public class Bug {
     }
     if (clazz.isAnnotationPresent(Buggy.class)) {
       if (System.getProperty("NOBUGS") != null) {
+        logger.info(String.format("Property NOBUGS set, returning false for %s", clazz.getName()));
         return false;
       }
       Buggy buggy = (Buggy)clazz.getAnnotation(Buggy.class);
@@ -58,6 +61,12 @@ public class Bug {
         System.out.println("Setting bug behav: "+bugBehaviour);
         bugBehaviour.loadFromProperties();
         mbs.registerMBean(bugBehaviour, mxbeanName);
+      }
+
+      ObjectName mxbeanSettsingsName = new ObjectName("inside.dumpster.outside:type=Settings");
+      if(!mbs.isRegistered(mxbeanSettsingsName)) {
+        final SettingsImpl settings = new SettingsImpl();
+        mbs.registerMBean(settings, mxbeanSettsingsName);
       }
     } catch (MalformedObjectNameException | InstanceAlreadyExistsException | MBeanRegistrationException | NotCompliantMBeanException ex) {
       throw new RuntimeException(ex);
