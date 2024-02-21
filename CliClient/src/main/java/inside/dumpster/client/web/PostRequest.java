@@ -54,7 +54,7 @@ public class PostRequest {
       mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
       HttpClient.Builder httpClientBuilder = HttpClient.newBuilder();
       String proxy;
-      if ((proxy = System.getenv("http_proxy")) != null) {
+      if (((proxy = System.getenv("http_proxy")) != null) && (System.getProperty("no_proxy") != null)) {
         URI proxyUri = URI.create(proxy);
         httpClientBuilder = httpClientBuilder.proxy(ProxySelector.of(new InetSocketAddress(proxyUri.getHost(), proxyUri.getPort())));
       }
@@ -72,7 +72,7 @@ public class PostRequest {
       reqEvent.begin();
 
       Builder builder = HttpRequest.newBuilder();
-      InputStream is = pdg.genetarePayloadData(networkRequest);
+      InputStream is = InputStream.nullInputStream();//pdg.genetarePayloadData(networkRequest);
       final String body;
       if (is != null) {
         builder.POST(HttpRequest.BodyPublishers.ofInputStream(() -> is));
@@ -91,6 +91,9 @@ public class PostRequest {
                 reqEvent.result = response.body();
                 reqEvent.status = response.statusCode();
                 logger.info(String.format("%s: %d", uri, reqEvent.status));
+                if (reqEvent.status != 200) {
+                  logger.info(String.format("%s: %s", uri, reqEvent.result));
+                }
                 reqEvent.end();
                 reqEvent.commit();
 

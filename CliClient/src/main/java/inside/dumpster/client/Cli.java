@@ -90,7 +90,7 @@ public class Cli {
       System.out.println("Filter requests: "+args.Filter.getValue());
       stream = stream.filter((Payload payload) -> {
         for (String filter : args.Filter.getValue().split(",")) {
-          System.out.println("Comapting: "+filter+" with: "+payload.getDestination().name());
+          System.out.println("Comparing: "+filter+" with: "+payload.getDestination().name());
           return payload.getDestination().name().matches(filter);
         }
         return false;

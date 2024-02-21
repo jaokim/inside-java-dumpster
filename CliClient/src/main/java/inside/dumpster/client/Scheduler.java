@@ -3,8 +3,10 @@
  */
 package inside.dumpster.client;
 
+import inside.dumpster.client.cli.CreateJspFromRequestRunnable;
 import inside.dumpster.client.cli.LocalRequestRunnable;
 import inside.dumpster.client.web.*;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
@@ -35,6 +37,7 @@ public class Scheduler<P extends Payload> {
   boolean debug;
   private final long timeForFirstRequest;
   private String baseURI;
+  private String generateJspPageDestination;
   private long lastlogtime = -1;
   private Duration durationToPostRequests;
   private int delayThreshold = 100;
@@ -80,6 +83,8 @@ public class Scheduler<P extends Payload> {
       };
     } else if (baseURI != null) {
       runner = new NetworkRequestRunnable(req, baseURI);
+    } else if (generateJspPageDestination != null) {
+      runner = new CreateJspFromRequestRunnable(req, Path.of(generateJspPageDestination));
     } else {
       runner = new LocalRequestRunnable(req);
     }
@@ -113,7 +118,7 @@ public class Scheduler<P extends Payload> {
         if (threadPool.isShutdown()) {
           System.out.println("Shutting down");
           System.out.println(threadPool.toString());
-          
+
           threadPool.shutdownNow();
           break;
         }
