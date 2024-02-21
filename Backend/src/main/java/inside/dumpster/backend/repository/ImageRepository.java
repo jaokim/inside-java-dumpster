@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -39,6 +40,11 @@ public class ImageRepository extends AbstractRepository<LImage> {
     imageUploadThreadPool.execute(uplaoder);
 
     return storedData;
+  }
+
+  public static void shutodownAndWaitFor() throws InterruptedException {
+    imageUploadThreadPool.shutdown();
+    imageUploadThreadPool.awaitTermination(2, TimeUnit.SECONDS);
   }
 
   static class ImageUploader implements Runnable {
