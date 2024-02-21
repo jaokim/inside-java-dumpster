@@ -24,7 +24,7 @@ public class Authenticator {
     this.dummy = dummy;
   }
 
-  public User authenticateUser(String authType, String sessionId, Principal principal, Object session, Map<String,String[]> params) {
+  public User authenticateUser(String authType, String sessionId, Principal principal, Object session, Map<String,String[]> params) throws MustAcceptCookiesError {
     User user;
     if (loggedInUser.get() != null) {
       user = loggedInUser.get();
@@ -37,7 +37,7 @@ public class Authenticator {
     }
     loggedInUser.set(user);
 
-    if (!dummy && user.isCookieAccepted()) {
+    if (!user.isCookieAccepted()) {
       if (Bug.isBuggy(this)) {
         throw new MustAcceptCookiesError(user);
       } else {

@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package inside.dumpster.bl;
 
@@ -10,6 +10,7 @@ package inside.dumpster.bl;
 public class BusinessLogicException extends Exception {
 
     public BusinessLogicException() {
+      super();
     }
     public BusinessLogicException(String message, Exception e) {
       super(message, e);
@@ -17,5 +18,5 @@ public class BusinessLogicException extends Exception {
     public BusinessLogicException(Exception e) {
       super(e);
     }
-    
+
 }

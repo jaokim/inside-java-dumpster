@@ -45,9 +45,11 @@ public class JackRabbitService extends BusinessLogicService<JackRabbitPayload, J
         final int numOfBytes = payload.getDstBytes();
         final ByteBuffer bb;
         if(Bug.isBuggy(this)) {
-          bb = allocateDirectByteBuffer(numOfBytes);
+          System.out.println("BUG alloc direct");
+          bb = ByteBuffer.allocateDirect(numOfBytes);//allocateDirectByteBuffer(numOfBytes);
         } else {
-          bb = ByteBuffer.wrap(new byte[numOfBytes]);
+          System.out.println("NO BUG just alloc");
+          bb = ByteBuffer.allocate(numOfBytes);//ByteBuffer.wrap(new byte[numOfBytes]);
         }
 
         String content = "";

@@ -8,6 +8,7 @@ import inside.dumpster.outside.Bug;
 import inside.dumpster.outside.BugBehaviourMXBean;
 import java.io.File;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
@@ -19,8 +20,10 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import jdk.jfr.Recording;
-import jdk.jfr.consumer.EventStream;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+//import jdk.jfr.Recording;
+//import jdk.jfr.consumer.EventStream;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -42,7 +45,7 @@ public class EnergyServiceTest {
     ch.setFormatter(new Formatter() {
       @Override
       public String format(LogRecord record) {
-        return String.format("%5s %8d %s\n", record.getLevel(), record.getLongThreadID(), record.getMessage());
+        return String.format("%5s %8d %s\n", record.getLevel(), record.getThreadID(), record.getMessage());
       }
     });
     for (Handler h : logger.getHandlers()) {
@@ -52,19 +55,29 @@ public class EnergyServiceTest {
     logger.setLevel(Level.ALL);
 
   }
-  Recording rec;
+
+    private String threadPrint() throws Exception {
+      final MBeanServer mrBean = ManagementFactory.getPlatformMBeanServer();
+      final String[] signature = {"[Ljava.lang.String;"};
+      final ObjectName name = ObjectName.getInstance("com.sun.management:type=DiagnosticCommand");
+      final Object[] params = new Object[1];
+      params[0] = new String[]{};
+      Object res = mrBean.invoke(name, "threadPrint", params, signature);
+      return res.toString();
+    }
+//  Recording rec;
 
   int reached=0, nonreached=0;
   @BeforeEach
   public void before(TestInfo testInfo) throws IOException {
-    rec = new Recording();
-    rec.enable("jdk.JavaMonitorEnter");
-    rec.enable("jdk.JavaMonitorWait");
-    rec.enable("jdk.ThreadStart");
-    rec.enable("jdk.ThreadDump");
+//    rec = new Recording();
+//    rec.enable("jdk.JavaMonitorEnter");
+//    rec.enable("jdk.JavaMonitorWait");
+//    rec.enable("jdk.ThreadStart");
+//    rec.enable("jdk.ThreadDump");
     //rec.setDumpOnExit(true);
     //rec.setDestination(Path.of("D:/rec-"+testInfo.getDisplayName()+".jfr"));
-    rec.start();
+//    rec.start();
 
   }
   @AfterEach
@@ -101,20 +114,8 @@ public class EnergyServiceTest {
     doTest("Comp0", "443");
     assertTrue(nonreached != 0, "Reached: "+reached + " non-reached: "+nonreached);
 
-    File recording = File.createTempFile("bug", "jfr");
-    rec.dump(recording.toPath());
-    final AtomicInteger count = new AtomicInteger(0);
-    EventStream stream = EventStream.openFile(recording.toPath());
-    stream.onEvent("jdk.ThreadDump", (event) -> {
-      if (event.toString().contains("Java-level deadlock")) {
-        count.incrementAndGet();
-        System.out.println("Deadlock found: " + event.toString());
-      } else {
-        System.out.println("No deadlock found: " + event.toString());
-      }
-     });
-    stream.start();
-    assertTrue(count.get() > 0);
+    final String threadDump = threadPrint();
+    assertTrue(threadDump.contains("Java-level deadlock"));
   }
 
 

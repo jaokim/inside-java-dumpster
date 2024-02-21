@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package inside.dumpster.eldorado;
 
@@ -17,22 +17,22 @@ import org.junit.jupiter.api.function.Executable;
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
 public class ElDoradoServiceTest {
-    
+
     public ElDoradoServiceTest() {
     }
-    
+
     @BeforeAll
     public static void setUpClass() {
     }
-    
+
     @AfterAll
     public static void tearDownClass() {
     }
-    
+
     @BeforeEach
     public void setUp() {
     }
-    
+
     @AfterEach
     public void tearDown() {
     }
@@ -46,7 +46,7 @@ public class ElDoradoServiceTest {
         ElDoradoPayload payload = new ElDoradoPayload();
         payload.setGold(1254908787);
         ElDoradoService instance = new ElDoradoService(ElDoradoPayload.class, Result.class);
-        
+
 //        StackOverflowError error = assertThrows(StackOverflowError.class, new Executable() {
 //            @Override
 //            public void execute() throws Throwable {
@@ -56,5 +56,5 @@ public class ElDoradoServiceTest {
 //        });
 //        assertNotNull(error);
     }
-    
+
 }
