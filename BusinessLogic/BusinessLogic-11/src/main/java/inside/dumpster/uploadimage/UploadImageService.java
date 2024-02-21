@@ -4,6 +4,8 @@
 package inside.dumpster.uploadimage;
 
 import inside.dumpster.backend.Backend;
+import inside.dumpster.backend.BackendException;
+import inside.dumpster.backend.database.Database;
 import inside.dumpster.backend.repository.StoredData;
 import inside.dumpster.backend.repository.data.LImage;
 import inside.dumpster.bl.BusinessLogicException;
@@ -18,6 +20,7 @@ import java.awt.image.CropImageFilter;
 import java.awt.image.FilteredImageSource;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.SQLException;
 import javax.imageio.ImageIO;
 
 /**
@@ -43,7 +46,7 @@ public class UploadImageService extends BusinessLogicService<UploadImagePayload,
       uploadEvent.size = payload.getDstBytes();
       uploadEvent.begin();
 
-      InputStream is = payload.getInputStream();
+      InputStream is = backend.getDatabase().getImageData(payload.getDstPort());//payload.getInputStream();
       if(is == null) {
         uploadEvent.datatype = "NoData";
         uploadEvent.end();
@@ -85,7 +88,7 @@ public class UploadImageService extends BusinessLogicService<UploadImagePayload,
       uploadEvent.end();
       uploadEvent.commit();
       return result;
-    } catch (IOException ex) {
+    } catch (BackendException | IOException ex) {
       throw new BusinessLogicException();
     }
   }

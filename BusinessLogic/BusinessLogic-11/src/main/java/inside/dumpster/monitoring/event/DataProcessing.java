@@ -3,9 +3,11 @@
  */
 package inside.dumpster.monitoring.event;
 
-import inside.dumpster.monitoring.TransactionEvent;
+import inside.dumpster.client.Payload;
+import inside.dumpster.monitoring.TransactionId;
 import jdk.jfr.Category;
 import jdk.jfr.Description;
+import jdk.jfr.Event;
 import jdk.jfr.Label;
 import jdk.jfr.Name;
 
@@ -17,7 +19,15 @@ import jdk.jfr.Name;
 @Label("Data Processing")
 @Category({"Business Application", "Data", "Processing"})
 @Description("Statistics over data processing events")
-public class DataProcessing extends TransactionEvent {
+public class DataProcessing extends Event {
+  @TransactionId
+  @Label("Transaction Id")
+  public String transactionId;
+
+
+  public void registerPayloadData(Payload payload) {
+    this.transactionId = payload.getTransactionId();
+  }
   @Label("Type of Data")
   @Description("What kind of data is processed. For instance if it's an Image, Video or Text")
   public String datatype;

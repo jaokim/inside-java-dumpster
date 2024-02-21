@@ -6,6 +6,7 @@ package inside.dumpster.uploadtext;
 import inside.dumpster.bl.BusinessLogicException;
 import inside.dumpster.client.impl.TextGenerator;
 import java.io.IOException;
+import jdk.jfr.Recording;
 import jdk.jfr.consumer.RecordedStackTrace;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
@@ -36,6 +37,7 @@ public class UploadTextServiceTest {
 
   @AfterEach
   public void tearDown() {
+    Recording record;
   }
 
   @Test
