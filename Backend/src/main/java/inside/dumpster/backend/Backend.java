@@ -54,10 +54,10 @@ public class Backend {
       return this;
     }
     public Backend build() {
-      if (Settings.DATABASE_CONNECTION_URL.isSet()) {
-        setDatabase(new DatabaseImpl());
-      } else {
-        setDatabase(database);
+      if (database == null) {
+        if (Settings.DATABASE_CONNECTION_URL.isSet()) {
+          setDatabase(new DatabaseImpl());
+        }
       }
       return new Backend(
               database != null ? database : new DatabaseImpl(),
