@@ -12,9 +12,11 @@ import java.util.logging.Logger;
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
 public class EnergyDepositV2 extends EnergyDeposit {
+  private static final Logger logger = Logger.getLogger(EnergyDeposit.class.getName());
 
   public EnergyDepositV2(String port) {
     super(port + "_v2");
+    logger.log(Level.INFO, "Using "+EnergyDepositV2.class.getName());
   }
 
   @Override
@@ -54,7 +56,7 @@ public class EnergyDepositV2 extends EnergyDeposit {
       }
 
     } catch (InterruptedException ex) {
-      Logger.getLogger(EnergyDeposit.class.getName()).log(Level.SEVERE, null, ex);
+      logger.log(Level.SEVERE, null, ex);
     }
 
     return result;
@@ -88,7 +90,7 @@ public class EnergyDepositV2 extends EnergyDeposit {
         Thread.sleep(1);
       }
     } catch (InterruptedException ex) {
-      Logger.getLogger(EnergyDeposit.class.getName()).log(Level.SEVERE, null, ex);
+      logger.log(Level.SEVERE, null, ex);
     }
   }
 
