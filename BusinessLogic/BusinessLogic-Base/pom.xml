@@ -95,7 +95,7 @@
               </resources>
             </configuration>
           </execution>
-<!--          <execution>
+          <execution>
             <id>copy-bl21</id>
             <phase>process-classes</phase>
             <goals>
@@ -113,7 +113,7 @@
                 </resource>
               </resources>
             </configuration>
-          </execution>-->
+          </execution>
         </executions>
       </plugin>
 
@@ -166,10 +166,10 @@
       <version>${project.version}</version>
       <type>jar</type>
     </dependency>
-    <dependency>
+    <!--dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>Monitoring</artifactId>
       <version>${project.version}</version>
-    </dependency>
+    </dependency-->
   </dependencies>
 </project>

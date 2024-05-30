@@ -25,7 +25,7 @@
     <modules>
         <module>BusinessLogic-8</module>
         <module>BusinessLogic-11</module>
-        <!--<module>BusinessLogic-21</module>-->
+        <module>BusinessLogic-21</module>
         <module>BusinessLogic-Base</module>
     </modules>
 <build>

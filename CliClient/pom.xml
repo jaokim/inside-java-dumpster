@@ -19,10 +19,15 @@
       <artifactId>BusinessLogic</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
+    <!--dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>WebClient</artifactId>
       <version>${project.version}</version>
+    </dependency-->
+	<dependency>
+       <groupId>com.fasterxml.jackson.core</groupId>
+       <artifactId>jackson-databind</artifactId>
+       <version>2.6.1</version>
     </dependency>
     <dependency>
       <groupId>org.openjdk.jmh</groupId>
