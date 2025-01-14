@@ -8,7 +8,7 @@ import inside.dumpster.client.Payload.Destination;
 import inside.dumpster.client.Result;
 import inside.dumpster.monitoring.event.ServiceCall;
 import inside.dumpster.monitoring.event.UnhandledServiceCall;
-import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +87,7 @@ public class BusinessLogicFactoryTest {
       performTest();
 
       r.stop();
-      Path f = new File("D:/final.jfr").toPath() ;//Files.createTempFile("recording",".jfr");
+      Path f = Files.createTempFile("recording",".jfr");
       r.dump(f);
 
 
