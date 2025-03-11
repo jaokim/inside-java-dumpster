@@ -38,6 +38,11 @@ public class EnhanceImageResult extends Result {
     }
 
 
+    @Override
+    public String toString() {
+        return this.getResult();
+    }
+
   @Override
   protected void finalize() throws Throwable {
     if(imageBuffer != null) {

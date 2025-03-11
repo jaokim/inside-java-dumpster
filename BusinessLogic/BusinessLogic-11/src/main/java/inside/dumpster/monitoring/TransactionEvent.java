@@ -4,7 +4,6 @@
 package inside.dumpster.monitoring;
 
 import inside.dumpster.client.Payload;
-import jdk.jfr.Event;
 import jdk.jfr.Label;
 
 /**

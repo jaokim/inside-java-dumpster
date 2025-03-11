@@ -5,9 +5,9 @@ package inside.dumpster.bl;
 
 import inside.dumpster.client.Payload;
 import inside.dumpster.client.Result;
-import inside.dumpster.credits.EarnCreditsPayload;
-import inside.dumpster.credits.EarnCreditsResult;
-import inside.dumpster.credits.EarnCreditsService;
+import inside.dumpster.credits.CreditsPayload;
+import inside.dumpster.credits.CreditsResult;
+import inside.dumpster.credits.CreditsService;
 import inside.dumpster.eldorado.ElDoradoPayload;
 import inside.dumpster.eldorado.ElDoradoService;
 import inside.dumpster.energy.EnergyPayload;
@@ -37,12 +37,15 @@ public class ServiceLookup implements ServiceLookupInterface {
 
   @Override
   public BusinessLogicService<? extends Payload, ? extends Result> lookupServiceWrapper(Payload.Destination destination) throws BusinessLogicException {
-    final BusinessLogicService<? extends Payload, ? extends Result> service;
-      ServiceCall serviceCallEvent = new ServiceCall();
-      serviceCallEvent.destination = destination.name();
+    BusinessLogicService<? extends Payload, ? extends Result> service;
+    ServiceCall serviceCallEvent = new ServiceCall();
+    serviceCallEvent.destination = destination.name();
+    if ((service = SMerviceLookupOverride.overrideService(serviceCallEvent, destination)) != null) {
+        
+    } else {
       switch(destination) {
           case IP:
-              service = new EnergyService(EnergyPayload.class, EnergyResult.class);
+              service = new EnergyService();//EnergyPayload.class, EnergyResult.class);
               break;
           case Comp1:
               service = new ElDoradoService(ElDoradoPayload.class, Result.class);
@@ -53,7 +56,7 @@ public class ServiceLookup implements ServiceLookupInterface {
               service = new EnhanceImageService(EnhanceImagePayload.class, EnhanceImageResult.class);
               break;
           case ActiveDirectory:
-              service = new EarnCreditsService(EarnCreditsPayload.class, EarnCreditsResult.class);
+              service = new CreditsService(CreditsPayload.class, CreditsResult.class);
               break;
           case Comp4:
           case Comp7:
@@ -72,6 +75,7 @@ public class ServiceLookup implements ServiceLookupInterface {
               service = new DefaultBusinessLogicService(Payload.class, Result.class);
               return service;
       }
+    }
       serviceCallEvent.serviceClass = service.getClass();
       serviceCallEvent.commit();
 

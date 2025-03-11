@@ -5,7 +5,6 @@ package inside.dumpster.uploadimage;
 
 import inside.dumpster.backend.Backend;
 import inside.dumpster.backend.BackendException;
-import inside.dumpster.backend.database.Database;
 import inside.dumpster.backend.repository.StoredData;
 import inside.dumpster.backend.repository.data.LImage;
 import inside.dumpster.bl.BusinessLogicException;
@@ -20,13 +19,13 @@ import java.awt.image.CropImageFilter;
 import java.awt.image.FilteredImageSource;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.SQLException;
 import javax.imageio.ImageIO;
 
 /**
  *
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
+@inside.dumpster.payload.Image
 public class UploadImageService extends BusinessLogicService<UploadImagePayload, UploadImageResult> {
 
   public UploadImageService(Class<UploadImagePayload> type, Class<UploadImageResult> type1) {
