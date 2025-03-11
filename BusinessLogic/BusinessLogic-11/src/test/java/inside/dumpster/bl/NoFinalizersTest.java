@@ -4,6 +4,7 @@
 package inside.dumpster.bl;
 
 import com.sun.security.auth.UserPrincipal;
+import inside.dumpster.backend.BackendException;
 import inside.dumpster.bl.auth.Authenticator;
 import inside.dumpster.bl.auth.MustAcceptCookiesError;
 import inside.dumpster.bl.auth.UnauthorizedException;
@@ -174,7 +175,7 @@ public class NoFinalizersTest {
    * Method that calls all services with dummy data.
    * @throws BusinessLogicException
    */
-  private void callAllServices() throws BusinessLogicException, UnauthorizedException {
+  private void callAllServices() throws BusinessLogicException, UnauthorizedException, BackendException {
     Authenticator auth = new Authenticator();
     User user;
     try {
