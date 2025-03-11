@@ -23,7 +23,6 @@
 
     <modules>
         <module>Monitoring-Base</module>
-        <module>MonitoringJFR-JDK8</module>
         <module>MonitoringJFR2</module>
     </modules>
 <build>
