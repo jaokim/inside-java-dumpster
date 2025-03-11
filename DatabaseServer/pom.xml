@@ -97,6 +97,7 @@
     <profile>
       <id>generate-db</id>
       <activation>
+          <activeByDefault>false</activeByDefault>
         <file>
           <missing>../release/db/dumpster/db.lck</missing>
         </file>
