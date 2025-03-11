@@ -31,7 +31,12 @@ public class SettingsImpl implements SettingsMBean {
   }
 
   SettingsImpl() {
-    dumpsterProps.setProperty(Settings.DATABASE_CONNECTION_URL.key, System.getenv(Settings.DATABASE_CONNECTION_URL.key) != null ? System.getenv(Settings.DATABASE_CONNECTION_URL.key) : "dumpster");
+    for (Settings setting : Settings.values()) {
+      String val = System.getenv(setting.key);
+      if (val != null) {
+        dumpsterProps.setProperty(setting.key, val);
+      }
+    }
     File dumpsterPropFile = new File("dumpster.properties");
     if (dumpsterPropFile.exists()) {
       Logger.getLogger(SettingsImpl.class.getName()).log(Level.INFO, "Loading properties from "+dumpsterPropFile.getAbsolutePath());
@@ -42,6 +47,14 @@ public class SettingsImpl implements SettingsMBean {
         Logger.getLogger(SettingsImpl.class.getName()).log(Level.SEVERE, null, ex);
       }
     }
+    for (Settings setting : Settings.values()) {
+      String val = System.getProperty(setting.key);
+      if (val != null) {
+          System.out.println("Got property: "+setting.key + " = "+val);
+        dumpsterProps.setProperty(setting.key, val);
+      }
+    }
+    
   }
 
   String getProperty(String key) {
@@ -96,10 +109,13 @@ public class SettingsImpl implements SettingsMBean {
 
   @Override
   public MBeanInfo getMBeanInfo() {
+    MBeanAttributeInfo[] attributes = new MBeanAttributeInfo[Settings.values().length];
+    int i = 0;
+    for (Settings set : Settings.values()) {
+        attributes[i++] = new MBeanAttributeInfo(set.key, String.class.getName(), set.description, true, true, false);
+    }
     MBeanInfo info = new MBeanInfo(this.getClass().getName(), "Settings for Inside the Java Dumspter Business Application",
-            new MBeanAttributeInfo[]{
-              new MBeanAttributeInfo(Settings.DATABASE_CONNECTION_URL.key, String.class.getName(), "URL for database connection", true, true, false)
-            },
+            attributes,
             null,
             null,
             null);

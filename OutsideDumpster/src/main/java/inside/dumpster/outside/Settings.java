@@ -8,12 +8,20 @@ package inside.dumpster.outside;
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
 public enum Settings {
-  DATABASE_CONNECTION_URL("dumpster.databaseConnectionUrl");
+  DATABASE_CONNECTION_URL(
+          "dumpster.databaseConnectionUrl", 
+          "URL for database connection. Example: \"jdbc:derby://localhost:1527/dumpster\""
+  ),
+  SERVICE_LOOKUP(
+          "service_lookup", 
+          "Service lookup mapping. Example: \"foo.*:FooLogic;bar:BarLogic\", will resolve any destination starting with foo \"foo\" to inside.dumpster.FooLogic.FooLogicService."
+  );
 
   final String key;
-
-  Settings(String key) {
+  final String description;
+  Settings(String key, String description) {
     this.key = key;
+    this.description = description;
   }
 
   public String getKey() {
