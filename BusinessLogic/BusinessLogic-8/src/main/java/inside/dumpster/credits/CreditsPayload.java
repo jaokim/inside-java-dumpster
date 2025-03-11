@@ -9,6 +9,6 @@ import inside.dumpster.client.Payload;
  *
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
-public class EarnCreditsPayload extends Payload {
+public class CreditsPayload extends Payload {
   
 }

@@ -13,17 +13,20 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
-@Buggy(because = "it takes up way too much CPU", enabled = false)
-public class EarnCreditsService extends BusinessLogicService<EarnCreditsPayload, EarnCreditsResult> {
-  public EarnCreditsService(Class<EarnCreditsPayload> type, Class<EarnCreditsResult> type1) {
+@Buggy(because = "it takes up way too much CPU", enabled = true)
+public class CreditsService extends BusinessLogicService<CreditsPayload, CreditsResult> {
+  public CreditsService() {
+    super(CreditsPayload.class, CreditsResult.class);
+  }
+  public CreditsService(Class<CreditsPayload> type, Class<CreditsResult> type1) {
     super(type, type1);
   }
 
 
   @Override
-  public EarnCreditsResult invoke(EarnCreditsPayload payload) throws BusinessLogicException {
+  public CreditsResult invoke(CreditsPayload payload) throws BusinessLogicException {
 
-    EarnCreditsResult res = new EarnCreditsResult();
+    CreditsResult res = new CreditsResult();
     if (Bug.isBuggy(this)) {
       if (payload.getSrcPort() != null && payload.getSrcPort().equals("Port06042")) {
         final Runnable cpuConsumerThread =new CPUConsumer();

@@ -9,6 +9,6 @@ import inside.dumpster.client.Result;
  *
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
-public class EarnCreditsResult extends Result {
+public class CreditsResult extends Result {
   
 }
