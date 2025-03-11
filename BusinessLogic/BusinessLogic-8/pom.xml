@@ -35,6 +35,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                   <configuration>
+                        <!--argLine>-XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:FlightRecorderOptions=settings=D:/myprofile.jfc,defaultrecording=true -Xms4G -Xmx4G -XX:-ResizePLAB -XX:MinTLABSize=10M -XX:InitiatingHeapOccupancyPercent=0 -XX:-UseAdaptiveSizePolicy -XX:SurvivorRatio=6 -XX:NewRatio=1  -XX:+UseG1GC  -Dcom.sun.management.jmxremote.port=54321 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1</argLine-->
+                    </configuration>
             </plugin>
         </plugins>
     </build>

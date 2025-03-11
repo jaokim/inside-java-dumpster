@@ -10,9 +10,9 @@
   <packaging>jar</packaging>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <javaVersion>8</javaVersion>
-    <maven.compiler.source>${javaVersion}</maven.compiler.source>
-    <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
+    <javaVersion>21</javaVersion>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
   </properties>
   <name>BusinessLogicBase</name>
   <description>This is the BusinessLogic base application. This creates
@@ -166,10 +166,10 @@
       <version>${project.version}</version>
       <type>jar</type>
     </dependency>
-    <!--dependency>
+    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>Monitoring</artifactId>
       <version>${project.version}</version>
-    </dependency-->
+    </dependency>
   </dependencies>
 </project>

@@ -12,12 +12,11 @@
     <artifactId>BusinessLogicParent</artifactId>
     <packaging>pom</packaging>
     <name>BusinessLogicParent</name>
-    <description>This is the parent project to encapsulate all BusinessLogic for
-      different Java versions.
+    <description>This is the parent project to encapsulate all BusinessLogic for different Java versions.
     </description>
 
     <properties>
-        <javaVersion>7</javaVersion>
+        <javaVersion>17</javaVersion>
         <maven.compiler.source>1.${javaVersion}</maven.compiler.source>
         <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
     </properties>
