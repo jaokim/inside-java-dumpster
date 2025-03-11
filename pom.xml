@@ -18,6 +18,7 @@
     <module>JettyServer</module>
     <module>DumpsterDiving</module>
     <module>DatabaseServer</module>
+    <module>Monitoring</module>
   </modules>
   <!--build>
     <plugins>
