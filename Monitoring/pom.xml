@@ -22,7 +22,7 @@
     </properties>
 
     <modules>
-        <module>Monitoring-Base</module>
+        <module>MonitoringBase</module>
         <module>MonitoringJFR2</module>
     </modules>
 <build>
