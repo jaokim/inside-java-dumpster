@@ -55,4 +55,9 @@ public class Helper {
   public <R extends Result> R convertResult(Class<R> resultlass, Result result) {
     return null;
   }
+  
+  public static int fixedHash(Object value, int min, int max) {
+      int mod = max - min;
+      return Math.abs(value.hashCode() % mod) + min;
+  }
 }

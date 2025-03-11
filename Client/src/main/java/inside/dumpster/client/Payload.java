@@ -406,9 +406,9 @@ public class Payload {
   }
 
 
-    @Override
-    public String toString() {
-        return PayloadHelper.getURI(this).toASCIIString();
-    }
+  @Override
+  public String toString() {
+    return PayloadHelper.getURI(this).toASCIIString();
+  }
 
 }
