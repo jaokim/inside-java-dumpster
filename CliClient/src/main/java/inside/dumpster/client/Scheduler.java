@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,6 +30,18 @@ public class Scheduler<P extends Payload> {
   private final static Object lock = new Object();
   void scheduleForExit() {
     threadPool.shutdown();
+    while (!threadPool.isTerminated()) {
+        System.out.println("Not terminated");
+        try {
+            Thread.sleep(Duration.ofSeconds(1));
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Scheduler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    Thread.dumpStack();
+    System.out.println("Terminated.");
+    System.exit(0);
+    
   }
   ScheduledThreadPoolExecutor threadPool = new ScheduledThreadPoolExecutor(20);
   /** Start in milliseconds. */
@@ -41,6 +54,7 @@ public class Scheduler<P extends Payload> {
   private long lastlogtime = -1;
   private Duration durationToPostRequests;
   private int delayThreshold = 100;
+  final static AtomicLong LAST_REQUEST = new AtomicLong();
   public Scheduler(long firsttime) {
     this(null, firsttime, false);
   }
@@ -106,7 +120,7 @@ public class Scheduler<P extends Payload> {
     long time = now + (delay);
     if (!threadPool.isShutdown()) {
       ScheduledFuture future = threadPool.schedule(runner, delay, TimeUnit.MILLISECONDS);
-
+      LAST_REQUEST.incrementAndGet();
     }
     Duration currentDuration = Duration.ofMillis(delayFromStart);
 
