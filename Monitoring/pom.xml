@@ -16,13 +16,13 @@
     </description>
 
     <properties>
-        <javaVersion>7</javaVersion>
+        <javaVersion>8</javaVersion>
         <maven.compiler.source>1.${javaVersion}</maven.compiler.source>
         <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
     </properties>
 
     <modules>
-        <module>MonitoringBase</module>
+        <module>Monitoring-Base</module>
         <module>MonitoringJFR2</module>
     </modules>
 <build>
