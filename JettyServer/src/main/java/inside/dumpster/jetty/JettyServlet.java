@@ -7,6 +7,7 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import inside.dumpster.backend.BackendException;
 import inside.dumpster.bl.BusinessLogicException;
 import inside.dumpster.bl.BusinessLogicFactory;
 import inside.dumpster.bl.BusinessLogicServiceWrapper;
@@ -84,7 +85,7 @@ public class JettyServlet extends HttpServlet {
     } catch (MustAcceptCookiesError ex) {
       request.setAttribute("acceptCookies", Boolean.TRUE);
 
-    } catch (BusinessLogicException ex) {
+    } catch (BusinessLogicException | BackendException ex) {
       Logger.getLogger(JettyServlet.class.getName()).log(Level.SEVERE, null, ex);
     } finally {
       request.getRequestDispatcher("/default.jsp").forward(request, response);
