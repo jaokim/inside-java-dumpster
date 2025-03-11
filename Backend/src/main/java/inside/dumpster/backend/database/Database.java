@@ -4,6 +4,7 @@
 package inside.dumpster.backend.database;
 
 import inside.dumpster.backend.BackendException;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
 /**
@@ -11,6 +12,8 @@ import java.io.InputStream;
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
 public interface Database {
+  public InputStream getPayloadData(DatabaseImpl.DataType dataType, String payload) throws BackendException;
+
   public InputStream getImageData(String dstPort) throws BackendException;
 
   public InputStream getTextData(String srcPort) throws BackendException;
@@ -23,4 +26,4 @@ public interface Database {
 
   public void insertTextData(String srcPort, InputStream iStream, boolean overwrite) throws BackendException;
 
-  }
+}

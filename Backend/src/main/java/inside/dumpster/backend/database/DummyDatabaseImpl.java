@@ -41,7 +41,20 @@ public class DummyDatabaseImpl implements Database {
 
   @Override
   public void insertTextData(String srcPort, InputStream iStream, boolean overwrite) throws BackendException {
-    
+
+  }
+
+  @Override
+  public InputStream getPayloadData(DatabaseImpl.DataType dataType, String payload) throws BackendException {
+    switch(dataType) {
+      case UserImage:
+      case Image:
+        return getImageData(payload);
+      case Text:
+        return getTextData(payload);
+      default:
+        return null;
+    }
   }
 
 }

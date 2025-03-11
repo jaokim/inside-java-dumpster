@@ -5,14 +5,17 @@ package inside.dumpster.backend;
 
 import inside.dumpster.backend.database.Database;
 import inside.dumpster.backend.database.DatabaseImpl;
+import inside.dumpster.backend.database.DummyDatabaseImpl;
 import inside.dumpster.backend.repository.ImageRepository;
 import inside.dumpster.outside.Settings;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
 public class Backend {
+  private static final Logger logger = Logger.getLogger(Backend.class.getName());
   private final Database database;
   private final ImageRepository imageRepository;
 
@@ -56,11 +59,11 @@ public class Backend {
     public Backend build() {
       if (database == null) {
         if (Settings.DATABASE_CONNECTION_URL.isSet()) {
-          setDatabase(new DatabaseImpl());
+          setDatabase(new DatabaseImpl(Settings.DATABASE_CONNECTION_URL.get()));
         }
       }
       return new Backend(
-              database != null ? database : new DatabaseImpl(),
+              database != null ? database : new DummyDatabaseImpl(),
               imageRepository != null ? imageRepository : new ImageRepository());
     }
   }

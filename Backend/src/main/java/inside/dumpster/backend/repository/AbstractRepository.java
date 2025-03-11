@@ -31,7 +31,7 @@ public abstract class AbstractRepository<D extends Data> {
       prop.load(new FileReader("dumpster.properties"));
       MAIN_DIR = new File(prop.getProperty("datadir"));
     } catch (Exception ex) {
-      Logger.getLogger(AbstractRepository.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(AbstractRepository.class.getName()).log(Level.WARNING, "Error reading dumpster.properties and propertyr \"dataDir\". Setting to tmp dir.", ex);
       MAIN_DIR = new File(System.getProperty("java.io.tmpdir"));
     }
   }
