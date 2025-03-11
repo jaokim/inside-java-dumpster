@@ -3,6 +3,7 @@
  */
 package inside.dumpster.micronaut;
 
+import inside.dumpster.backend.BackendException;
 import inside.dumpster.bl.BusinessLogicException;
 import inside.dumpster.bl.BusinessLogicFactory;
 import inside.dumpster.bl.BusinessLogicServiceWrapper;
@@ -76,7 +77,7 @@ public class MicronautController {
 
     } catch (MustAcceptCookiesError ex) {
 
-    } catch (BusinessLogicException ex) {
+    } catch (BusinessLogicException | BackendException ex) {
       java.util.logging.Logger.getLogger(MicronautController.class.getName()).log(Level.SEVERE, null, ex);
     } finally {
       authenticator.clearSession();
