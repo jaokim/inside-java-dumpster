@@ -3,20 +3,25 @@
  */
 package inside.dumpster.bl.auth;
 
+import java.io.OutputStream;
 import java.security.Principal;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
 public class User {
+  private static final Logger logger = Logger.getLogger(Authenticator.class.getName());
   private UUID id;
   private Object session;
   private Principal principal;
   private Object params;
   private boolean cookieAccepted;
+  private OutputStream userData;
+  private long timeout;
   String authTicket;
 
   public User() {
@@ -60,4 +65,33 @@ public class User {
   void setPrincipal(Principal principal) {
     this.principal = principal;
   }
+
+  public void setUserData(OutputStream is) {
+    this.userData = is;
+  }
+
+  public void setTimeout(long timeout) {
+    this.timeout = timeout;
+  }
+
+  public long getTimeout() {
+    return timeout;
+  }
+
+  public OutputStream getUserData() {
+    return userData;
+  }
+
+  public Principal getPrincipal() {
+    return principal;
+  }
+
+  public Object getParams() {
+    return params;
+  }
+
+  public Object getSession() {
+    return session;
+  }
+
 }

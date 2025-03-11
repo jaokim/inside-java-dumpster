@@ -65,9 +65,10 @@ public class EnergyDepositV2 extends EnergyDeposit {
   @Override
   protected void doDepositRun() {
     try {
+      double initialDeposit;
+      double depositBonus;
+
       while (true) {
-        double initialDeposit;
-        double depositBonus;
         final long localIterations;
         synchronized (iterationsLock) {
           while (iterations == 0) {
@@ -83,11 +84,11 @@ public class EnergyDepositV2 extends EnergyDeposit {
           depositLock.notify();
 
         }
-        Thread.sleep(1);
+        //Thread.sleep(1);
         synchronized (iterationsLock) {
           iterationsLock.notify();
         }
-        Thread.sleep(1);
+       // Thread.sleep(1);
       }
     } catch (InterruptedException ex) {
       logger.log(Level.SEVERE, null, ex);

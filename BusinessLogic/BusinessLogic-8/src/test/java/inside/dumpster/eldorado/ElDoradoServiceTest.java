@@ -51,7 +51,7 @@ public class ElDoradoServiceTest {
 //            @Override
 //            public void execute() throws Throwable {
 //                Result result = instance.invoke(payload);
-//                fail("No SOE thrown");
+////                fail("No SOE thrown");
 //            }
 //        });
 //        assertNotNull(error);

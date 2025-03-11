@@ -11,7 +11,7 @@ import inside.dumpster.monitoring.Event;
  */
 public class ServiceCall extends Event {
 
-  public ServiceCall() { }
+  public ServiceCall() {System.out.println("New secrice vall"); }
 
   public String destination;
 

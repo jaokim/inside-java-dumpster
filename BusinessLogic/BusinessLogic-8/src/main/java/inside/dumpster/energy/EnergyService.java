@@ -41,9 +41,10 @@ public class EnergyService extends BusinessLogicService<EnergyPayload, EnergyRes
     }
   }
 
-  public EnergyService(Class<EnergyPayload> payloadClass, Class<EnergyResult> resultClass) {
-    super(payloadClass, resultClass);
-  }
+
+    public EnergyService() {
+        super(EnergyPayload.class, EnergyResult.class);
+    }
 
   @Override
   public EnergyResult invoke(EnergyPayload payload) throws BusinessLogicException {

@@ -47,6 +47,9 @@ public class BusinessLogicServiceWrapper<SpecificPayload extends Payload, Specif
     serviceInvocation.serviceClass = service.getClass();
     serviceInvocation.registerPayloadData(payload);
     serviceInvocation.begin();
+    if (this.service.payloadClass == null) {
+            throw new NullPointerException("Payload calss is null for :" + this.service.getClass());
+        }
 
     SpecificPayload convertedPayload = Helper.convertPayload(this.service.payloadClass, payload);
 

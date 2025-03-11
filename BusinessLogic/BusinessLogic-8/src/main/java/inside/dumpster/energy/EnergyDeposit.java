@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  *
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
-@Buggy(because = "it has a deadlock", enabled = true)
+@Buggy(because = "it has a deadlock", enabled = false)
 public class EnergyDeposit implements Runnable {
   private static final Logger logger = Logger.getLogger(EnergyDeposit.class.getName());
   private static final Map<String, EnergyDepositThread> threads = new HashMap<>();
@@ -50,12 +50,12 @@ public class EnergyDeposit implements Runnable {
         deposit = threads.get(key).deposit;
       } else {
         if (Bug.isBuggy(EnergyDeposit.class)) {
-        // EnergyDepsoit is the buggy one
-        deposit = new EnergyDeposit(destPort);
-      } else {
-        // this is the not buggy version, and the bug is not enabled
-        deposit = new EnergyDepositV2(destPort);
-      }
+          // EnergyDepsoit is the buggy one
+          deposit = new EnergyDeposit(destPort);
+        } else {
+          // this is the not buggy version, and the bug is not enabled
+          deposit = new EnergyDepositV2(destPort);
+        }
         Thread t = ThreadHelper.createThread(deposit, key);
         threads.put(key, new EnergyDepositThread(t, deposit));
         threads.notifyAll();
@@ -83,20 +83,25 @@ public class EnergyDeposit implements Runnable {
     try {
 
       synchronized (iterationsLock) {
+        logger.info("exchgEnergy | Have iterationslock: " +iterationsLock.hashCode());
         this.iterations = payload.getIterations();
         synchronized (depositLock) {
           deposit = deposit.add(BigDecimal.valueOf(payload.getIngoingWattage()));
         }
         iterationsLock.notify();
       }
+      logger.info("exchgEnergy | Dropped iterationslock: " +iterationsLock.hashCode());
 
 
       while (!result.isReached()) {
         int wattageTaken = 0;
         synchronized (depositLock) {
+          logger.info("exchgEnergy | Have depositlock: " +depositLock.hashCode());
           while (!result.isReached()) {
             if (deposit.compareTo(BigDecimal.ONE) < 0) {
+              logger.info(String.format(depositLock.hashCode() + "Waiting on deposit lock, current deposit is %s ...", deposit.toEngineeringString()));
               depositLock.wait();
+              logger.info(String.format(depositLock.hashCode() + "Got deposit lock, current deposit is %s ...", deposit.toEngineeringString()));
 
             } else {
               deposit = deposit.subtract(BigDecimal.ONE);
@@ -111,6 +116,8 @@ public class EnergyDeposit implements Runnable {
             }
           }
         }
+        logger.info("exchgEnergy | Dropped depositlock: " +depositLock.hashCode());
+
         Thread.sleep(10);
       }
 
@@ -123,11 +130,13 @@ public class EnergyDeposit implements Runnable {
 
   protected void doDepositRun() {
     try {
+      double initialDeposit;
+      double depositBonus;
       while (true) {
-        double initialDeposit;
-        double depositBonus;
         final long localIterations;
         synchronized (iterationsLock) {
+          logger.info("doDeposit | Have    iterationslock: " +iterationsLock.hashCode());
+
           while (iterations == 0) {
 
             iterationsLock.wait();
@@ -137,8 +146,11 @@ public class EnergyDeposit implements Runnable {
           initialDeposit = deposit.doubleValue();
           depositBonus = calculateDepositBonus(initialDeposit, localIterations);
         }
-        
+        logger.info("doDeposit | Dropped iterationslock: " +iterationsLock.hashCode());
+
         synchronized (depositLock) {
+          logger.info("doDeposit | Have    depositlock: " +depositLock.hashCode());
+
           deposit = /*deposit.add*/(new BigDecimal(depositBonus));
           depositLock.notify();
 
@@ -148,6 +160,8 @@ public class EnergyDeposit implements Runnable {
             iterationsLock.notify();
           }
         }
+        logger.info("doDeposit | Dropped depositlock: " +depositLock.hashCode());
+
         Thread.sleep(1);
       }
     } catch (InterruptedException ex) {

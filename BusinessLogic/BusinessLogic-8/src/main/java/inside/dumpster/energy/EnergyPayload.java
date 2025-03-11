@@ -11,7 +11,7 @@ import inside.dumpster.client.Payload;
  */
 public class EnergyPayload extends Payload {
   public Long getIterations() {
-    return Long.parseLong(this.getDuration());
+    return this.getDuration() != null ? Long.parseLong(this.getDuration()) : 0;
   }
 
   public int getIngoingWattage() {
@@ -23,10 +23,10 @@ public class EnergyPayload extends Payload {
   }
 
   public int getRequestedWattage() {
-    return this.getDstBytes();
+    return Integer.parseInt(this.getSrcPackets());
   }
 
   public void setRequestedWattage(int watts) {
-    this.setDstBytes(watts);
+    this.setSrcPackets(String.valueOf(watts));
   }
 }

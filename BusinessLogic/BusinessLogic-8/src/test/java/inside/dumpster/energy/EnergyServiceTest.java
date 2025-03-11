@@ -124,15 +124,17 @@ public class EnergyServiceTest {
     EnergyPayload p1 = new EnergyPayload();
 
     p1.setSrcDevice(srcDevice);
-    p1.setIngoingWattage(550);
-    p1.setRequestedWattage(5000);
+    //p1.setIngoingWattage(550);
+    //p1.setRequestedWattage(5000);
+    p1.setIngoingWattage(346291); // data from newtflow
+    p1.setRequestedWattage(418); // data from newtflow
     p1.setDstPort(destPort);
     p1.setSrcPort("30k");
     p1.setDuration("30000");
     final AtomicInteger id = new AtomicInteger(1);
     System.out.println("Starting one big consumer");
     Thread t = new Thread(() -> {
-        EnergyService service = new EnergyService(EnergyPayload.class, EnergyResult.class);
+        EnergyService service = new EnergyService();//EnergyPayload.class, EnergyResult.class);
         try {
           p1.setTransactionId(String.valueOf(id.addAndGet(1)));
           EnergyResult res = service.invoke(p1);
@@ -150,14 +152,16 @@ public class EnergyServiceTest {
     p.setSrcDevice(srcDevice);
     p.setSrcPort("1k");
     p.setDstPort(destPort);
-    p.setIngoingWattage(1000);  // 1000*10 = 10000 -> -5000 -> 5000
-    p.setRequestedWattage(50);  // 50*10 = 500
+    //p.setIngoingWattage(1000);  // 1000*10 = 10000 -> -5000 -> 5000
+    //p.setRequestedWattage(50);  // 50*10 = 500
+    p.setIngoingWattage(1676508);  // 1000*10 = 10000 -> -5000 -> 5000
+    p.setRequestedWattage(2047);  // 50*10 = 500
     p.setDuration("1000");
 
 
     for (int i = 0; i < 10; i++) {
       Thread t1 = new Thread(() -> {
-        EnergyService service = new EnergyService(EnergyPayload.class, EnergyResult.class);
+        EnergyService service = new EnergyService();//EnergyPayload.class, EnergyResult.class);
         try {
           p.setTransactionId(String.valueOf(id.addAndGet(1)));
           p.setSrcPort("1k");
