@@ -3,17 +3,19 @@
  */
 package inside.dumpster.database;
 
+import inside.dumpster.backend.database.DatabaseImpl;
 import inside.dumpster.client.Payload;
 import inside.dumpster.client.impl.NetFlowData;
 import inside.dumpster.client.impl.ParseLine;
 import inside.dumpster.client.impl.PayloadDataGenerator;
+import inside.dumpster.outside.Bug;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import static java.sql.Types.BLOB;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -45,10 +47,36 @@ public class DatabaseGenerator {
   }
 
   public static void main(String[] args) throws Exception {
+      System.out.println("Args: "+args);
     new DatabaseGenerator().generateDatabase(args);
+    //new DatabaseGenerator().generateDatabaseOld(args);
+  }
+  public void generateDatabase(String[] args) throws Exception {
+    final PayloadDataGenerator generator = new PayloadDataGenerator();
+    Bug.getMXBean().setBuggy(DatabaseImpl.class.getName(), Boolean.FALSE);
+
+    DatabaseImpl database = new DatabaseImpl(args.length > 0 ? args[0] : "jdbc:derby://localhost:1527/dumpster");
+    database.create();
+    Random rand = new Random();
+    for (int i=0; i < DatabaseImpl.MAX_DATA_ID ; i++) {
+      InputStream iStream;
+      int x = rand.nextInt(500, 700);
+      int y = rand.nextInt(300, 600);
+      iStream = generator.generateImage(x, y);
+      database.insertData(DatabaseImpl.DataType.Image.name(), i, iStream);
+
+      int sentences = rand.nextInt(30, 1000);
+      int seed = rand.nextInt();
+      iStream = generator.generateText(seed, sentences);
+      database.insertData(DatabaseImpl.DataType.Text.name(), i, iStream);
+
+      iStream = generator.generateImage(800, 800);
+      database.insertData(DatabaseImpl.DataType.UserImage.name(), i, iStream);
+
+    }
   }
 
-  public void generateDatabase(String[] args) throws Exception {
+  public void generateDatabaseOld(String[] args) throws Exception {
 //    Recording rec = new Recording(Configuration.getConfiguration("default"));
 //    rec.setDestination(Path.of("E:/derby-run.jfr"));
 //    rec.setToDisk(true);

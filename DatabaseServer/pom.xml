@@ -35,6 +35,11 @@
       <artifactId>Client</artifactId>
       <version>${project.version}</version>
     </dependency>
+        <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>Backend</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -105,7 +110,7 @@
 
             <configuration>
               <mainClass>inside.dumpster.database.DatabaseGenerator</mainClass>
-              <arguments>target/../../release/db/dumpster</arguments>
+              <arguments>jdbc:derby:../release/db/dumpster</arguments>
             </configuration>
             <executions>
               <execution>

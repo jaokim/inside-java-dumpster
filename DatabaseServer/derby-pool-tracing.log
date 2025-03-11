@@ -1,0 +1,4 @@
+[derby] BEGIN TRACE_CONNECTS
+[derby] Attempting connection to localhost:1527/dumpster
+[derby] Using properties: { traceFile=derby-pool-tracing.log, databaseName=dumpster, maxStatements=0, serverName=localhost, traceLevel=100, retrieveMessageText=true, ssl=off, portNumber=1527, dataSourceName=jdbc:derby:../release/db/dumpster, securityMechanism=4, loginTimeout=0, traceFileAppend=false, user=APP }
+[derby] END TRACE_CONNECTS
