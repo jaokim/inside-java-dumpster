@@ -7,20 +7,17 @@ import inside.dumpster.backend.BackendException;
 import inside.dumpster.backend.utils.Utils;
 import inside.dumpster.outside.Bug;
 import inside.dumpster.outside.Buggy;
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.sql.DataSource;
+import org.apache.derby.jdbc.BasicEmbeddedConnectionPoolDataSource40;
 import org.apache.derby.jdbc.ClientConnectionPoolDataSource;
-//import org.apache.derby.iapi.jdbc.EmbeddedDriver;
 
 /**
  *
@@ -29,7 +26,8 @@ import org.apache.derby.jdbc.ClientConnectionPoolDataSource;
 @Buggy(because = "it doesn't use a connection pool")
 public class DatabaseImpl implements Database {
   private final String connectionUrl;
-  private final DataSource dataSource;
+  private DataSource dataSource;
+  private boolean embedded;
   /**
    * All data blobs reside in "buckets".
    */
@@ -39,14 +37,28 @@ public class DatabaseImpl implements Database {
   }
 
   public DatabaseImpl(String connectionUrl) {
+    this(connectionUrl, false);
+  }
+  public DatabaseImpl(String connectionUrl, boolean embedded) {
     this.connectionUrl = connectionUrl;
-    ClientConnectionPoolDataSource cpds = new ClientConnectionPoolDataSource();
-    cpds.setDataSourceName(connectionUrl);
-    cpds.setDatabaseName("dumpster");//connectionUrl.replace("jdbc:derby:", ""));
-    cpds.setTraceFile("derby-pool-tracing.log");
-    cpds.setTraceLevel(100);
-    dataSource = cpds;
-
+    this.embedded = embedded;
+  }
+  private void init() {
+    if (dataSource != null) return;
+    if (embedded) {
+      BasicEmbeddedConnectionPoolDataSource40 bde = new BasicEmbeddedConnectionPoolDataSource40();
+      bde.setDataSourceName("dumpster");
+      bde.setDatabaseName(connectionUrl.replace("jdbc:derby:", ""));
+      dataSource = bde;
+      
+    } else  {
+      ClientConnectionPoolDataSource cpds = new ClientConnectionPoolDataSource();
+      cpds.setDataSourceName(connectionUrl);
+      cpds.setDatabaseName("dumpster");//connectionUrl.replace("jdbc:derby:", ""));
+      cpds.setTraceFile("derby-pool-tracing.log");
+      cpds.setTraceLevel(100);
+      dataSource = cpds;
+    }
   }
 
 //  private enum Type {
@@ -95,7 +107,7 @@ public class DatabaseImpl implements Database {
   public DatabaseImpl createIfNotExists() throws SQLException {
     Connection conn = null;
     try {
-      conn = DriverManager.getConnection(connectionUrl);
+      conn = getConnection();
     } catch (SQLException ex) {
       if (ex.getMessage().contains("not found")) {
         return create();
@@ -111,7 +123,7 @@ public class DatabaseImpl implements Database {
   }
 
   public DatabaseImpl create() throws SQLException {
-    try (Connection conn2 = DriverManager.getConnection(connectionUrl + ";create=true")) {
+    try (Connection conn2 = getConnection()) {//connectionUrl + ";create=true")) {
       try {
         conn2.createStatement().execute("DROP TABLE db_payload");
         System.out.println("Dropped table db_payload");
@@ -151,7 +163,6 @@ public class DatabaseImpl implements Database {
 //                    "INSERT INTO textdata(destination, dstPort, dstDevice, srcPort, srcDevice, data) VALUES(?,?,?,?,?,?)");
 //          conn2.createStatement().execute("CREATE TABLE srcPortData(srcPort varchar(25), FOREIGN KEY ("+Table.imagedata.fkey()+") REFERENCES "+Table.imagedata+"(id))");
 //          conn2.createStatement().execute("CREATE TABLE "+Table.textdata+"(PRIMARY KEY id, data blob NOT NULL)");
-
 return this;
     }
   }
@@ -163,6 +174,7 @@ DatabaseImpl database = new DatabaseImpl(args.length > 0 ? args[0] : "jdbc:derby
   }
 
   public Connection getConnection() throws SQLException {
+    init();
     if (Bug.isBuggy(this)) {
       return getRawConnection();
     } else {
@@ -231,7 +243,7 @@ DatabaseImpl database = new DatabaseImpl(args.length > 0 ? args[0] : "jdbc:derby
     try (
             final Connection conn = getConnection();
             final PreparedStatement textInsert = conn.prepareStatement(
-                    "INSERT INTO db_data(payload_id, data_type, data) VALUES(?,?,?)", new String[] { "data_id"});) {
+                    "INSERT INTO db_data(payload_id, data_type, data) VALUES(?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
       int cnt = 1;
       textInsert.setInt(cnt++, value);
       textInsert.setString(cnt++, datatype);

@@ -28,11 +28,12 @@ public class DatabaseGenerator {
     Connection conn;
     String connectionUrl = "jdbc:derby:" + dbLocation;
     try {
-
+      System.out.println("Gettting connection for :"+connectionUrl);
 //    Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
       conn = DriverManager.getConnection(connectionUrl);
     } catch (SQLException ex) {
       if (ex.getMessage().contains("not found")) {
+        System.out.println("onnection for :"+connectionUrl+ " not found, adding ;create=true \"" +connectionUrl + ";create=true"+ "\"");
         conn = DriverManager.getConnection(connectionUrl + ";create=true");
 
         //conn.createStatement().execute("CREATE TABLE textdata(destination varchar(255), dstPort varchar(25), dstDevice varchar(25), srcPort varchar(25), srcDevice varchar(25), data blob)");
@@ -54,8 +55,9 @@ public class DatabaseGenerator {
   public void generateDatabase(String[] args) throws Exception {
     final PayloadDataGenerator generator = new PayloadDataGenerator();
     Bug.getMXBean().setBuggy(DatabaseImpl.class.getName(), Boolean.FALSE);
-
-    DatabaseImpl database = new DatabaseImpl(args.length > 0 ? args[0] : "jdbc:derby://localhost:1527/dumpster");
+    String connectionString = args.length > 0 ? args[0] : "jdbc:derby://localhost:1527/dumpster";
+    System.out.println("Using connection string: "+connectionString);
+    DatabaseImpl database = new DatabaseImpl(connectionString, true);
     database.create();
     Random rand = new Random();
     for (int i=0; i < DatabaseImpl.MAX_DATA_ID ; i++) {

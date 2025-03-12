@@ -54,10 +54,6 @@ public class PayloadDataGenerator {
 
   public InputStream generateImage(int x, int y) throws IOException {
     ImageGenerator generator = new ImageGenerator();
-//        System.out.println("Img: "+(int)Math.round(Math.sqrt(dst))/10 + " x "+ (int)Math.round(Math.sqrt(src))/10);
-//        generator.setHeight((int)Math.round(Math.sqrt(dst))/10);
-//        generator.setWidth((int)Math.round(Math.sqrt(src))/10);
-    System.out.println("IOmg: " + x + "x" + y);
     generator.setHeight(y);
     generator.setWidth(x);
     return generator.generateImage();
