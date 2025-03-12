@@ -10,6 +10,8 @@
   <body>
     <div>
     <small>User: <%=user.getId()%> <%=user.isCookieAccepted()%></small>
+    <small>Database: <%=inside.dumpster.backend.Backend.getInstance().getDatabase()%></small>
+    
     </div>
     <h2>Dest: <%=payload.getDstDevice()%></h2>
     <h2>Src:  <%=payload.getSrcDevice()%></h2>

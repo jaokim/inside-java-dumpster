@@ -38,6 +38,8 @@ public class JettyServer {
 
   public void start() throws Exception {
     Bug.registerMXBean();
+    
+    
 
     server = new Server();
 

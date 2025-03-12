@@ -42,6 +42,7 @@ public class DatabaseImpl implements Database {
   public DatabaseImpl(String connectionUrl, boolean embedded) {
     this.connectionUrl = connectionUrl;
     this.embedded = embedded;
+    init();
   }
   private void init() {
     if (dataSource != null) return;
@@ -279,5 +280,10 @@ DatabaseImpl database = new DatabaseImpl(args.length > 0 ? args[0] : "jdbc:derby
   }
 
 
+
+  @Override
+  public String toString() {
+    return dataSource + "; " + connectionUrl;
+  }
 
 }
