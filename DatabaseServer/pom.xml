@@ -89,7 +89,7 @@
               <target>
                 <copy file="target/${project.artifactId}-${project.version}-jar-with-dependencies.jar" tofile="../release/db/${project.artifactId}.jar"/>
                 <copy file="src/release/Dockerfile" tofile="../release/db/Dockerfile"/>
-                <copy file="src/release/prepare.sh" tofile="../release/db/"/>
+                <copy file="src/release/prepare.sh" tofile="../release/db/prepare.sh"/>
               </target>
             </configuration>
             <goals>
