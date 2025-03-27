@@ -298,7 +298,7 @@ public abstract class Arguments<T extends Arguments> {
         throwException = false;
         return parseArgs(args);
     }
-
+    
     public T parseArgs(String... args) throws Exception {
         if(args == null) return (T)this;
         for (Arg inarg : values()) {

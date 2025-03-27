@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
 public class DatabaseGenerator extends Arguments<DatabaseGenerator> {
-   public final Arg ConnectionString = new Arguments.Arg("-connectionstring", "connection", String.class, Arguments.Arg.Is.Optional, "JDBC connection string, f.i. jdbc:derby://localhost:1527/dumpster", "jdbc:derby:dumpster", Arg.Askable.Yes);
+   
 //    public final Arg Duration = new Arguments.Arg("-duration", "duration", Integer.class, Arguments.Arg.Is.Optional, "Set how long the client will run. In seconds.", null, Arg.Askable.Yes);
 //    public final Arg Limit = new Arguments.Arg("-limit", "limit", Integer.class, Arguments.Arg.Is.Optional, "Sets a limit to number of requests made.", null, Arg.Askable.Yes);
 //    public final Arg Filter = new Arguments.Arg("-filter", "filter", String.class, Arguments.Arg.Is.Optional, "Filter destinations.", null, Arg.Askable.Yes);
@@ -69,14 +69,14 @@ public class DatabaseGenerator extends Arguments<DatabaseGenerator> {
 
   public static void main(String[] args) throws Exception {
       System.out.println("Args: "+args);
-    new DatabaseGenerator().generateDatabase(args);
+    DatabaseGeneratorArguments arg = new DatabaseGeneratorArguments(args);
+    new DatabaseGenerator().generateDatabase(arg);
     //new DatabaseGenerator().generateDatabaseOld(args);
   }
-  public void generateDatabase(String[] args) throws Exception {
-    new DatabaseGenerator().parseArgs(args);
+  public void generateDatabase(DatabaseGeneratorArguments args) throws Exception {
     final PayloadDataGenerator generator = new PayloadDataGenerator();
     Bug.getMXBean().setBuggy(DatabaseImpl.class.getName(), Boolean.FALSE);
-    String connectionString = ConnectionString.getValue();//args.length > 0 ? args[0] : "jdbc:derby://localhost:1527/dumpster";
+    String connectionString = args.ConnectionString.getValue();//args.length > 0 ? args[0] : "jdbc:derby://localhost:1527/dumpster";
     System.out.println("Using connection string: "+connectionString);
     DatabaseImpl database = new DatabaseImpl(connectionString, true);
     database.create();
