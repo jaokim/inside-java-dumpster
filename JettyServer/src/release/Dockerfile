@@ -6,7 +6,7 @@ WORKDIR /app
 COPY JettyServer.jar ./
 COPY entrypoint.sh ./
 COPY dumpster.properties ./
-COPY logger.properties ./
+COPY logging.properties ./
 
 ENTRYPOINT ["/bin/sh"]
 CMD ["entrypoint.sh"]
