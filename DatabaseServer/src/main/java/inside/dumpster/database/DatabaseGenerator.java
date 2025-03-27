@@ -3,6 +3,7 @@
  */
 package inside.dumpster.database;
 
+import com.github.jaokim.arguably.Arguments;
 import inside.dumpster.backend.database.DatabaseImpl;
 import inside.dumpster.client.Payload;
 import inside.dumpster.client.impl.NetFlowData;
@@ -22,7 +23,26 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
-public class DatabaseGenerator {
+public class DatabaseGenerator extends Arguments<DatabaseGenerator> {
+   public final Arg ConnectionString = new Arguments.Arg("-connectionstring", "connection", String.class, Arguments.Arg.Is.Optional, "JDBC connection string, f.i. jdbc:derby://localhost:1527/dumpster", "jdbc:derby:dumpster", Arg.Askable.Yes);
+//    public final Arg Duration = new Arguments.Arg("-duration", "duration", Integer.class, Arguments.Arg.Is.Optional, "Set how long the client will run. In seconds.", null, Arg.Askable.Yes);
+//    public final Arg Limit = new Arguments.Arg("-limit", "limit", Integer.class, Arguments.Arg.Is.Optional, "Sets a limit to number of requests made.", null, Arg.Askable.Yes);
+//    public final Arg Filter = new Arguments.Arg("-filter", "filter", String.class, Arguments.Arg.Is.Optional, "Filter destinations.", null, Arg.Askable.Yes);
+//    public final Arg Interactive = new Arguments.Arg("-i", "interactive", Boolean.class, Arguments.Arg.Is.Optional, "Decide interactively when each reqauest will be sent.", "false");
+//    public final Arg DelayThreshold = new Arguments.Arg("-delay", "delay", Integer.class, Arguments.Arg.Is.Optional, "Delay threshold for how often requests are sent. The original delay is divided by this value.", "100");
+//    public final static CliArguments Instance;
+//    static {
+//      CliArguments inst = null;
+//      try {
+//        inst = new CliArguments(new String[0]);
+//      } catch (Exception ex) {
+//      } finally {
+//        Instance = inst;
+//      }
+//    }
+//    public CliArguments (String [] args) throws Exception {
+//        super.parseArgs(args);
+//    }
 
   public Connection getConnection(String dbLocation) throws SQLException {
     Connection conn;
@@ -53,9 +73,10 @@ public class DatabaseGenerator {
     //new DatabaseGenerator().generateDatabaseOld(args);
   }
   public void generateDatabase(String[] args) throws Exception {
+    new DatabaseGenerator().parseArgs(args);
     final PayloadDataGenerator generator = new PayloadDataGenerator();
     Bug.getMXBean().setBuggy(DatabaseImpl.class.getName(), Boolean.FALSE);
-    String connectionString = args.length > 0 ? args[0] : "jdbc:derby://localhost:1527/dumpster";
+    String connectionString = ConnectionString.getValue();//args.length > 0 ? args[0] : "jdbc:derby://localhost:1527/dumpster";
     System.out.println("Using connection string: "+connectionString);
     DatabaseImpl database = new DatabaseImpl(connectionString, true);
     database.create();
