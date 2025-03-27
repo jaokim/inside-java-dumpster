@@ -171,7 +171,7 @@
             <phase>install</phase>
             <configuration>
               <target>
-                <copy file="src/release/logger.properties" todir="../release/jetty/"/>
+                <copy file="src/release/logging.properties" todir="../release/jetty/"/>
                 <copy file="src/release/dumpster.properties" todir="../release/jetty/"/>
                 <copy file="src/release/entrypoint.sh" todir="../release/jetty/"/>
                 <copy file="src/release/prepare.sh" todir="../release/jetty/"/>
