@@ -3,4 +3,4 @@
 # data. Its supposed to be run once, generate database import files which can
 # be included in the Dockerfile.
 
-java -cp DatabaseServer.jar inside.dumpster.database.DatabaseGenerator jdbc:derby:dumpster;create=true
+java -cp DatabaseServer.jar inside.dumpster.database.DatabaseGenerator -connectionstring "jdbc:derby:dumpster;create=true"
