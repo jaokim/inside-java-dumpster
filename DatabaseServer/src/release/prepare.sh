@@ -4,5 +4,3 @@
 # be included in the Dockerfile.
 
 java -cp DatabaseServer.jar inside.dumpster.database.DatabaseGenerator jdbc:derby:dumpster;create=true
-
-
