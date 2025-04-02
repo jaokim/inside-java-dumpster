@@ -53,7 +53,7 @@ public abstract class Arguments<T extends Arguments> {
         }
 
         public boolean isTrue() {
-            return Boolean.parseBoolean(getValue().toString());
+            return Boolean.parseBoolean(getValue());
         }
 
 //        public String getValue() {
