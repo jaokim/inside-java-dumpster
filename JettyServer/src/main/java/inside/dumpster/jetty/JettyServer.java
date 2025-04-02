@@ -61,6 +61,7 @@ public class JettyServer {
 
     // Add Application Servlets
     servletContextHandler.addServlet(JettyServlet.class, "/business/dest/*");
+    servletContextHandler.addServlet(TestServlet.class, "/test/");
     // Create Example of mapping jsp to path spec
     ServletHolder holderAltMapping = new ServletHolder();
     holderAltMapping.setName("default.jsp");
