@@ -26,12 +26,15 @@ import java.util.logging.Logger;
 public abstract class AbstractRepository<D extends Data> {
   private static File MAIN_DIR;
   static {
+    final File file = new File("dumpster.properties");
     try {
       Properties prop = new Properties();
-      prop.load(new FileReader("dumpster.properties"));
+      if (file.isFile() && file.exists() && file.canRead()) { 
+        prop.load(new FileReader(file));
+      }
       MAIN_DIR = new File(prop.getProperty("datadir"));
     } catch (Exception ex) {
-      Logger.getLogger(AbstractRepository.class.getName()).log(Level.WARNING, "Error reading dumpster.properties and propertyr \"dataDir\". Setting to tmp dir.", ex);
+      Logger.getLogger(AbstractRepository.class.getName()).log(Level.WARNING, "Error reading dumpster.properties (\""+file.getAbsolutePath()+"\") and property \"datadir\". Setting to tmp dir.");
       MAIN_DIR = new File(System.getProperty("java.io.tmpdir"));
     }
   }

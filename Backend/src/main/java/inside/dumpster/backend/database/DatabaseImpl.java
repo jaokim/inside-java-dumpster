@@ -7,6 +7,7 @@ import inside.dumpster.backend.BackendException;
 import inside.dumpster.backend.utils.Utils;
 import inside.dumpster.outside.Bug;
 import inside.dumpster.outside.Buggy;
+import inside.dumpster.outside.Settings;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -15,6 +16,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sql.DataSource;
 import org.apache.derby.jdbc.BasicEmbeddedConnectionPoolDataSource40;
 import org.apache.derby.jdbc.ClientConnectionPoolDataSource;
@@ -25,6 +28,7 @@ import org.apache.derby.jdbc.ClientConnectionPoolDataSource;
  */
 @Buggy(because = "it doesn't use a connection pool")
 public class DatabaseImpl implements Database {
+  private static final Logger logger = Logger.getLogger(DatabaseImpl.class.getName());
   private final String connectionUrl;
   private DataSource dataSource;
   private boolean embedded;
@@ -47,12 +51,14 @@ public class DatabaseImpl implements Database {
   private void init() {
     if (dataSource != null) return;
     if (embedded) {
+      logger.log(Level.INFO, "Using embedded db");
       BasicEmbeddedConnectionPoolDataSource40 bde = new BasicEmbeddedConnectionPoolDataSource40();
       bde.setDataSourceName("dumpster");
       bde.setDatabaseName(connectionUrl.replace("jdbc:derby:", ""));
       dataSource = bde;
       
     } else  {
+      logger.log(Level.INFO, "Using pooled datasource: {0}", connectionUrl);
       ClientConnectionPoolDataSource cpds = new ClientConnectionPoolDataSource();
       cpds.setDataSourceName(connectionUrl);
       cpds.setDatabaseName("dumpster");//connectionUrl.replace("jdbc:derby:", ""));

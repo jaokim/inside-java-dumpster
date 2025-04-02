@@ -31,7 +31,7 @@ public class Server extends Arguments {
   public void main() throws Exception {
     
     // This starts the server on the default port, 1527, listening on localhost (all interfaces).
-    NetworkServerControl server = new NetworkServerControl(InetAddress.getLocalHost(), 1527);
+    NetworkServerControl server = new NetworkServerControl();//InetAddress.getLoopbackAddress(), 1528);
     server.start(new PrintWriter(System.out));
     if (Verbose.isTrue()) {
       System.out.println("Verbose mode is on");
