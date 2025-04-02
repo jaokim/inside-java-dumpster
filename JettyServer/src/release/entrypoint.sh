@@ -9,13 +9,13 @@ else
   JDKARGS=--enable-preview
 fi
 
-JDKARGS=$JDKARGS -XX:+PrintConcurrentLocks
+JDKARGS="$JDKARGS -XX:+PrintConcurrentLocks"
 
-JMXARGS=-Dcom.sun.management.jmxremote.port=12345 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1
+JMXARGS="-Dcom.sun.management.jmxremote.port=12345 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1"
 
-JFRARGS= -XX:StartFlightRecording=filename=logs/dump.jfr,dumponexit=true
+JFRARGS=" -XX:StartFlightRecording=filename=logs/dump.jfr,dumponexit=true"
 
-LOGARGS=-Djava.util.logging.config.file=logging.properties
+LOGARGS="-Djava.util.logging.config.file=logging.properties"
 
 #java $JDKARGS -XX:StartFlightRecording=filename=logs/dump.jfr,dumponexit=true -XX:+PrintConcurrentLocks -Dcom.sun.management.jmxremote.port=12345 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Djava.util.logging.config.file=logging.properties -jar JettyServer/target/JettyServer-1.0-jar-with-dependencies.jar
 
