@@ -30,8 +30,11 @@ public class ElDoradoService extends BusinessLogicService<ElDoradoPayload, Resul
 
   private int collectedGold = 0;
 
-  public ElDoradoService(Class<ElDoradoPayload> payloadClass, Class<Result> resultClass) {
-    super(payloadClass, resultClass);
+  //public ElDoradoService(Class<ElDoradoPayload> payloadClass, Class<Result> resultClass) {
+  //  super(payloadClass, resultClass);
+  //}
+  public ElDoradoService() {
+    super(ElDoradoPayload.class, Result.class);
   }
 
   private int dropGold(int iteration) {
