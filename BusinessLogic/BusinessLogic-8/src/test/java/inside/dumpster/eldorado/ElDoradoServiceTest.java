@@ -45,7 +45,7 @@ public class ElDoradoServiceTest {
         System.out.println("invoke");
         ElDoradoPayload payload = new ElDoradoPayload();
         payload.setGold(1254908787);
-        ElDoradoService instance = new ElDoradoService(ElDoradoPayload.class, Result.class);
+        ElDoradoService instance = new ElDoradoService();
 
 //        StackOverflowError error = assertThrows(StackOverflowError.class, new Executable() {
 //            @Override
