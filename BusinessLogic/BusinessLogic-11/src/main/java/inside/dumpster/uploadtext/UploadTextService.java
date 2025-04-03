@@ -18,8 +18,8 @@ import java.io.InputStream;
  */
 public class UploadTextService extends BusinessLogicService<UploadTextPayload, UploadTextResult>  {
 
-  public UploadTextService(Class<UploadTextPayload> payloadClass, Class<UploadTextResult> resultClass) {
-    super(payloadClass, resultClass);
+  public UploadTextService() {
+    super(UploadTextPayload.class, UploadTextResult.class);
   }
 
 

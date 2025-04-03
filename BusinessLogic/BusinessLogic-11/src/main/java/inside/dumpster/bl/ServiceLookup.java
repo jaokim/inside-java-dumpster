@@ -48,23 +48,23 @@ public class ServiceLookup implements ServiceLookupInterface {
               service = new EnergyService();//EnergyPayload.class, EnergyResult.class);
               break;
           case Comp1:
-              service = new ElDoradoService(ElDoradoPayload.class, Result.class);
+              service = new ElDoradoService();
               break;
           case Comp3:
           case Comp0:
           case Comp2:
-              service = new EnhanceImageService(EnhanceImagePayload.class, EnhanceImageResult.class);
+              service = new EnhanceImageService();
               break;
           case ActiveDirectory:
-              service = new CreditsService(CreditsPayload.class, CreditsResult.class);
+              service = new CreditsService();
               break;
           case Comp4:
           case Comp7:
           case Comp8:
-              service = new UploadImageService(UploadImagePayload.class, UploadImageResult.class);
+              service = new UploadImageService();
               break;
           case Comp9:
-              service = new UploadTextService(UploadTextPayload.class, UploadTextResult.class);
+              service = new UploadTextService();
               break;
           case Unknown:
           default:

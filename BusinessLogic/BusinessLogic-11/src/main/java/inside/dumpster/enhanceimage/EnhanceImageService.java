@@ -37,6 +37,9 @@ public class EnhanceImageService extends BusinessLogicService<EnhanceImagePayloa
   public EnhanceImageService(Class<EnhanceImagePayload> type, Class<EnhanceImageResult> type1) {
     super(type, type1);
   }
+  public EnhanceImageService() {
+    super(EnhanceImagePayload.class, EnhanceImageResult.class);
+  }
 
   @Override
   public EnhanceImageResult invoke(EnhanceImagePayload payload) throws BusinessLogicException {

@@ -28,8 +28,8 @@ import javax.imageio.ImageIO;
 @inside.dumpster.payload.Image
 public class UploadImageService extends BusinessLogicService<UploadImagePayload, UploadImageResult> {
 
-  public UploadImageService(Class<UploadImagePayload> type, Class<UploadImageResult> type1) {
-    super(type, type1);
+  public UploadImageService() {
+    super(UploadImagePayload.class, UploadImageResult.class);
   }
 
 
