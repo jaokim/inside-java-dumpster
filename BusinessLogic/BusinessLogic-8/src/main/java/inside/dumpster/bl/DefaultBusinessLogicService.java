@@ -12,8 +12,8 @@ import inside.dumpster.client.Result;
  */
 public class DefaultBusinessLogicService extends BusinessLogicService<Payload, Result> {
 
-  public DefaultBusinessLogicService(Class<Payload> payloadClass, Class<Result> resultClass) {
-    super(payloadClass, resultClass);
+  public DefaultBusinessLogicService() {
+    super(Payload.class, Result.class);
   }
 
 

@@ -83,7 +83,7 @@ public class ServiceLookup implements ServiceLookupInterface {
           service = l.newInstance();
       } catch (InstantiationException | IllegalAccessException ex) {
           Logger.getLogger(ServiceLookup.class.getName()).log(Level.SEVERE, null, ex);
-          service = new DefaultBusinessLogicService(Payload.class, Result.class);
+          service = new DefaultBusinessLogicService();
       }
       return service;
 //      serviceCallEvent.serviceClass = service.getClass();
