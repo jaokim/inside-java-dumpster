@@ -72,7 +72,7 @@ public class ServiceLookup implements ServiceLookupInterface {
               unhandledServiceEvent.destination = destination.name();
               unhandledServiceEvent.commit();
 
-              service = new DefaultBusinessLogicService(Payload.class, Result.class);
+              service = new DefaultBusinessLogicService();
               return service;
       }
     }
