@@ -80,7 +80,7 @@ public class Cli {
 
     }
 
-    Scheduler scheduler = new Scheduler(data.getFirsttime());
+    Scheduler scheduler = new Scheduler(null, data.getFirsttime(), args.Verbose.isTrue());
     scheduler.setBaseURI(address);
 
     Stream<Payload> stream = data.getStream();
