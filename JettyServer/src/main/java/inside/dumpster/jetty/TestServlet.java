@@ -34,7 +34,7 @@ public class TestServlet extends HttpServlet {
           HttpServletResponse response)
           throws ServletException, IOException {
     response.setStatus(200);
-    Backend backend = Backend.builder().build();
+    Backend backend = Backend.getInstance();
     
     response.getWriter().println("Database: "+backend.getDatabase().toString());
     String test = "teststring";
