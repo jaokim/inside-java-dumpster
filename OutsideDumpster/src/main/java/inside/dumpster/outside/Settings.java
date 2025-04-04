@@ -9,14 +9,14 @@ package inside.dumpster.outside;
  */
 public enum Settings {
   DATABASE_CONNECTION_URL(
-          "dumpster.databaseConnectionUrl", 
+          "database_connection_url", 
           "URL for database connection. Example: \"jdbc:derby://localhost:1527/dumpster\""
   ),
   SERVICE_LOOKUP(
           "service_lookup", 
           "Service lookup mapping. Example: \"foo.*:FooLogic;bar:BarLogic\", will resolve any destination starting with foo \"foo\" to inside.dumpster.FooLogic.FooLogicService."
   );
-
+  static SettingsImpl impl;
   final String key;
   final String description;
   Settings(String key, String description) {
