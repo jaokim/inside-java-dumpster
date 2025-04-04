@@ -5,11 +5,11 @@ package inside.dumpster.jetty;
 
 import inside.dumpster.backend.Backend;
 import inside.dumpster.backend.BackendException;
+import inside.dumpster.backend.database.Database;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.CharBuffer;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -35,16 +35,16 @@ public class TestServlet extends HttpServlet {
           throws ServletException, IOException {
     response.setStatus(200);
     Backend backend = Backend.getInstance();
-    
+    String query = request.getParameter("query");
     response.getWriter().println("Database: "+backend.getDatabase().toString());
     String test = "teststring";
     String testdst = "987654";
     InputStream is = new ByteArrayInputStream(test.getBytes());
+    Database db  = backend.getDatabase();
     try {
-      backend.getDatabase().insertTextData(testdst, is);
+      db.insertTextData(testdst, is);
       
       InputStream data = backend.getDatabase().getTextData(testdst);
-      InputStreamReader bis = new InputStreamReader(data);
       byte[] bytes = new byte[120];
       data.read(bytes);
       response.getWriter().println("Database: "+new String(bytes));
