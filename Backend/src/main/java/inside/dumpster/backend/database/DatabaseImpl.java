@@ -59,12 +59,32 @@ public class DatabaseImpl implements Database {
       
     } else  {
       logger.log(Level.INFO, "Using pooled datasource: {0}", connectionUrl);
+      try {
+        DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
+      } catch (SQLException ex) {
+        logger.log(Level.SEVERE, "Failed to register driver: "+ex.getMessage(), ex);
+      }
       ClientConnectionPoolDataSource cpds = new ClientConnectionPoolDataSource();
+
       cpds.setDataSourceName(connectionUrl);
       cpds.setDatabaseName("dumpster");//connectionUrl.replace("jdbc:derby:", ""));
       cpds.setTraceFile("derby-pool-tracing.log");
       cpds.setTraceLevel(100);
       dataSource = cpds;
+
+    }
+    try (ResultSet rs = dataSource.getConnection().createStatement().executeQuery("SELECT 1 FROM db_data")) {
+      if (rs.next()) {
+        int res = rs.getInt(1);
+        if (res != 1) {
+          throw new SQLException("Query SELECT 1 FROM db_data didn't return 1");
+        }
+      }
+    } catch(Exception e) {
+      e.printStackTrace();
+      System.exit(1);
+      throw new IllegalStateException("Database is not setup correctly", e);
+      
     }
   }
 
