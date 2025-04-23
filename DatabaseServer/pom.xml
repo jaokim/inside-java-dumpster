@@ -15,11 +15,11 @@
       <artifactId>Arguably</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency-->
-    <dependency>
+<!--    <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
       <version>10.14.2.0</version>
-    </dependency>
+    </dependency>-->
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derbyclient</artifactId>
@@ -89,6 +89,7 @@
               <target>
                 <copy file="target/${project.artifactId}-${project.version}-jar-with-dependencies.jar" tofile="../release/db/${project.artifactId}.jar"/>
                 <copy file="src/release/Dockerfile" tofile="../release/db/Dockerfile"/>
+                <copy file="src/release/entrypoint.sh" tofile="../release/db/entrypoint.sh"/>
                 <copy file="src/release/prepare.sh" tofile="../release/db/prepare.sh"/>
               </target>
             </configuration>
