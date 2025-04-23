@@ -12,6 +12,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.tomcat.InstanceManager;
 import org.apache.tomcat.SimpleInstanceManager;
 import org.eclipse.jetty.jsp.JettyJspServlet;
@@ -26,6 +28,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
 public class JettyServer {
+  private static final Logger logger = Logger.getLogger(JettyServer.class.getName());
   // Resource path pointing to where the WEBROOT is
   private static final String WEBROOT_INDEX = "/web/";
 
@@ -39,8 +42,13 @@ public class JettyServer {
   public void start() throws Exception {
     Bug.registerMXBean();
     
+    logger.log(Level.SEVERE, "Logging SEVERE");
+    logger.log(Level.CONFIG, "Logging CONFIG");
+    logger.log(Level.WARNING, "Logging WARNING");
+    logger.log(Level.INFO, "Logging INFO");
+    logger.log(Level.FINE, "Logging FINE");
+    logger.log(Level.FINEST, "Logging FINEST");
     
-
     server = new Server();
 
     // Define ServerConnector
