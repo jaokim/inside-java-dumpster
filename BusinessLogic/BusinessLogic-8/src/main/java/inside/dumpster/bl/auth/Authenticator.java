@@ -16,48 +16,49 @@ import java.util.UUID;
  */
 @Buggy(because = "an exception is used to control program flow", enabled = true)
 public class Authenticator {
+  private final ThreadLocal<User> loggedInUser = new ThreadLocal();
   public Authenticator() {
   }
   Authenticator(boolean dummy) {
   }
 
-  public User authenticateUser(String authType, String sessionId, Principal principal, Object session, Map<String,String[]> params) throws MustAcceptCookiesError, BackendException {
+  public void loginUser(String authType, String sessionId, Principal principal, Object session, Map<String,String[]> params) throws BackendException {
     User user;
     user = new User();
     user.setId(getId());
     user.setSession(session);
     user.setPrincipal(principal);
     user.setParams(params);
-    if (!user.isCookieAccepted()) {
-      if (Bug.isBuggy(this)) {
-        throw new MustAcceptCookiesError(user);
-      } else {
-        // error is also thrown when authTicket is tried w/o being autheticated
-      }
-    }
     UserCache.getInstance().add(user);
-    return user;
+    loggedInUser.set(user);
   }
 
   public User getLoggedInUser() {
-//    if(loggedInUser.get() != null) {
-//      return loggedInUser.get();
-//    } else {
-//      return null;
-//      //throw new NotAuthorizedError();
-//    }
-    return null;
+    final User user = loggedInUser.get();
+    if(user != null) {
+      if (!user.isCookieAccepted()) {
+        if (Bug.isBuggy(this)) {
+          throw new MustAcceptCookiesError(user);
+        } else {
+          // error is also thrown when authTicket is tried w/o being autheticated
+        }
+      }
+      return loggedInUser.get();
+    } else {
+      return null;//throw new NotAuthorizedError();
+    }
   }
 
   private UUID getId() {
     return UUID.randomUUID();
   }
 
-  public void reauthenticate(User user) {
-    user.authTicket = UUID.randomUUID().toString();
+  public String getAuthTicket(User user) {
+    return user.authTicket = user.getAuthTicket();// UUID.randomUUID().toString();
   }
 
   public void clearSession() {
+    loggedInUser.remove();
   }
 
 }

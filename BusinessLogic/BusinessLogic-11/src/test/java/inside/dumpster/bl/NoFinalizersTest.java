@@ -179,9 +179,10 @@ public class NoFinalizersTest {
     Authenticator auth = new Authenticator();
     User user;
     try {
-      user = auth.authenticateUser("a", "123", new UserPrincipal("moin"), this, null);
+      auth.loginUser("a", "123", new UserPrincipal("moin"), this, null);
+      user = auth.getLoggedInUser();
     } catch(MustAcceptCookiesError ex) {
-      auth.reauthenticate(ex.getUser());
+      String authTicket = auth.getAuthTicket(ex.getUser());
     }
     final Payload payload = new Payload();
     payload.setDstPort("6745");

@@ -37,9 +37,6 @@ public class User {
   }
 
   public String getAuthTicket() throws MustAcceptCookiesError {
-    if (!cookieAccepted) {
-      throw new MustAcceptCookiesError(this);
-    }
     return authTicket;
   }
 

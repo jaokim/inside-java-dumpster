@@ -20,9 +20,8 @@ import inside.dumpster.client.Result;
 import inside.dumpster.client.impl.PayloadHelper;
 import java.io.IOException;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,28 +40,21 @@ public class JettyServlet extends HttpServlet {
           HttpServletResponse response)
           throws ServletException, IOException {
     doPost(request, response);
-//    String destination = request.getPathInfo();
-//    response.setContentType("application/json");
-//    response.setStatus(HttpServletResponse.SC_OK);
-//    response.getWriter().println("{ \"status\": \"ok\"}");
   }
+
   @Override
   protected void doPost(
           HttpServletRequest request,
           HttpServletResponse response)
           throws ServletException, IOException {
     final User user;
+    boolean cookiesAccepted = false;
     try {
-      user = authenticator.authenticateUser(request.getAuthType(), UUID.randomUUID().toString(), request.getUserPrincipal(), new Object(), request.getParameterMap());
-
-//      if (user.isCookieAccepted()) {
-//        authenticator.reauthenticate(user);
-//      }
-
+      authenticator.loginUser(request.getAuthType(), UUID.randomUUID().toString(), request.getUserPrincipal(), new Object(), request.getParameterMap());
+        
       String pathinfo = request.getPathInfo().substring(1);
       String destination = PayloadHelper.getDestination(pathinfo);
       System.out.println("Dest: "+destination);
-      Gson gson = getGson();
       BusinessLogicServiceWrapper<? extends Payload, ? extends Result> service =
               factory.lookupService(Destination.fromString(destination));
 
@@ -71,26 +63,42 @@ public class JettyServlet extends HttpServlet {
       payload.setInputStream(request.getInputStream());
 
       Result result = service.invoke(payload);
-
-      response.setContentType("application/json");
+      
+      response.setContentType("text/html");
       request.setAttribute("payload", payload);
       request.setAttribute("result", result);
-      request.setAttribute("user", user);
-//response.sendRedirect("web/default.jsp");
-
-//      response.setStatus(HttpServletResponse.SC_OK);
+      
       System.out.println("response:"+result.getResult());
-//      response.getWriter().write(gson.toJson(result));
 
+      user = authenticator.getLoggedInUser();
+      request.setAttribute("user", user);
+      
+      if (user.isCookieAccepted()) {
+        cookiesAccepted = true;
+        final String authTicket  = authenticator.getAuthTicket(user);
+        Cookie cookie = new Cookie("auth", authTicket);
+        cookie.setComment("Reauth ticket");
+        response.addCookie(cookie);
+      } else {
+        cookiesAccepted = false;
+      }
+      
+      request.setAttribute("cookiesAccepted", new Boolean(cookiesAccepted));
+      
     } catch (MustAcceptCookiesError ex) {
-      request.setAttribute("acceptCookies", Boolean.TRUE);
-
+      cookiesAccepted = false;
+      request.setAttribute("cookiesAccepted", new Boolean(cookiesAccepted));
+    
     } catch (BusinessLogicException | BackendException ex) {
-      Logger.getLogger(JettyServlet.class.getName()).log(Level.SEVERE, null, ex);
+      request.setAttribute("exception", ex);
+      
     } finally {
       request.getRequestDispatcher("/default.jsp").forward(request, response);
       authenticator.clearSession();
     }
+    
+      
+    
   }
 
   private Gson getGson() {

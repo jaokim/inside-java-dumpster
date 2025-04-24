@@ -47,6 +47,7 @@ public class JettyServer {
     logger.log(Level.WARNING, "Logging WARNING");
     logger.log(Level.INFO, "Logging INFO");
     logger.log(Level.FINE, "Logging FINE");
+    logger.log(Level.FINER, "Logging FINER");
     logger.log(Level.FINEST, "Logging FINEST");
     
     server = new Server();

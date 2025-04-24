@@ -30,9 +30,16 @@ public class Backend {
       logger.info("Using backend test instance");
       return testB;
     }
-    return new BackendBuilder().build();
+    
+    if (realBackend == null) {
+      synchronized(Backend.class) {
+        realBackend = new BackendBuilder().build();
+      }
+    }
+    return realBackend;
   }
   private static Backend testB;
+  private static Backend realBackend;
   public static void useThis(Backend backend) {
     testB = backend;
   }

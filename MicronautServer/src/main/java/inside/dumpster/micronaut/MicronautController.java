@@ -18,6 +18,8 @@ import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
+import io.micronaut.http.cookie.Cookie;
+import io.micronaut.http.simple.cookies.SimpleCookie;
 import java.io.ByteArrayInputStream;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -62,18 +64,39 @@ public class MicronautController {
 
   }
 
+  
+  /**
+   * 
+   * @param destination
+   * @param srcDevice
+   * @param srcDeviceID
+   * @param srcPort
+   * @param dstDevice
+   * @param dstDeviceId
+   * @param dstPort
+   * @param protocol
+   * @return 
+   */
   private Result doRequest(String destination, String srcDevice, String srcDeviceID, String srcPort, String dstDevice, String dstDeviceId, String dstPort, String protocol) {
     final User user;
 
     try {
-      user = authenticator.authenticateUser("AUTH", UUID.randomUUID().toString(), null, new Object(), null);
+      authenticator.loginUser("AUTH", UUID.randomUUID().toString(), null, new Object(), null);
 
       Payload payload = new Payload(null, destination, srcDevice, dstDevice, protocol, srcPort, dstPort, srcPort, dstPort, srcPort, dstPort);
-      return service.getService(destination).invoke(payload);
+      Result res = service.getService(destination).invoke(payload);
+      
 //      if (user.isCookieAccepted()) {
 //        authenticator.reauthenticate(user);
 //      }
-
+      
+      user = authenticator.getLoggedInUser();
+      if (user.isCookieAccepted()) {
+        final String authTicket  = authenticator.getAuthTicket(user);
+        Cookie cookie = new SimpleCookie("auth", authTicket);
+      }
+        
+      return res;
 
     } catch (MustAcceptCookiesError ex) {
 

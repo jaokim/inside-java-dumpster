@@ -20,7 +20,7 @@ public class UploadTextPayload extends Payload {
   @Override
   public InputStream getInputStream() {
     if (super.getInputStream() == null) {
-      Database db = Backend.builder().build().getDatabase();
+      Database db = Backend.getInstance().getDatabase();
       InputStream stream;
       try {
         stream = db.getTextData(getSrcPort());
