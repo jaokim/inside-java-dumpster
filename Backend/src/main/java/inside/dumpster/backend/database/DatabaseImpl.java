@@ -45,7 +45,7 @@ public class DatabaseImpl implements Database {
   }
   public DatabaseImpl(String connectionUrl, boolean embedded) {
     this.connectionUrl = connectionUrl;
-    this.embedded = embedded;
+    this.embedded = !connectionUrl.startsWith("jdbc:derby://");
     init();
   }
   private void init() {
