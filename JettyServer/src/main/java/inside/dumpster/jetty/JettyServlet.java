@@ -83,11 +83,11 @@ public class JettyServlet extends HttpServlet {
         cookiesAccepted = false;
       }
       
-      request.setAttribute("cookiesAccepted", new Boolean(cookiesAccepted));
+      request.setAttribute(COOKIES_ACCEPTED, cookiesAccepted ? "yes" : "no");
       
     } catch (MustAcceptCookiesError ex) {
       cookiesAccepted = false;
-      request.setAttribute("cookiesAccepted", new Boolean(cookiesAccepted));
+      request.setAttribute(COOKIES_ACCEPTED, cookiesAccepted ? "yes" : "no");
     
     } catch (BusinessLogicException | BackendException ex) {
       request.setAttribute("exception", ex);
@@ -100,6 +100,7 @@ public class JettyServlet extends HttpServlet {
       
     
   }
+    protected static final String COOKIES_ACCEPTED = "cookiesAccepted";
 
   private Gson getGson() {
     Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
