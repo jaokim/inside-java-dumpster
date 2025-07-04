@@ -3,7 +3,7 @@
 <jsp:useBean id="result" scope="request" class="inside.dumpster.client.Result"/>
 <jsp:useBean id="user" scope="request" class="inside.dumpster.bl.auth.User"/>
 <jsp:useBean id="acceptCookies" scope="request" class="java.lang.String"/>
-<jsp:useBean id="exception" scope="request" class="java.lang.Exception"/>
+<jsp:useBean id="exception" scope="request" type="java.lang.Exception"/>
 
 <!DOCTYPE html>
   <head>
@@ -11,9 +11,8 @@
   </head>
   <body>
     <div>
-    <small>User: <%=user.getId()%> <%=user.isCookieAccepted()%></small>
-    <small>Database: <%=inside.dumpster.backend.Backend.getInstance().getDatabase()%></small>
-    
+        <small>User: <%=user.getId()%> <%=user.isCookieAccepted()%></small><br/>
+        <small>Database: <%=inside.dumpster.backend.Backend.getInstance().getDatabase()%></small><br/>
     </div>
     <h2>Dest: <%=payload.getDstDevice()%></h2>
     <h2>Src:  <%=payload.getSrcDevice()%></h2>

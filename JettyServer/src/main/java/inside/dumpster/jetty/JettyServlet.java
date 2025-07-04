@@ -67,7 +67,6 @@ public class JettyServlet extends HttpServlet {
       response.setContentType("text/html");
       request.setAttribute("payload", payload);
       request.setAttribute("result", result);
-      request.setAttribute("exception", null);
 
       System.out.println("response:"+result.getResult());
 
