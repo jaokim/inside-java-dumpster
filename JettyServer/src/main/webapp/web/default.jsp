@@ -3,7 +3,7 @@
 <jsp:useBean id="result" scope="request" class="inside.dumpster.client.Result"/>
 <jsp:useBean id="user" scope="request" class="inside.dumpster.bl.auth.User"/>
 <jsp:useBean id="acceptCookies" scope="request" class="java.lang.String"/>
-<jsp:useBean id="exception" scope="request" class="java.lang.Exception"/>
+<jsp:useBean id="exception" scope="request"/>
 
 <!DOCTYPE html>
   <head>
