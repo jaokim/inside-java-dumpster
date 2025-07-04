@@ -33,7 +33,7 @@ public class Scheduler<P extends Payload> {
     while (!threadPool.isTerminated()) {
         System.out.println("Not terminated");
         try {
-            Thread.sleep(Duration.ofSeconds(1));
+            Thread.sleep(Duration.ofSeconds(1).toMillis());
         } catch (InterruptedException ex) {
             Logger.getLogger(Scheduler.class.getName()).log(Level.SEVERE, null, ex);
         }
