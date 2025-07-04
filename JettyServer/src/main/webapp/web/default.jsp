@@ -2,7 +2,7 @@
 <jsp:useBean id="payload" scope="request" class="inside.dumpster.client.Payload"/>
 <jsp:useBean id="result" scope="request" class="inside.dumpster.client.Result"/>
 <jsp:useBean id="user" scope="request" class="inside.dumpster.bl.auth.User"/>
-<jsp:useBean id="acceptCookies" scope="request" class="java.lang.Boolean"/>
+<jsp:useBean id="acceptCookies" scope="request" class="java.lang.Object"/>
 
 <!DOCTYPE html>
   <head>
