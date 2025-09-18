@@ -33,6 +33,7 @@ public class Bug {
     if (BUG_BEHAVIOUR.get() != null) {
       Boolean overridden = BUG_BEHAVIOUR.get().possiblyBuggyClasses.get(clazz.getName());
       if(overridden != null) {
+        logger.log(Level.FINE, "Returning isBuggy={0} for {1}", new Object[]{overridden, clazz.getName()});
         return overridden;
       }
     }
@@ -43,8 +44,10 @@ public class Bug {
       }
       Buggy buggy = (Buggy)clazz.getAnnotation(Buggy.class);
       final Boolean enabled = buggy.enabled();
+      logger.log(Level.FINE, "Returning isBuggy/enabled={0} for {1}", new Object[]{enabled, clazz.getName()});
       return enabled;
     } else {
+      logger.log(Level.FINE, "Returning isBuggy false for {1} (not a class with @Buggy annotation)", new Object[]{clazz.getName()});
       return false;
     }
   }
@@ -58,7 +61,7 @@ public class Bug {
       if(!mbs.isRegistered(mxbeanName)) {
         final BugBehaviour bugBehaviour = new BugBehaviour();
         BUG_BEHAVIOUR.set(bugBehaviour);
-        System.out.println("Setting bug behav: "+bugBehaviour);
+        logger.log(Level.CONFIG, "Registering Bug MXBean handler");
         bugBehaviour.loadFromProperties();
         mbs.registerMBean(bugBehaviour, mxbeanName);
       }
