@@ -76,7 +76,7 @@ public class NoFinalizersTest {
       callAllServices();
 
       r.stop();
-      Path f = new File("D:/final.jfr").toPath() ;//Files.createTempFile("recording",".jfr");
+      Path f = Files.createTempFile("recording",".jfr");
       r.dump(f);
 
 //      try (EventStream stream = EventStream.openFile(f)) {
