@@ -25,7 +25,6 @@ public class UploadTextService extends BusinessLogicService<UploadTextPayload, U
 
   @Override
   public UploadTextResult invoke(UploadTextPayload payload) throws BusinessLogicException {
-
     final DataUpload uploadEvent = new DataUpload();
     uploadEvent.transactionId = payload.getTransactionId();
     uploadEvent.datatype = "Text";

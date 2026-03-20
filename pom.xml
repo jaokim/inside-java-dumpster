@@ -36,6 +36,38 @@
               </plugin>
     </plugins>
   </build-->
+  <profiles>
+    <profile>
+        <id>JDK8</id>
+        <activation>
+        <jdk>1.8</jdk>
+        </activation>
+        <properties>
+            <buildJdk11>install</buildJdk11>
+            <buildJdk17>skip</buildJdk17>
+        </properties>
+    </profile>
+    <profile>
+        <id>JDK11</id>
+        <activation>
+        <jdk>11</jdk>
+        </activation>
+        <properties>
+            <buildJdk11>install</buildJdk11>
+            <buildJdk17>skip</buildJdk17>
+        </properties>
+    </profile>
+    <profile>
+        <id>JDK21</id>
+        <activation>
+        <jdk>21</jdk>
+        </activation>
+        <properties>
+            <buildJdk11>install</buildJdk11>
+            <buildJdk21>install</buildJdk21>
+        </properties>
+    </profile>
+  </profiles>
   <build>
     <defaultGoal>install</defaultGoal>
     <pluginManagement>
@@ -83,6 +115,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <junit.version>5.6.0</junit.version>
     <jmh.version>1.36</jmh.version>
+    <buildJdk17>${java.version}</buildJdk17>
   </properties>
 
   <dependencyManagement>

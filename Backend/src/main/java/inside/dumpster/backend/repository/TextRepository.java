@@ -25,6 +25,7 @@ public class TextRepository implements Repository<Text> {
   @Override
   public StoredData storeData(final Text im) throws IOException {
     File file = File.createTempFile("textrepo_", ".txt");
+    file.deleteOnExit();
     final Id id = new Id(file.getName());
     long len = 0;
     if(im.hasInputStream()) {

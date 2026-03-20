@@ -4,7 +4,7 @@ JAVA_VER=$(java -version 2>&1 | sed -n ';s/.* version "\(.*\)\.\(.*\)\..*".*/\1\
 if [[ "$JAVA_VER" -eq 18 ]]
 then
   echo Java ver: $JAVA_VER, Java 8
-  JDKARGS+=" -XX:+UnlockCommercialFeatures -XX:FlightRecorderOptions=loglevel=trace"
+  JDKARGS+=" -XX:+UnlockCommercialFeatures -XX:FlightRecorderOptions=loglevel=trace,maxchunksize=1"
 else
   echo Java ver: $JAVA_VER
   JDKARGS+=" --enable-preview -Xlog:jfr=info"

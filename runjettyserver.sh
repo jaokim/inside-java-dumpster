@@ -9,7 +9,7 @@ then
   JDKARGS=-XX:+UnlockCommercialFeatures
 else
   echo Java ver: $JAVA_VER
-  JDKARGS=--enable-preview
+  JDKARGS="--enable-preview -javaagent:C:/Users/jsnor/dev/git/github/nelanbu/jfr-ai/Monitoring/agent/target/Agent-1.0.jar=http://localhost:8091"
 fi
 
 

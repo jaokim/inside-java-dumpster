@@ -65,17 +65,14 @@ public class ImageRepository extends AbstractRepository<LImage> {
     public void storeData() {
       LImage im = imageTempStore.get();
       try {
-        System.out.println("About ti write:");
-        ImageIO.getImageWritersBySuffix("jpg").forEachRemaining(
+        /*ImageIO.getImageWritersBySuffix("jpg").forEachRemaining(
         i -> {System.out.println("Writer:: "+i.toString());}
 
-        );
-        System.out.println("Img: "+im.getRenderedImage().toString());
+        );*/
         if (!ImageIO.write(im.getRenderedImage(), "jpeg", file)) {
           System.out.println("Coulnd't write");
         }
-        System.out.println("About ti write:");
-
+        
       } catch (IOException ex) {
         Logger.getLogger(ImageRepository.class.getName()).log(Level.SEVERE, null, ex);
       }

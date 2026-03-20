@@ -7,7 +7,7 @@ import inside.dumpster.client.Payload;
 import inside.dumpster.client.Result;
 import inside.dumpster.service.Service;
 
-
+@interface Marker {};
 /**
  *
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
@@ -22,7 +22,7 @@ public abstract class BusinessLogicService<P extends Payload, R extends Result> 
 // public BusinessLogicService() {
 //    this.payloadClass = null;
 //  }
- 
+    @TraceMe
     public abstract R invoke(P payload) throws BusinessLogicException;
     
 }

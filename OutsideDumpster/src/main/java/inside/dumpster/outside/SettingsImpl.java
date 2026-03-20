@@ -31,12 +31,6 @@ public class SettingsImpl implements SettingsMBean {
   }
 
   SettingsImpl() {
-    for (Settings setting : Settings.values()) {
-      String val = System.getenv(setting.key);
-      if (val != null) {
-        dumpsterProps.setProperty(setting.key, val);
-      }
-    }
     File dumpsterPropFile = new File("dumpster.properties");
     if (dumpsterPropFile.exists()) {
       Logger.getLogger(SettingsImpl.class.getName()).log(Level.INFO, "Loading properties from "+dumpsterPropFile.getAbsolutePath());
@@ -48,13 +42,18 @@ public class SettingsImpl implements SettingsMBean {
       }
     }
     for (Settings setting : Settings.values()) {
+      String val = System.getenv(setting.key);
+      if (val != null) {
+        dumpsterProps.setProperty(setting.key, val);
+      }
+    }   
+    for (Settings setting : Settings.values()) {
       String val = System.getProperty(setting.key);
       if (val != null) {
           System.out.println("Got property: "+setting.key + " = "+val);
         dumpsterProps.setProperty(setting.key, val);
       }
     }
-    
   }
 
   String getProperty(String key) {

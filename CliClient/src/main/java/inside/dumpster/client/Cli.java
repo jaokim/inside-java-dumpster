@@ -64,7 +64,7 @@ public class Cli {
     String address;
     NetFlowData data;
     if(args.Address.isSet()) {
-      data = new NetFlowData<HttpPayload>(new HttpPayloadParseLine());
+      data = new NetFlowData<>(new HttpPayloadParseLine());
 
       address = args.Address.getValue();
 
@@ -111,7 +111,7 @@ public class Cli {
             Thread.sleep(duration.toMillis());
           } catch (InterruptedException ex) {
           }
-          System.out.println("Okay, we've reached the end, scheduling for exit.");
+          System.out.println("Duration of running is over, scheduling for exit.");
           scheduler.scheduleForExit();
           //System.exit(0);
           //Runtime.getRuntime().halt(0);
@@ -127,7 +127,7 @@ public class Cli {
     }
     if(args.Interactive.isTrue()) {
         stream = stream.filter((t) -> {
-          System.out.println("Press enter for new req.");
+          System.out.println("Press enter for new request to be sent...");
           try {
             int ch = System.in.read();
             if ('q' == ch) {

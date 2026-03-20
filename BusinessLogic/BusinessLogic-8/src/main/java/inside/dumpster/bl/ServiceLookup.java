@@ -85,6 +85,7 @@ public class ServiceLookup implements ServiceLookupInterface {
           Logger.getLogger(ServiceLookup.class.getName()).log(Level.SEVERE, null, ex);
           service = new DefaultBusinessLogicService();
       }
+      logger.info("Service Call: "+service.getClass().getName());
       return service;
 //      serviceCallEvent.serviceClass = service.getClass();
 //      serviceCallEvent.commit();

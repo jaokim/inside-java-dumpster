@@ -63,7 +63,7 @@ public class Scheduler {
       runner = new Runnable() {
         @Override
         public void run() {
-          System.out.println("Doing " + req);
+          System.out.println("Debug doing " + req);
         }
       };
     }

@@ -36,8 +36,8 @@ public class Server extends Arguments {
     if (Verbose.isTrue()) {
       System.out.println("Verbose mode is on");
     }
-    server.logConnections(Verbose.isTrue());
-    server.trace(Verbose.isTrue());
+    //server.logConnections(Verbose.isTrue());
+    //server.trace(Verbose.isTrue());
     while (true) {
       Thread.sleep(10000);
     }

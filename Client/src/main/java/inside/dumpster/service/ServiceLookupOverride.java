@@ -22,15 +22,15 @@ public class ServiceLookupOverride<T> {
         if (Settings.SERVICE_LOOKUP.isSet()) {
             String serviceLookupSetting = Settings.SERVICE_LOOKUP.get();
             String[] lookups = serviceLookupSetting.split(";");
-            logger.info("Service lookup: "+serviceLookupSetting);
+            logger.finer("Service lookup: "+serviceLookupSetting);
             for (String lookup : lookups) {
                 String[] regex_classes = lookup.split(":");
-                logger.info("Service lookup: "+lookup + "r0: "+regex_classes[0]+" r1: " + regex_classes[1]);
+                logger.finer("Service lookup: "+lookup + "r0: "+regex_classes[0]+" r1: " + regex_classes[1]);
                 if (destination.name().matches(regex_classes[0])) {
-                    logger.info("Service lookup: matched dest: "+destination);
+                    logger.finer("Service lookup: matched dest: "+destination);
                     String klass = regex_classes[1];
                     String fullKlass = "inside.dumpster."+klass.replace("Service", "").toLowerCase() + "."+klass+"Service";
-                    logger.info("Loading klass: "+fullKlass);
+                    logger.finer("Loading klass: "+fullKlass);
                     try {
                         service_ = (Class<T>)Class.forName(fullKlass);
                         

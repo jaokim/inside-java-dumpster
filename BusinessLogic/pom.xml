@@ -22,11 +22,47 @@
     </properties>
 
     <modules>
+        <module>BusinessLogic-Base</module>
+    </modules>
+    <profiles>
+    <profile>
+        <id>JDK8</id>
+        <activation>
+        <jdk>1.8</jdk>
+        </activation>
+    <modules>
+        <module>BusinessLogic-8</module>
+        <module>BusinessLogic-Base</module>
+    </modules>
+  
+    </profile>
+    <profile>
+        <id>JDK11</id>
+        <activation>
+        <jdk>11</jdk>
+        </activation>
+  <modules>
+        <module>BusinessLogic-8</module>
+        <module>BusinessLogic-11</module>
+        <module>BusinessLogic-Base</module>
+    </modules>
+  
+    </profile>
+    <profile>
+        <id>JDK21</id>
+        <activation>
+        <jdk>21</jdk>
+        </activation>
+  <modules>
         <module>BusinessLogic-8</module>
         <module>BusinessLogic-11</module>
         <module>BusinessLogic-21</module>
         <module>BusinessLogic-Base</module>
     </modules>
+  
+    </profile>
+  </profiles>
+  
 <build>
   <plugins>
 <!--    <plugin>

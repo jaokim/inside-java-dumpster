@@ -35,7 +35,6 @@ public class LocalRequestRunnable implements Runnable {
     } catch (IOException | BusinessLogicException ex) {
       Logger.getLogger(Cli.class.getName()).log(Level.SEVERE, null, ex);
     }
-    System.out.println("Doing " + req);
   }
 
 }

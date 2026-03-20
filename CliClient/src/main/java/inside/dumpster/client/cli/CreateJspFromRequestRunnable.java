@@ -36,7 +36,7 @@ public class CreateJspFromRequestRunnable implements Runnable {
     } catch (IOException | BusinessLogicException ex) {
       Logger.getLogger(Cli.class.getName()).log(Level.SEVERE, null, ex);
     }
-    System.out.println("Doing " + req);
+    System.out.println("Create JSP " + req);
   }
 
 }

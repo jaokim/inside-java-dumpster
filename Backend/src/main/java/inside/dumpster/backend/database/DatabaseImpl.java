@@ -56,7 +56,6 @@ public class DatabaseImpl implements Database {
       bde.setDataSourceName("dumpster");
       bde.setDatabaseName(connectionUrl.replace("jdbc:derby:", ""));
       dataSource = bde;
-      
     } else  {
       logger.log(Level.INFO, "Using pooled datasource: {0}", connectionUrl);
       try {

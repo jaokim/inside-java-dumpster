@@ -23,27 +23,10 @@ import java.util.logging.Logger;
  * @author JSNORDST
  */
 public class Scheduler<P extends Payload> {
-
   private static final Logger logger = Logger.getLogger("WebClient");
-
-  private static long totalCount = 0;
   private final static Object lock = new Object();
-  void scheduleForExit() {
-    threadPool.shutdown();
-    while (!threadPool.isTerminated()) {
-        System.out.println("Not terminated");
-        try {
-            Thread.sleep(Duration.ofSeconds(1).toMillis());
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Scheduler.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    Thread.dumpStack();
-    System.out.println("Terminated.");
-    System.exit(0);
-    
-  }
-  ScheduledThreadPoolExecutor threadPool = new ScheduledThreadPoolExecutor(20);
+  private final ScheduledThreadPoolExecutor threadPool = new ScheduledThreadPoolExecutor(20);
+
   /** Start in milliseconds. */
   final long start;
   long count = 0;
@@ -136,7 +119,8 @@ public class Scheduler<P extends Payload> {
           threadPool.shutdownNow();
           break;
         }
-        System.out.println(" "+(threadPool.isShutdown()?"in shutdown":"not in shutdown")+ " "+threadPool.toString());
+        System.out.println("\u001b[2A");
+        System.out.println(" "+(threadPool.isShutdown()?"in shutdown":"STTATUS: not in shutdown")+ " "+threadPool.toString());
         try {
           // if there's  a duration limit, we want to cancel
           if(durationToPostRequests != null) {
@@ -163,4 +147,23 @@ public class Scheduler<P extends Payload> {
 //            ", nt:"+ sdf.format(new Date(newtime)) + ", nd: "+newDelay);
   }
 
+  /**
+   * Schedule the threadpool to exit.
+   */
+  void scheduleForExit() {
+    threadPool.shutdown();
+    while (!threadPool.isTerminated()) {
+        System.out.println(" not terminated " + threadPool.toString());
+        try {
+            Thread.sleep(Duration.ofSeconds(1).toMillis());
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Scheduler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    //Thread.dumpStack();
+    System.out.println("Exiting.");
+    System.exit(0);
+    
+  }
+  
 }
