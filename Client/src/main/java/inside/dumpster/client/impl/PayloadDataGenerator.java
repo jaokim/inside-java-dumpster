@@ -73,37 +73,30 @@ public class PayloadDataGenerator {
   public Type getPayloadDataType(Destination destination) throws IOException {
     ServiceLookupOverride slo = new ServiceLookupOverride();
     Class c = slo.lookupClassForService(destination, null);
+    if (c == null) {
+        return Type.Nothing;
+    }
     if (c.isAnnotationPresent(Image.class)) {
         return Type.Image;
     }
     if (c.isAnnotationPresent(Text.class)) {
         return Type.Text;
     }
-//    switch (destination) {
-//      case Comp2:
-//      case Comp4:
-//      case Comp7:
-//      case Comp8:
-//        return Type.Image;
-//      case Comp3:
-//      case Comp9:
-//      case IP:
-//      default:
-//        return Type.Text;
-//    }
-return Type.Nothing;
+    return Type.Nothing;
   }
 
   public InputStream generatePayload(Payload payload, Class<? extends Service> service) throws IOException {
-     
-    if (service.isAnnotationPresent(Image.class)) {
-        return generatePayloadData(payload, Type.Image);
-    }
-    if (service.isAnnotationPresent(Text.class)) {
-        return generatePayloadData(payload, Type.Image);
+    if (service != null) {
+        if (service.isAnnotationPresent(Image.class)) {
+            return generatePayloadData(payload, Type.Image);
+        }
+        if (service.isAnnotationPresent(Text.class)) {
+            return generatePayloadData(payload, Type.Image);
+        }
     }
     return generatePayloadData(payload, Type.Nothing);
   }
+
   public InputStream genetarePayloadData(Payload payload) throws IOException {
     return generatePayloadData(payload, getPayloadDataType(payload.getDestination()));
   }
