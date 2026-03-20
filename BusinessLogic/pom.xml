@@ -51,7 +51,8 @@
     <profile>
         <id>JDK21</id>
         <activation>
-        <jdk>21</jdk>
+            <activeByDefault>true</activeByDefault>
+            <jdk>21</jdk>
         </activation>
   <modules>
         <module>BusinessLogic-8</module>
