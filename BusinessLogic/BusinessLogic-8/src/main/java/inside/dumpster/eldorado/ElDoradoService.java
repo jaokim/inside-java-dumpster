@@ -18,6 +18,8 @@ package inside.dumpster.eldorado;
 import inside.dumpster.bl.BusinessLogicException;
 import inside.dumpster.bl.BusinessLogicService;
 import inside.dumpster.client.Result;
+import inside.dumpster.outside.Bug;
+import inside.dumpster.outside.Buggy;
 
 /**
  * El Dorado, queen of cities Overflowing with excess Every turn exotic, lavish
@@ -26,40 +28,46 @@ import inside.dumpster.client.Result;
  *
  * @author JSNORDST
  */
+@Buggy(because = "it's recursive for no good reason", enabled = false)
 public class ElDoradoService extends BusinessLogicService<ElDoradoPayload, Result> {
 
-  private int collectedGold = 0;
+    private int collectedGold = 0;
 
-  //public ElDoradoService(Class<ElDoradoPayload> payloadClass, Class<Result> resultClass) {
-  //  super(payloadClass, resultClass);
-  //}
-  public ElDoradoService() {
-    super(ElDoradoPayload.class, Result.class);
-  }
-
-  private int dropGold(int iteration) {
-    if (iteration == 0) {
-      return collectedGold;
-    } else {
-      addGoldToPond();
-      iteration--;
-      return dropGold(iteration);
+    public ElDoradoService() {
+        super(ElDoradoPayload.class, Result.class);
     }
-  }
 
-  private void addGoldToPond() {
-    collectedGold++;
-  }
-
-  @Override
-  public Result invoke(ElDoradoPayload payload) throws BusinessLogicException {
-    try {
-      this.dropGold(payload.getGold());
-    } catch (StackOverflowError soe) {
-      // jsut ignore
+    private int dropGold(int iteration) {
+        if (Bug.isBuggy(this)) {
+            if (iteration == 0) {
+                return collectedGold;
+            } else {
+                addGoldToPond();
+                iteration--;
+                return dropGold(iteration);
+            }
+        } else {
+            while (iteration > 0) {
+                addGoldToPond();
+                iteration--;
+            }
+        }
+        return collectedGold;
     }
-    Result res = new Result();
-    res.setResult(String.format("%d", collectedGold));
-    return res;
-  }
+
+    private void addGoldToPond() {
+        collectedGold++;
+    }
+
+    @Override
+    public Result invoke(ElDoradoPayload payload) throws BusinessLogicException {
+        try {
+            this.dropGold(payload.getGold());
+        } catch (StackOverflowError soe) {
+            // jsut ignore
+        }
+        Result res = new Result();
+        res.setResult(String.format("%d", collectedGold));
+        return res;
+    }
 }
