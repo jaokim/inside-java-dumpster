@@ -7,7 +7,6 @@ import inside.dumpster.client.Payload;
 import inside.dumpster.client.Result;
 import inside.dumpster.service.Service;
 
-@interface Marker {};
 /**
  *
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
@@ -15,14 +14,13 @@ import inside.dumpster.service.Service;
  * @param <R> type of result
  */
 public abstract class BusinessLogicService<P extends Payload, R extends Result> implements Service {
-  final Class<P> payloadClass;
-  public BusinessLogicService(Class<P> payloadClass, Class<R> resultClass) {
-    this.payloadClass = payloadClass;
-  }
-// public BusinessLogicService() {
-//    this.payloadClass = null;
-//  }
-    @TraceMe
+
+    final Class<P> payloadClass;
+
+    public BusinessLogicService(Class<P> payloadClass, Class<R> resultClass) {
+        this.payloadClass = payloadClass;
+    }
+
     public abstract R invoke(P payload) throws BusinessLogicException;
-    
+
 }
