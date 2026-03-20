@@ -40,6 +40,7 @@ public class ElDoradoService extends BusinessLogicService<ElDoradoPayload, Resul
     private int dropGold(int iteration) {
         if (Bug.isBuggy(this)) {
             if (iteration == 0) {
+                System.out.println("ElDoradoService: Is buggy, calling recurcsive");
                 return collectedGold;
             } else {
                 addGoldToPond();
@@ -47,6 +48,7 @@ public class ElDoradoService extends BusinessLogicService<ElDoradoPayload, Resul
                 return dropGold(iteration);
             }
         } else {
+            System.out.println("ElDoradoService: Not buggy, just looping");
             while (iteration > 0) {
                 addGoldToPond();
                 iteration--;
