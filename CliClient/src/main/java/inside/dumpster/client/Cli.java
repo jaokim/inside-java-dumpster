@@ -8,6 +8,7 @@ import inside.dumpster.client.arguments.CliArguments;
 import inside.dumpster.client.impl.ParseLine;
 import inside.dumpster.client.web.HttpPayload;
 import inside.dumpster.client.web.HttpPayloadParseLine;
+import inside.dumpster.outside.Bug;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Arrays;
@@ -77,6 +78,7 @@ public class Cli {
         }
       });
       address = null;
+      Bug.registerMXBean();
 
     }
 
