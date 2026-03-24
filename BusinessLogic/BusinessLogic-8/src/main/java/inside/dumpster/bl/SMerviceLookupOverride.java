@@ -23,15 +23,15 @@ public class SMerviceLookupOverride {
         if (Settings.SERVICE_LOOKUP.isSet()) {
             String serviceLookupSetting = Settings.SERVICE_LOOKUP.get();
             String[] lookups = serviceLookupSetting.split(";");
-            logger.info("Service lookup: "+serviceLookupSetting);
+            logger.fine("Service lookup: "+serviceLookupSetting);
             for (String lookup : lookups) {
                 String[] regex_classes = lookup.split(":");
-                logger.info("Service lookup: "+lookup + "r0: "+regex_classes[0]+" r1: " + regex_classes[1]);
+                logger.fine("Service lookup: "+lookup + "r0: "+regex_classes[0]+" r1: " + regex_classes[1]);
                 if (serviceCallEvent.destination.matches(regex_classes[0])) {
-                    logger.info("Service lookup: matched dest: "+serviceCallEvent.destination);
+                    logger.fine("Service lookup: matched dest: "+serviceCallEvent.destination);
                     String klass = regex_classes[1];
                     String fullKlass = "inside.dumpster."+klass.replace("Service", "").toLowerCase() + "."+klass+"Service";
-                    logger.info("Loading klass: "+fullKlass);
+                    logger.fine("Loading klass: "+fullKlass);
                     try {
                         service_ = (BusinessLogicService<? extends Payload, ? extends Result>) Class.forName(fullKlass).newInstance();
                         
