@@ -117,7 +117,7 @@ public class BugBehaviour implements BugBehaviourMXBean {
         logger.info("Couldn't load foundbugs properties file: " + props.getAbsolutePath());
       }
       try (OutputStream stream = new FileOutputStream(FOUNDBUGSPROPERTIES)) {
-        properties.store(stream, new Date().toLocaleString());
+        properties.store(stream, " Found bugs. Set to true to enable buggy behavior. Last saved: "+ new Date().toLocaleString());
       } catch (FileNotFoundException ex) {
         Logger.getLogger(BugBehaviour.class.getName()).log(Level.SEVERE, null, ex);
       } catch (IOException ex) {
@@ -138,7 +138,7 @@ public class BugBehaviour implements BugBehaviourMXBean {
         System.out.println("Loading bugs from " + FOUNDBUGSPROPERTIES);
         logger.info("Loading bugs from " + props.getAbsolutePath());
         properties.load(bugs);
-        properties.store(System.out, "Current identifed bugs");
+        properties.store(System.out, "Current identified bugs");
         for (String clazz : properties.stringPropertyNames()) {
           possiblyBuggyClasses.put(clazz, Boolean.getBoolean(properties.getProperty(clazz)));
         }
