@@ -114,7 +114,7 @@ public class BugBehaviour implements BugBehaviourMXBean {
 
         properties.setProperty(clazz, isBuggy.toString());
       } catch (IOException ex) {
-        System.out.println("Couldn't load foundbugs properties file: " + props.getAbsolutePath());
+        logger.info("Couldn't load foundbugs properties file: " + props.getAbsolutePath());
       }
       try (OutputStream stream = new FileOutputStream(FOUNDBUGSPROPERTIES)) {
         properties.store(stream, new Date().toLocaleString());
@@ -125,7 +125,7 @@ public class BugBehaviour implements BugBehaviourMXBean {
       }
 
     } else {
-      System.out.println("Couldn't find/read/write foundbugs properties file: " + props.getAbsolutePath());
+      logger.info("Couldn't find/read/write foundbugs properties file: " + props.getAbsolutePath());
     }
   }
 
@@ -136,16 +136,17 @@ public class BugBehaviour implements BugBehaviourMXBean {
     if (props.exists() && props.canRead()) {
       try (InputStream bugs = new BufferedInputStream(new FileInputStream(props))) {
         System.out.println("Loading bugs from " + FOUNDBUGSPROPERTIES);
+        logger.info("Loading bugs from " + props.getAbsolutePath());
         properties.load(bugs);
         properties.store(System.out, "Current identifed bugs");
         for (String clazz : properties.stringPropertyNames()) {
           possiblyBuggyClasses.put(clazz, Boolean.getBoolean(properties.getProperty(clazz)));
         }
       } catch (IOException ex) {
-        System.out.println("Couldn't fing found bugs properties file: " + props.getAbsolutePath());
+        logger.severe("Couldn't load found bugs properties file: " + props.getAbsolutePath());
       }
     } else {
-      System.out.println("Couldn't find foundbugs properties file: " + props.getAbsolutePath());
+      logger.info("Couldn't find found bugs properties file: " + props.getAbsolutePath());
     }
   }
 
