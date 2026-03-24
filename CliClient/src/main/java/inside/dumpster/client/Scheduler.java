@@ -119,7 +119,7 @@ public class Scheduler<P extends Payload> {
           threadPool.shutdownNow();
           break;
         }
-        System.out.println("\u001b[2A");
+        //System.out.println("\u001b[2A");
         System.out.println(" "+(threadPool.isShutdown()?"in shutdown":"STTATUS: not in shutdown")+ " "+threadPool.toString());
         try {
           // if there's  a duration limit, we want to cancel
