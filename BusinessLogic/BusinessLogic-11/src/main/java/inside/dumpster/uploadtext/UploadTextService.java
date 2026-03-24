@@ -16,6 +16,7 @@ import java.io.InputStream;
  *
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
+@inside.dumpster.payload.Text
 public class UploadTextService extends BusinessLogicService<UploadTextPayload, UploadTextResult>  {
 
   public UploadTextService() {

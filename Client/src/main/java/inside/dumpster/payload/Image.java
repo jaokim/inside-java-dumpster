@@ -10,7 +10,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- *
+ * Add this annotation to the Service class.
  * @author jsnor
  */
 @Retention(RetentionPolicy.RUNTIME)
