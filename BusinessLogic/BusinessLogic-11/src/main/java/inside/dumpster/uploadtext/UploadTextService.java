@@ -53,6 +53,7 @@ public class UploadTextService extends BusinessLogicService<UploadTextPayload, U
       }
 
     } catch (IOException ex) {
+        System.out.println("int uploadtesxt servcie "+ payload.toString() + "  "+ ex.getMessage());
       ex.printStackTrace();
       res.setResult(ex.getMessage());
       throw new BusinessLogicException(ex);

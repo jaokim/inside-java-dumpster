@@ -20,6 +20,7 @@ import inside.dumpster.client.Result;
 import inside.dumpster.client.impl.PayloadHelper;
 import java.io.IOException;
 import java.util.UUID;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -31,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
 public class JettyServlet extends HttpServlet {
+  private static final Logger logger = Logger.getLogger(JettyServlet.class.getName());
   private final Authenticator authenticator = new Authenticator();
   private final BusinessLogicFactory factory = new BusinessLogicFactory();
 
@@ -54,7 +56,7 @@ public class JettyServlet extends HttpServlet {
         
       String pathinfo = request.getPathInfo().substring(1);
       String destination = PayloadHelper.getDestination(pathinfo);
-      System.out.println("Dest: "+destination);
+      logger.finest("Dest: "+destination);
       BusinessLogicServiceWrapper<? extends Payload, ? extends Result> service =
               factory.lookupService(Destination.fromString(destination));
 
@@ -68,7 +70,7 @@ public class JettyServlet extends HttpServlet {
       request.setAttribute("payload", payload);
       request.setAttribute("result", result);
 
-      System.out.println("response:"+result.getResult());
+      logger.finest("Response: "+result.getResult());
 
       user = authenticator.getLoggedInUser();
       request.setAttribute("user", user);

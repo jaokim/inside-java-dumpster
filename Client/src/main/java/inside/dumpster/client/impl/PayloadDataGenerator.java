@@ -13,13 +13,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Joakim Nordstrom joakim.nordstrom@oracle.com
  */
 public class PayloadDataGenerator {
-
+    private static final Logger logger = Logger.getLogger(PayloadDataGenerator.class.getName());
     public enum Type {
     Text, Image, Nothing
     }
@@ -48,6 +50,8 @@ public class PayloadDataGenerator {
 
         return generateText(payload.getDstPort().hashCode(), Math.max(1, sent / 100));
         default:
+        logger.log(Level.FINE, "Generating no data");
+    
       return InputStream.nullInputStream();
     }
   }
@@ -56,6 +60,7 @@ public class PayloadDataGenerator {
     ImageGenerator generator = new ImageGenerator();
     generator.setHeight(y);
     generator.setWidth(x);
+    logger.log(Level.FINE, "Generating image {0}x{1}", new Object[]{x, y});
     return generator.generateImage();
   }
 
@@ -63,6 +68,7 @@ public class PayloadDataGenerator {
     TextGenerator text = new TextGenerator(seed);
 //        long srcpackets = Integer.parseInt(payload.getSrcPackets());
     text.setSentences(sentences);
+    logger.log(Level.FINE, "Generating text {0} sentences", new Object[]{sentences});
     return text.generateText();
   }
 

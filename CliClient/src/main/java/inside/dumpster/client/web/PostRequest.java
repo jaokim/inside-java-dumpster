@@ -16,6 +16,7 @@ import java.net.ProxySelector;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublisher;
 import java.net.http.HttpRequest.Builder;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
@@ -72,41 +73,36 @@ public class PostRequest {
       reqEvent.begin();
 
       Builder builder = HttpRequest.newBuilder();
-      InputStream is = InputStream.nullInputStream();//pdg.genetarePayloadData(networkRequest);
-      final String body;
+      logger.finest(String.format("Start %s: %d", uri, reqEvent.status));
+                
+      InputStream is = pdg.genetarePayloadData(networkRequest);
+      final BodyPublisher bodyPublisher;
       if (is != null) {
-        builder.POST(HttpRequest.BodyPublishers.ofInputStream(() -> is));
-        body = "with body";
+        bodyPublisher = HttpRequest.BodyPublishers.ofInputStream(() -> is);
       } else {
-        builder.POST(HttpRequest.BodyPublishers.noBody());
-        body = "w/o body";
+        bodyPublisher = HttpRequest.BodyPublishers.noBody();
       }
       HttpRequest request = builder
               .uri(uri)
               .header("Content-Type", "application/octet-stream")
               .header("TransactionId", networkRequest.getTransactionId())
+              .header("Transfer-Encoding", "chunked")
+              .POST(bodyPublisher)
               .build();
       client.sendAsync(request, BodyHandlers.ofString())
               .thenAccept((HttpResponse<String> response) -> {
                 reqEvent.result = response.body();
                 reqEvent.status = response.statusCode();
-                logger.info(String.format("%s: %d", uri, reqEvent.status));
+                logger.finest(String.format("END %s: %d", uri, reqEvent.status));
                 if (reqEvent.status != 200) {
-                  logger.info(String.format("%s: %s", uri, reqEvent.result));
+                  logger.finest(String.format("%s: %s", uri, reqEvent.result));
                 }
                 reqEvent.end();
                 reqEvent.commit();
 
               } )
-//              .thenApply(HttpResponse::body)
-//              .thenAccept((String s) -> {
-//                reqEvent.result = s;
-//                reqEvent.end();
-//                reqEvent.commit();
-//
-//              })
               .join();
-
+        logger.finest(String.format("DONE: %s: %s", uri, reqEvent.result));
     } catch (Exception ex) {
       reqEvent.result = ex.getMessage();
       reqEvent.end();
